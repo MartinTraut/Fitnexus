@@ -7,6 +7,7 @@ import { GlassCard } from '@/components/glass-card'
 import { SectionHeading } from '@/components/section-heading'
 import { StarRating } from '@/components/star-rating'
 import { FAQAccordion } from '@/components/faq-accordion'
+import { DashboardScrollPreview } from '@/components/dashboard-scroll-preview'
 import {
   Layers, Shield, FileCheck, UserPlus, Search, MessageCircle, Rocket,
   Dumbbell, Users, ClipboardList, Apple, TrendingUp, Star, Check,
@@ -200,6 +201,9 @@ export default function HomePage() {
           {/* Bottom fade */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0F1A] to-transparent" />
         </section>
+
+        {/* ═══ DASHBOARD SCROLL PREVIEW ═══ */}
+        <DashboardScrollPreview />
 
         {/* ═══ USP ═══ */}
         <section id="usp" className="relative py-24 lg:py-32 overflow-hidden">
