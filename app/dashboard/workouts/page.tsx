@@ -1,14 +1,79 @@
+'use client'
+
 import { GlassCard } from '@/components/glass-card'
-import { Dumbbell, ChevronRight, Clock } from 'lucide-react'
+import { LineChart } from '@/components/charts/line-chart'
+import { BarChart } from '@/components/charts/bar-chart'
+import { Dumbbell, ChevronRight, Clock, TrendingUp, Flame } from 'lucide-react'
+
+const volumeData = [
+  {
+    name: 'Trainingsvolumen (Tonnen)',
+    color: '#00A8FF',
+    data: [
+      { label: 'W1', value: 12.4 },
+      { label: 'W2', value: 13.1 },
+      { label: 'W3', value: 14.2 },
+      { label: 'W4', value: 13.8 },
+      { label: 'W5', value: 15.5 },
+      { label: 'W6', value: 16.1 },
+      { label: 'W7', value: 15.8 },
+      { label: 'W8', value: 17.3 },
+    ],
+  },
+]
+
+const muscleGroupData = [
+  { label: 'Brust', value: 18, color: '#00A8FF' },
+  { label: 'Rücken', value: 22, color: '#00D4FF' },
+  { label: 'Beine', value: 24, color: '#00FF94' },
+  { label: 'Schulter', value: 12, color: '#39FF14' },
+  { label: 'Arme', value: 14, color: '#00A8FF' },
+  { label: 'Core', value: 10, color: '#00D4FF' },
+]
 
 export default function WorkoutsPage() {
   return (
     <div className="p-4 md:p-8 space-y-8">
       <div>
         <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground">Trainingspläne</h1>
-        <p className="text-muted-foreground mt-1">Deine aktiven Pläne</p>
+        <p className="text-muted-foreground mt-1">Deine aktiven Pläne und Statistiken</p>
       </div>
 
+      {/* Quick Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: 'Workouts gesamt', value: '48', icon: Dumbbell, color: '#00A8FF' },
+          { label: 'Streak', value: '12 Tage', icon: Flame, color: '#FF6B35' },
+          { label: 'Volumen-Trend', value: '+12%', icon: TrendingUp, color: '#00FF94' },
+        ].map((s) => (
+          <GlassCard key={s.label} className="p-4">
+            <s.icon className="w-5 h-5 mb-2" style={{ color: s.color }} />
+            <p className="text-xl font-bold text-foreground">{s.value}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">{s.label}</p>
+          </GlassCard>
+        ))}
+      </div>
+
+      {/* Trainingsvolumen Chart */}
+      <GlassCard className="p-5 md:p-6" hover={false}>
+        <div className="flex items-center justify-between mb-1">
+          <div>
+            <h3 className="font-heading font-semibold text-foreground">Trainingsvolumen</h3>
+            <p className="text-xs text-muted-foreground mt-1">Gesamtes Volumen pro Woche in Tonnen</p>
+          </div>
+          <span className="text-xs font-medium text-[#00FF94]">+39% in 8 Wochen</span>
+        </div>
+        <LineChart series={volumeData} height={220} yUnit="t" showArea />
+      </GlassCard>
+
+      {/* Muskelgruppen-Verteilung */}
+      <GlassCard className="p-5 md:p-6" hover={false}>
+        <h3 className="font-heading font-semibold text-foreground mb-1">Sets pro Muskelgruppe</h3>
+        <p className="text-xs text-muted-foreground mb-3">Verteilung diese Woche</p>
+        <BarChart data={muscleGroupData} height={180} yUnit="" />
+      </GlassCard>
+
+      {/* Aktueller Plan */}
       <GlassCard className="p-6 neon-border" hover={false}>
         <div className="flex items-center justify-between mb-4">
           <div>

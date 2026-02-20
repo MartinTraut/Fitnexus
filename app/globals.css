@@ -327,4 +327,112 @@
     pointer-events: none;
     z-index: 9999;
   }
+
+  /* Marquee animation */
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    gap: 2rem;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  .marquee-content {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    animation: marquee-scroll 30s linear infinite;
+  }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+
+  /* Text highlight marker effect */
+  .text-highlight {
+    position: relative;
+    display: inline;
+  }
+  .text-highlight::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    bottom: 0;
+    height: 35%;
+    background: linear-gradient(90deg, rgba(0, 168, 255, 0.2), rgba(0, 255, 148, 0.15));
+    border-radius: 4px;
+    z-index: -1;
+  }
+
+  /* Stagger animation delay utilities */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+
+  /* Horizontal line with gradient */
+  .divider-gradient {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.2), rgba(0, 255, 148, 0.15), transparent);
+  }
+
+  /* Number counter styling */
+  .stat-number {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  /* Large quote mark */
+  .quote-mark::before {
+    content: '\201C';
+    position: absolute;
+    top: -0.2em;
+    left: -0.05em;
+    font-size: 6em;
+    line-height: 1;
+    font-family: Georgia, serif;
+    background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(0, 255, 148, 0.08));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Bento card variations */
+  .bento-card {
+    background: rgba(13, 19, 32, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 168, 255, 0.06);
+    border-radius: 1.25rem;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bento-card:hover {
+    border-color: rgba(0, 168, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 0 30px rgba(0, 168, 255, 0.04);
+  }
+
+  /* Section label */
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #94A3B8;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 1.5rem;
+    height: 1px;
+    background: linear-gradient(90deg, #00A8FF, #00D4FF);
+  }
 }

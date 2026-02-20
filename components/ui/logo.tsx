@@ -9,11 +9,11 @@ interface LogoProps {
 }
 
 const sizes = {
-  sm: { icon: 36, text: 'text-lg', gap: 'gap-2' },
-  md: { icon: 44, text: 'text-xl', gap: 'gap-2.5' },
-  lg: { icon: 56, text: 'text-2xl', gap: 'gap-3' },
-  xl: { icon: 72, text: 'text-3xl', gap: 'gap-3.5' },
-  hero: { icon: 100, text: 'text-4xl', gap: 'gap-4' },
+  sm: { icon: 40, text: 'text-lg', gap: 'gap-2' },
+  md: { icon: 52, text: 'text-xl', gap: 'gap-2.5' },
+  lg: { icon: 60, text: 'text-2xl', gap: 'gap-3' },
+  xl: { icon: 80, text: 'text-3xl', gap: 'gap-3.5' },
+  hero: { icon: 120, text: 'text-4xl', gap: 'gap-4' },
 }
 
 export function Logo({ size = 'md', showText = true, className }: LogoProps) {

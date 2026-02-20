@@ -1,4 +1,3 @@
-import { Logo } from '@/components/ui/logo'
 import Image from 'next/image'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -10,11 +9,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="absolute inset-0 bg-grid opacity-20" />
 
       <div className="relative z-10 w-full max-w-md">
-        <div className="flex flex-col items-center mb-8 gap-4">
-          <div className="animate-float">
-            <Image src="/logo.png" alt="FITNEXUS" width={100} height={100} className="drop-shadow-[0_0_25px_rgba(0,168,255,0.3)]" priority />
-          </div>
-          <span className="text-2xl font-heading font-bold tracking-brand gradient-brand-text">FITNEXUS</span>
+        <div className="flex flex-col items-center mb-8 gap-3">
+          <Image src="/logo.png" alt="FITNEXUS" width={80} height={80} className="mix-blend-screen drop-shadow-[0_0_20px_rgba(0,168,255,0.2)]" priority />
+          <span className="text-xl font-heading font-bold tracking-brand gradient-brand-text">FITNEXUS</span>
         </div>
         {children}
       </div>
