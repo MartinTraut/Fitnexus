@@ -3,29 +3,33 @@ import Link from 'next/link'
 
 const footerLinks = {
   Plattform: [
-    { href: '/search', label: 'Trainer finden' },
-    { href: '/#how-it-works', label: 'So funktioniert\'s' },
-    { href: '/#pricing', label: 'Preise' },
-    { href: '/auth/register', label: 'Als Trainer starten' },
+    { href: '/trainers', label: 'Trainer finden' },
+    { href: '/how-it-works', label: 'So funktioniert\'s' },
+    { href: '/pricing', label: 'Preise' },
+    { href: '/for-coaches', label: 'Für Coaches' },
+    { href: '/faq', label: 'FAQ' },
   ],
   'Städte': [
-    { href: '/trainer/berlin', label: 'Berlin' },
-    { href: '/trainer/muenchen', label: 'München' },
-    { href: '/trainer/hamburg', label: 'Hamburg' },
-    { href: '/trainer/koeln', label: 'Köln' },
-    { href: '/trainer/frankfurt', label: 'Frankfurt' },
+    { href: '/city/berlin', label: 'Berlin' },
+    { href: '/city/muenchen', label: 'München' },
+    { href: '/city/hamburg', label: 'Hamburg' },
+    { href: '/city/koeln', label: 'Köln' },
+    { href: '/city/frankfurt', label: 'Frankfurt' },
+    { href: '/city/stuttgart', label: 'Stuttgart' },
   ],
   Kategorien: [
-    { href: '/trainer/personal-training', label: 'Personal Training' },
-    { href: '/trainer/yoga', label: 'Yoga' },
-    { href: '/trainer/krafttraining', label: 'Krafttraining' },
-    { href: '/trainer/ernaehrungsberatung', label: 'Ernährungsberatung' },
+    { href: '/category/personal-training', label: 'Personal Training' },
+    { href: '/category/yoga', label: 'Yoga' },
+    { href: '/category/krafttraining', label: 'Krafttraining' },
+    { href: '/category/online-coaching', label: 'Online Coaching' },
+    { href: '/category/ernaehrungsberatung', label: 'Ernährungsberatung' },
   ],
   Legal: [
+    { href: '/about', label: 'Über uns' },
+    { href: '/contact', label: 'Kontakt' },
     { href: '/impressum', label: 'Impressum' },
     { href: '/datenschutz', label: 'Datenschutz' },
     { href: '/agb', label: 'AGB' },
-    { href: '/kontakt', label: 'Kontakt' },
   ],
 }
 
@@ -36,7 +40,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 md:col-span-1">
             <Logo size="lg" />
-            <p className="mt-4 text-sm text-muted-foreground max-w-xs">
+            <p className="mt-4 text-sm text-muted-foreground max-w-xs leading-relaxed">
               Die All-in-One Fitness Coaching Plattform für Trainer und Kunden.
             </p>
           </div>

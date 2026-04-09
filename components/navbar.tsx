@@ -8,10 +8,10 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
 const links = [
-  { href: '/search', label: 'Trainer finden' },
-  { href: '/#how-it-works', label: 'So funktioniert\'s' },
-  { href: '/#pricing', label: 'Preise' },
-  { href: '/#faq', label: 'FAQ' },
+  { href: '/trainers', label: 'Trainer finden' },
+  { href: '/how-it-works', label: 'So funktioniert\'s' },
+  { href: '/pricing', label: 'Preise' },
+  { href: '/for-coaches', label: 'Für Coaches' },
 ]
 
 export function Navbar() {
@@ -51,12 +51,12 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-3">
             <Link
-              href="/auth/login"
+              href="/login"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 px-4 py-2"
             >
               Anmelden
             </Link>
-            <Link href="/auth/register">
+            <Link href="/register">
               <GradientButton size="sm" variant="cyan">
                 Kostenlos starten
               </GradientButton>
@@ -89,10 +89,10 @@ export function Navbar() {
             </Link>
           ))}
           <div className="pt-4 mt-3 space-y-3 border-t border-[rgba(0,168,255,0.08)]">
-            <Link href="/auth/login" className="block text-base font-medium text-foreground px-3 py-2">
+            <Link href="/login" className="block text-base font-medium text-foreground px-3 py-2">
               Anmelden
             </Link>
-            <Link href="/auth/register" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
               <GradientButton size="md" variant="cyan" className="w-full">
                 Kostenlos starten
               </GradientButton>

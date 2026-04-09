@@ -82,14 +82,14 @@ export function TrainerCard({
 
       {/* Action Buttons */}
       <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[rgba(0,168,255,0.06)]">
-        <Link href={`/trainer/${id}`} className="flex-1">
+        <Link href={`/trainers/${id}`} className="flex-1">
           <GradientButton variant="cyan" outline size="sm" className="w-full text-xs">
             Profil ansehen
           </GradientButton>
         </Link>
-        <Link href="/auth/register" className="flex-1">
+        <Link href={`/trainers/${id}#contact`} className="flex-1">
           <GradientButton variant="green" size="sm" className="w-full text-xs">
-            Direkt buchen
+            Kennenlernen
           </GradientButton>
         </Link>
       </div>
