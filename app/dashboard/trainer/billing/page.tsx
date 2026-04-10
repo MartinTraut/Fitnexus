@@ -2,10 +2,13 @@
 
 import { GlassCard } from '@/components/glass-card'
 import { GradientButton } from '@/components/gradient-button'
+import { pricingPlans } from '@/lib/mock-data'
 import {
   CreditCard, CheckCircle2, Users, MessageCircle,
-  FileText, Download, Zap, Crown,
+  FileText, Download, Zap, Crown, Check,
 } from 'lucide-react'
+
+const coachPlans = pricingPlans.filter(p => p.name !== 'Kunde')
 
 const invoices = [
   { id: 'INV-2026-003', date: '01.04.2026', amount: '99,00€', status: 'Bezahlt' },
@@ -75,60 +78,52 @@ export default function TrainerBillingPage() {
         </div>
       </div>
 
-      {/* Plan Comparison */}
+      {/* Plan Comparison — from central pricingPlans */}
       <div>
         <h2 className="text-lg font-heading font-semibold text-foreground mb-4">Planvergleich</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Starter */}
-          <GlassCard className="p-6" hover={false}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-[#00A8FF]/10 flex items-center justify-center">
-                <Zap className="w-5 h-5 text-[#00D4FF]" />
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-foreground">Starter</h3>
-                <p className="text-sm text-muted-foreground">29€/Monat</p>
-              </div>
-            </div>
-            <ul className="space-y-2 mb-5">
-              {['Bis zu 5 Kunden', 'Basis-Profil', 'Nachrichten', 'Lead-Benachrichtigungen'].map((feature) => (
-                <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <CheckCircle2 className="w-4 h-4 text-muted-foreground/50 flex-shrink-0" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            <GradientButton variant="cyan" size="sm" outline className="w-full">
-              Downgrade
-            </GradientButton>
-          </GlassCard>
-
-          {/* Pro */}
-          <GlassCard className="p-6 border border-[#00FF94]/20 relative" hover={false}>
-            <div className="absolute -top-3 right-4 text-xs px-3 py-1 rounded-full bg-[#00FF94] text-[#0B0F1A] font-bold">
-              Aktueller Plan
-            </div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-[#00FF94]/10 flex items-center justify-center">
-                <Crown className="w-5 h-5 text-[#00FF94]" />
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-foreground">Pro</h3>
-                <p className="text-sm text-muted-foreground">99€/Monat</p>
-              </div>
-            </div>
-            <ul className="space-y-2 mb-5">
-              {['Bis zu 25 Kunden', 'Premium-Profil mit Badge', 'Unbegrenzte Nachrichten', 'Pläne & Workspace', 'Priorität im Matching', 'Analytics & Reports'].map((feature) => (
-                <li key={feature} className="flex items-center gap-2 text-sm text-foreground">
-                  <CheckCircle2 className="w-4 h-4 text-[#00FF94] flex-shrink-0" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            <GradientButton variant="green" size="sm" className="w-full" disabled>
-              Aktueller Plan
-            </GradientButton>
-          </GlassCard>
+          {coachPlans.map((plan) => {
+            const isCurrentPlan = plan.name === 'Pro'
+            return (
+              <GlassCard key={plan.name} className={`p-6 relative ${isCurrentPlan ? 'border border-[#00FF94]/20' : ''}`} hover={false}>
+                {isCurrentPlan && (
+                  <div className="absolute -top-3 right-4 text-xs px-3 py-1 rounded-full bg-[#00FF94] text-[#0B0F1A] font-bold">
+                    Aktueller Plan
+                  </div>
+                )}
+                <div className="flex items-center gap-3 mb-2">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isCurrentPlan ? 'bg-[#00FF94]/10' : 'bg-[#00A8FF]/10'}`}>
+                    {isCurrentPlan ? <Crown className="w-5 h-5 text-[#00FF94]" /> : <Zap className="w-5 h-5 text-[#00D4FF]" />}
+                  </div>
+                  <div>
+                    <h3 className="font-heading font-bold text-foreground">{plan.name}</h3>
+                    <p className="text-xs text-muted-foreground">{plan.description}</p>
+                  </div>
+                </div>
+                <div className="mb-5">
+                  <span className="text-3xl font-heading font-bold text-foreground">{plan.price}</span>
+                  {plan.period && <span className="text-sm text-muted-foreground">{plan.period}</span>}
+                </div>
+                <ul className="space-y-2.5 mb-6">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5 text-sm">
+                      <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 ${isCurrentPlan ? 'text-[#00FF94]' : 'text-[#00D4FF]/60'}`} />
+                      <span className={isCurrentPlan ? 'text-foreground' : 'text-muted-foreground'}>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                {isCurrentPlan ? (
+                  <GradientButton variant="green" size="sm" className="w-full" disabled>
+                    Aktueller Plan
+                  </GradientButton>
+                ) : (
+                  <GradientButton variant="cyan" size="sm" outline className="w-full">
+                    Zu {plan.name} wechseln
+                  </GradientButton>
+                )}
+              </GlassCard>
+            )
+          })}
         </div>
       </div>
 

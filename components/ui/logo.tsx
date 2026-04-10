@@ -8,12 +8,13 @@ interface LogoProps {
   className?: string
 }
 
+// Icon size should be ~1.5x the text line-height for visual balance
 const sizes = {
-  sm: { icon: 36, text: 'text-lg', gap: 'gap-2' },
-  md: { icon: 44, text: 'text-xl', gap: 'gap-2.5' },
-  lg: { icon: 56, text: 'text-2xl', gap: 'gap-3' },
-  xl: { icon: 72, text: 'text-3xl', gap: 'gap-3.5' },
-  hero: { icon: 100, text: 'text-4xl', gap: 'gap-4' },
+  sm: { icon: 28, text: 'text-base', gap: 'gap-2' },
+  md: { icon: 34, text: 'text-lg', gap: 'gap-2.5' },
+  lg: { icon: 40, text: 'text-xl', gap: 'gap-2.5' },
+  xl: { icon: 48, text: 'text-2xl', gap: 'gap-3' },
+  hero: { icon: 64, text: 'text-3xl', gap: 'gap-3.5' },
 }
 
 export function Logo({ size = 'md', showText = true, className }: LogoProps) {
@@ -21,7 +22,7 @@ export function Logo({ size = 'md', showText = true, className }: LogoProps) {
   return (
     <Link href="/" className={cn('flex items-center', s.gap, className)}>
       <Image
-        src="/logo.png"
+        src="/logo-icon.png"
         alt="FITNEXUS Logo"
         width={s.icon}
         height={s.icon}
@@ -29,7 +30,7 @@ export function Logo({ size = 'md', showText = true, className }: LogoProps) {
         priority
       />
       {showText && (
-        <span className={cn('font-heading font-bold tracking-brand gradient-brand-text', s.text)}>
+        <span className={cn('font-heading font-bold tracking-[0.04em] gradient-brand-text', s.text)}>
           FITNEXUS
         </span>
       )}
@@ -40,7 +41,7 @@ export function Logo({ size = 'md', showText = true, className }: LogoProps) {
 export function LogoIcon({ size = 44, className }: { size?: number; className?: string }) {
   return (
     <Image
-      src="/logo.png"
+      src="/logo-icon.png"
       alt="FITNEXUS"
       width={size}
       height={size}

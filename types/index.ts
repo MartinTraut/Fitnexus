@@ -134,6 +134,7 @@ export interface WorkoutExercise {
   weight: string | null
   rest_seconds: number
   notes: string | null
+  video_url: string | null
   order: number
   day: number
   superset_group: string | null

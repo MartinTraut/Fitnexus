@@ -128,7 +128,7 @@ export default async function CityPage({ params }: PageProps) {
                   hourlyRate={trainer.hourly_rate}
                   rating={trainer.rating_average}
                   ratingCount={trainer.rating_count}
-                  isVerified={trainer.is_verified}
+                  isVerified={trainer.is_verified} certificateCount={trainer.certificates?.length}
                 />
               ))}
             </div>

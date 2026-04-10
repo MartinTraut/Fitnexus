@@ -3,7 +3,7 @@ import { GlassCard } from '@/components/glass-card'
 import { StarRating } from '@/components/star-rating'
 import { GradientButton } from '@/components/gradient-button'
 import { Badge } from '@/components/ui/badge'
-import { MapPin, Shield } from 'lucide-react'
+import { MapPin, Shield, Award } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -17,11 +17,12 @@ interface TrainerCardProps {
   rating: number
   ratingCount: number
   isVerified?: boolean
+  certificateCount?: number
   className?: string
 }
 
 export function TrainerCard({
-  id, name, image, city, categories, hourlyRate, rating, ratingCount, isVerified, className
+  id, name, image, city, categories, hourlyRate, rating, ratingCount, isVerified, certificateCount, className
 }: TrainerCardProps) {
   return (
     <GlassCard className={cn('p-5 group', className)}>
@@ -74,6 +75,12 @@ export function TrainerCard({
             {categories.length > 3 && (
               <Badge variant="secondary" className="bg-[#1A2332]/50 text-muted-foreground border-none text-[11px] px-2 py-0.5">
                 +{categories.length - 3}
+              </Badge>
+            )}
+            {certificateCount && certificateCount > 0 && (
+              <Badge variant="secondary" className="bg-[#FFD700]/[0.08] text-[#FFD700]/90 border border-[#FFD700]/15 text-[11px] px-2 py-0.5">
+                <Award className="w-3 h-3 mr-1" />
+                {certificateCount} {certificateCount === 1 ? 'Zertifikat' : 'Zertifikate'}
               </Badge>
             )}
           </div>

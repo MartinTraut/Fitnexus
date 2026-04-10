@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Search, SlidersHorizontal, MapPin, Tag, ArrowUpDown, Monitor, Navigation, Repeat, X } from 'lucide-react'
+import { Search, SlidersHorizontal, MapPin, Tag, ArrowUpDown, Monitor, Navigation, Repeat, X, Euro, UserCircle } from 'lucide-react'
 import { GlassCard } from '@/components/glass-card'
 import { TrainerCard } from '@/components/trainer-card'
 import { AnimatedSection, StaggerGroup, StaggerItem } from '@/components/motion'
@@ -23,18 +23,30 @@ export default function TrainersPage() {
   const [category, setCategory] = useState('')
   const [sortBy, setSortBy] = useState('default')
   const [mode, setMode] = useState('')
+  const [priceMin, setPriceMin] = useState('')
+  const [priceMax, setPriceMax] = useState('')
+  const [gender, setGender] = useState('')
 
   const results = useMemo(() => {
-    return searchTrainers({
+    let filtered = searchTrainers({
       query: query || undefined,
       city: city || undefined,
       category: category || undefined,
       mode: mode || undefined,
+      minPrice: priceMin ? parseInt(priceMin) : undefined,
+      maxPrice: priceMax ? parseInt(priceMax) : undefined,
       sortBy: sortBy === 'default' ? undefined : sortBy,
     })
-  }, [query, city, category, sortBy, mode])
+    // Gender filter (based on first name heuristic from mock data)
+    if (gender === 'weiblich') {
+      filtered = filtered.filter(t => ['Sarah', 'Anna', 'Lena', 'Nina'].includes(t.first_name))
+    } else if (gender === 'männlich') {
+      filtered = filtered.filter(t => ['Max', 'Leon', 'David', 'Tom'].includes(t.first_name))
+    }
+    return filtered
+  }, [query, city, category, sortBy, mode, priceMin, priceMax, gender])
 
-  const hasActiveFilters = city || category || mode || sortBy !== 'default'
+  const hasActiveFilters = city || category || mode || sortBy !== 'default' || priceMin || priceMax || gender
 
   function clearFilters() {
     setCity('')
@@ -42,6 +54,9 @@ export default function TrainersPage() {
     setMode('')
     setSortBy('default')
     setQuery('')
+    setPriceMin('')
+    setPriceMax('')
+    setGender('')
   }
 
   return (
@@ -64,109 +79,90 @@ export default function TrainersPage() {
             </div>
           </AnimatedSection>
 
-          {/* Search Bar */}
+          {/* Search + Filters — Unified Block */}
           <AnimatedSection delay={0.1}>
-            <div className="max-w-2xl mx-auto mb-8">
+            <div className="mb-8 space-y-3">
+              {/* Search Bar */}
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/50" />
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/40" />
                 <input
                   type="text"
                   placeholder="Name, Kategorie oder Stadt suchen..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.12)] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#00A8FF]/40 focus:shadow-[0_0_20px_rgba(0,168,255,0.1)] transition-all duration-300 text-base"
+                  className="w-full pl-14 pr-4 py-4 rounded-2xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.1)] text-foreground placeholder:text-muted-foreground/35 focus:outline-none focus:border-[#00A8FF]/35 focus:shadow-[0_0_20px_rgba(0,168,255,0.08)] transition-all duration-300 text-base"
                 />
               </div>
+
+              {/* Filter Row */}
+              <div className="rounded-2xl bg-[#0D1320]/50 border border-[rgba(0,168,255,0.06)] p-3">
+                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-0.5">
+                  {/* City */}
+                  <select value={city} onChange={(e) => setCity(e.target.value)}
+                    className="appearance-none px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground focus:outline-none focus:border-[#00A8FF]/25 transition-all min-w-[110px] cursor-pointer flex-shrink-0">
+                    <option value="">Stadt</option>
+                    {GERMAN_CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+
+                  {/* Category */}
+                  <select value={category} onChange={(e) => setCategory(e.target.value)}
+                    className="appearance-none px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground focus:outline-none focus:border-[#00A8FF]/25 transition-all min-w-[120px] cursor-pointer flex-shrink-0">
+                    <option value="">Kategorie</option>
+                    {TRAINER_CATEGORIES.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
+                  </select>
+
+                  {/* Price Min */}
+                  <input type="number" placeholder="Min €" value={priceMin} onChange={(e) => setPriceMin(e.target.value)}
+                    className="w-[80px] px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground placeholder:text-muted-foreground/35 focus:outline-none focus:border-[#00A8FF]/25 transition-all flex-shrink-0"
+                  />
+                  <span className="text-muted-foreground/20 text-[10px] flex-shrink-0">–</span>
+                  {/* Price Max */}
+                  <input type="number" placeholder="Max €" value={priceMax} onChange={(e) => setPriceMax(e.target.value)}
+                    className="w-[80px] px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground placeholder:text-muted-foreground/35 focus:outline-none focus:border-[#00A8FF]/25 transition-all flex-shrink-0"
+                  />
+
+                  {/* Gender */}
+                  <select value={gender} onChange={(e) => setGender(e.target.value)}
+                    className="appearance-none px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground focus:outline-none focus:border-[#00A8FF]/25 transition-all min-w-[100px] cursor-pointer flex-shrink-0">
+                    <option value="">Geschlecht</option>
+                    <option value="männlich">Männlich</option>
+                    <option value="weiblich">Weiblich</option>
+                  </select>
+
+                  {/* Sort */}
+                  <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground focus:outline-none focus:border-[#00A8FF]/25 transition-all min-w-[110px] cursor-pointer flex-shrink-0">
+                    {SORT_OPTIONS.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                  </select>
+
+                  {/* Coaching Mode Chips */}
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    {COACHING_MODES.map((m) => {
+                      const isActive = mode === m
+                      const Icon = m === 'Online' ? Monitor : m === 'Vor Ort' ? Navigation : Repeat
+                      return (
+                        <button key={m} onClick={() => setMode(isActive ? '' : m)}
+                          className={`flex items-center gap-1 px-2.5 py-2 rounded-lg text-[11px] font-medium transition-all duration-200 flex-shrink-0 ${
+                            isActive
+                              ? 'bg-[#00A8FF]/15 text-[#00D4FF] border border-[#00A8FF]/25'
+                              : 'bg-[#1A2332]/40 text-muted-foreground/50 border border-transparent hover:text-muted-foreground hover:bg-[#1A2332]/60'
+                          }`}>
+                          <Icon className="w-3 h-3" /> {m}
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Clear */}
+                  {hasActiveFilters && (
+                    <button onClick={clearFilters}
+                      className="flex items-center gap-1 px-2.5 py-2 rounded-lg text-[11px] font-medium text-red-400/70 hover:text-red-400 hover:bg-red-400/10 transition-all flex-shrink-0">
+                      <X className="w-3 h-3" /> Reset
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
-          </AnimatedSection>
-
-          {/* Filter Bar */}
-          <AnimatedSection delay={0.15}>
-            <GlassCard hover={false} className="p-4 sm:p-5 mb-8">
-              <div className="flex items-center gap-2 mb-3 sm:mb-0 sm:hidden">
-                <SlidersHorizontal className="w-4 h-4 text-[#00D4FF]" />
-                <span className="text-sm font-medium text-muted-foreground">Filter</span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3">
-                {/* City */}
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/40 pointer-events-none" />
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="appearance-none pl-9 pr-8 py-2.5 rounded-xl bg-[#0D1320]/60 border border-[rgba(0,168,255,0.1)] text-sm text-foreground focus:outline-none focus:border-[#00A8FF]/30 transition-all duration-300 min-w-[140px] cursor-pointer"
-                  >
-                    <option value="">Alle Städte</option>
-                    {GERMAN_CITIES.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Category */}
-                <div className="relative">
-                  <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/40 pointer-events-none" />
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="appearance-none pl-9 pr-8 py-2.5 rounded-xl bg-[#0D1320]/60 border border-[rgba(0,168,255,0.1)] text-sm text-foreground focus:outline-none focus:border-[#00A8FF]/30 transition-all duration-300 min-w-[160px] cursor-pointer"
-                  >
-                    <option value="">Alle Kategorien</option>
-                    {TRAINER_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Sort */}
-                <div className="relative">
-                  <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/40 pointer-events-none" />
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none pl-9 pr-8 py-2.5 rounded-xl bg-[#0D1320]/60 border border-[rgba(0,168,255,0.1)] text-sm text-foreground focus:outline-none focus:border-[#00A8FF]/30 transition-all duration-300 min-w-[160px] cursor-pointer"
-                  >
-                    {SORT_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Coaching Mode Toggle */}
-                <div className="col-span-2 sm:col-span-1 flex items-center gap-1.5 rounded-xl bg-[#0D1320]/60 border border-[rgba(0,168,255,0.1)] p-1">
-                  {COACHING_MODES.map((m) => {
-                    const isActive = mode === m
-                    const Icon = m === 'Online' ? Monitor : m === 'Vor Ort' ? Navigation : Repeat
-                    return (
-                      <button
-                        key={m}
-                        onClick={() => setMode(isActive ? '' : m)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
-                          isActive
-                            ? 'bg-[#00A8FF]/15 text-[#00D4FF] border border-[#00A8FF]/25'
-                            : 'text-muted-foreground/60 hover:text-muted-foreground border border-transparent'
-                        }`}
-                      >
-                        <Icon className="w-3 h-3" />
-                        {m}
-                      </button>
-                    )
-                  })}
-                </div>
-
-                {/* Clear Filters */}
-                {hasActiveFilters && (
-                  <button
-                    onClick={clearFilters}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-[#00FF94]/70 hover:text-[#00FF94] transition-colors duration-200"
-                  >
-                    <X className="w-3 h-3" />
-                    Zurücksetzen
-                  </button>
-                )}
-              </div>
-            </GlassCard>
           </AnimatedSection>
 
           {/* Results Count */}
@@ -193,7 +189,7 @@ export default function TrainersPage() {
                     hourlyRate={trainer.hourly_rate}
                     rating={trainer.rating_average}
                     ratingCount={trainer.rating_count}
-                    isVerified={trainer.is_verified}
+                    isVerified={trainer.is_verified} certificateCount={trainer.certificates?.length}
                   />
                 </StaggerItem>
               ))}

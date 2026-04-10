@@ -1,7 +1,14 @@
 import type { TrainerProfile, Review, Booking, WorkoutPlan, NutritionPlan } from '@/types'
 
 // ─── Mock Trainers ────────────────────────────────────────
-export const mockTrainers: (TrainerProfile & { slug: string; display_name: string; specialties: string[]; languages: string[]; coaching_modes: string[]; response_time_hours: number; free_spots: number; member_since: string; total_clients: number })[] = [
+export interface TrainerCertificate {
+  name: string
+  issuer: string
+  year: string
+  verified: boolean
+}
+
+export const mockTrainers: (TrainerProfile & { slug: string; display_name: string; specialties: string[]; languages: string[]; coaching_modes: string[]; response_time_hours: number; free_spots: number; member_since: string; total_clients: number; certificates: TrainerCertificate[] })[] = [
   {
     id: 'tr_1',
     slug: 'max-mueller',
@@ -36,6 +43,10 @@ export const mockTrainers: (TrainerProfile & { slug: string; display_name: strin
     free_spots: 3,
     member_since: '2024-03',
     total_clients: 89,
+    certificates: [
+      { name: 'A-Lizenz Fitnesstrainer', issuer: 'Deutsche Sporthochschule Köln', year: '2019', verified: true },
+      { name: 'Ernährungsberater B-Lizenz', issuer: 'IST-Studieninstitut', year: '2020', verified: true },
+    ],
     created_at: '2024-03-15T10:00:00Z',
     updated_at: '2026-04-01T10:00:00Z',
   },
@@ -72,6 +83,10 @@ export const mockTrainers: (TrainerProfile & { slug: string; display_name: strin
     free_spots: 5,
     member_since: '2024-01',
     total_clients: 124,
+    certificates: [
+      { name: 'Yoga Alliance RYT-500', issuer: 'Yoga Alliance', year: '2018', verified: true },
+      { name: 'Ernährungsberaterin IHK', issuer: 'IHK München', year: '2021', verified: true },
+    ],
     created_at: '2024-01-10T10:00:00Z',
     updated_at: '2026-04-02T10:00:00Z',
   },
@@ -108,6 +123,10 @@ export const mockTrainers: (TrainerProfile & { slug: string; display_name: strin
     free_spots: 2,
     member_since: '2024-06',
     total_clients: 56,
+    certificates: [
+      { name: 'CrossFit Level 2 Trainer', issuer: 'CrossFit Inc.', year: '2021', verified: true },
+      { name: 'Olympic Weightlifting Coach', issuer: 'BVDG', year: '2022', verified: true },
+    ],
     created_at: '2024-06-01T10:00:00Z',
     updated_at: '2026-03-28T10:00:00Z',
   },
@@ -144,6 +163,9 @@ export const mockTrainers: (TrainerProfile & { slug: string; display_name: strin
     free_spots: 8,
     member_since: '2023-11',
     total_clients: 203,
+    certificates: [
+      { name: 'Personal Trainerin B-Lizenz', issuer: 'BSA Akademie', year: '2020', verified: true },
+    ],
     created_at: '2023-11-01T10:00:00Z',
     updated_at: '2026-04-05T10:00:00Z',
   },
@@ -180,6 +202,9 @@ export const mockTrainers: (TrainerProfile & { slug: string; display_name: strin
     free_spots: 4,
     member_since: '2025-02',
     total_clients: 34,
+    certificates: [
+      { name: 'Bodybuilding Coach Zertifikat', issuer: 'DBFV', year: '2023', verified: false },
+    ],
     created_at: '2025-02-01T10:00:00Z',
     updated_at: '2026-04-03T10:00:00Z',
   },
@@ -216,6 +241,11 @@ export const mockTrainers: (TrainerProfile & { slug: string; display_name: strin
     free_spots: 6,
     member_since: '2024-08',
     total_clients: 67,
+    certificates: [
+      { name: 'Physiotherapeutin', issuer: 'Hochschule Fresenius', year: '2017', verified: true },
+      { name: 'Mobility Specialist', issuer: 'FMS', year: '2021', verified: true },
+      { name: 'Pilates Instructor', issuer: 'Polestar Pilates', year: '2019', verified: true },
+    ],
     created_at: '2024-08-01T10:00:00Z',
     updated_at: '2026-04-04T10:00:00Z',
   },
@@ -251,6 +281,9 @@ export const mockTrainers: (TrainerProfile & { slug: string; display_name: strin
     free_spots: 1,
     member_since: '2025-01',
     total_clients: 41,
+    certificates: [
+      { name: 'Muay Thai Kru Level 3', issuer: 'WMF', year: '2020', verified: true },
+    ],
     created_at: '2025-01-15T10:00:00Z',
     updated_at: '2026-04-01T10:00:00Z',
   },
@@ -287,6 +320,10 @@ export const mockTrainers: (TrainerProfile & { slug: string; display_name: strin
     free_spots: 4,
     member_since: '2024-05',
     total_clients: 98,
+    certificates: [
+      { name: 'Calisthenics Coach Level 2', issuer: 'School of Calisthenics', year: '2022', verified: true },
+      { name: 'Personal Trainerin A-Lizenz', issuer: 'DFAV', year: '2021', verified: true },
+    ],
     created_at: '2024-05-01T10:00:00Z',
     updated_at: '2026-04-06T10:00:00Z',
   },

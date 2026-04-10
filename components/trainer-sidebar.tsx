@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard, UserCircle, Inbox, Users,
-  MessageCircle, CreditCard, Settings, LogOut,
+  MessageCircle, CreditCard, Settings, LogOut, FileText,
 } from 'lucide-react'
 import { signOut } from '@/lib/auth'
 
@@ -15,6 +15,7 @@ const navItems = [
   { href: '/dashboard/trainer/profile', icon: UserCircle, label: 'Profil' },
   { href: '/dashboard/trainer/leads', icon: Inbox, label: 'Leads' },
   { href: '/dashboard/trainer/clients', icon: Users, label: 'Kunden' },
+  { href: '/dashboard/trainer/contracts', icon: FileText, label: 'Verträge' },
   { href: '/dashboard/trainer/messages', icon: MessageCircle, label: 'Nachrichten' },
   { href: '/dashboard/trainer/billing', icon: CreditCard, label: 'Billing' },
 ]

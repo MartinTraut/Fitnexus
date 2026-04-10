@@ -14,7 +14,7 @@ import { BookingModal } from '@/components/booking/booking-modal'
 import { initializeStore } from '@/lib/store'
 import {
   Shield, MapPin, Clock, Users, Calendar, Globe, Monitor, Navigation, Repeat,
-  ArrowLeft, MessageCircle, Package, Sparkles, ChevronRight, Zap,
+  ArrowLeft, MessageCircle, Package, Sparkles, ChevronRight, Zap, Play,
 } from 'lucide-react'
 
 // ─── Review dimension labels ─────────────────────────────
@@ -219,6 +219,34 @@ export default function TrainerProfilePage() {
               </GlassCard>
             </AnimatedSection>
 
+            {/* Intro Video */}
+            <AnimatedSection delay={0.03}>
+              <GlassCard hover={false} className="p-6 sm:p-8 overflow-hidden">
+                <h2 className="font-heading text-xl font-bold text-foreground mb-5 flex items-center gap-2">
+                  <span className="w-1 h-6 rounded-full bg-gradient-to-b from-[#00A8FF] to-[#00FF94]" />
+                  Vorstellungsvideo
+                </h2>
+                {trainer.intro_video_url ? (
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-[#0B0F1A]">
+                    <iframe
+                      src={trainer.intro_video_url.replace('watch?v=', 'embed/')}
+                      className="absolute inset-0 w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <div className="relative w-full aspect-video rounded-2xl bg-[#0D1320]/60 border border-[rgba(0,168,255,0.08)] flex flex-col items-center justify-center">
+                    <div className="w-20 h-20 rounded-full bg-[#00A8FF]/[0.08] flex items-center justify-center mb-4">
+                      <Play className="w-9 h-9 text-[#00D4FF]/60 ml-1" />
+                    </div>
+                    <p className="text-sm text-muted-foreground/60 font-medium">Lerne {trainer.first_name} persönlich kennen</p>
+                    <p className="text-xs text-muted-foreground/30 mt-1">Vorstellungsvideo wird in Kürze verfügbar sein</p>
+                  </div>
+                )}
+              </GlassCard>
+            </AnimatedSection>
+
             {/* Specialties */}
             <AnimatedSection delay={0.05}>
               <GlassCard hover={false} className="p-6 sm:p-8">
@@ -239,6 +267,38 @@ export default function TrainerProfilePage() {
                 </div>
               </GlassCard>
             </AnimatedSection>
+
+            {/* Certificates */}
+            {trainer.certificates && trainer.certificates.length > 0 && (
+              <AnimatedSection delay={0.05}>
+                <div>
+                  <h2 className="font-heading text-xl font-bold text-foreground mb-5 flex items-center gap-2">
+                    <span className="w-1 h-6 rounded-full bg-gradient-to-b from-[#FFD700] to-[#FFA500]" />
+                    Zertifikate & Lizenzen
+                  </h2>
+                  <div className="space-y-3">
+                    {trainer.certificates.map((cert, i) => (
+                      <div key={i} className="flex items-center gap-4 p-4 rounded-2xl bg-[#0D1320]/50 border border-[rgba(255,215,0,0.08)] hover:border-[rgba(255,215,0,0.15)] transition-colors">
+                        <div className="w-10 h-10 rounded-xl bg-[#FFD700]/10 flex items-center justify-center flex-shrink-0">
+                          <Shield className="w-5 h-5 text-[#FFD700]" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="font-semibold text-sm text-foreground">{cert.name}</p>
+                            {cert.verified && (
+                              <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-[#00FF94]/10 text-[#00FF94] font-medium whitespace-nowrap">
+                                <Sparkles className="w-2.5 h-2.5" /> Verifiziert
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-0.5">{cert.issuer} · {cert.year}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </AnimatedSection>
+            )}
 
             {/* Packages */}
             <AnimatedSection delay={0.1}>

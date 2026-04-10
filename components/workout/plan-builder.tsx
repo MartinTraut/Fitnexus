@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import {
-  Plus, X, GripVertical, Save, Dumbbell, CheckCircle2,
+  Plus, X, GripVertical, Save, Dumbbell, CheckCircle2, Play,
 } from 'lucide-react'
 
 const DAY_LABELS: { key: number; short: string; full: string }[] = [
@@ -36,6 +36,7 @@ function createEmptyExercise(day: number, order: number): WorkoutExercise {
     weight: null,
     rest_seconds: 60,
     notes: null,
+    video_url: null,
     order,
     day,
     superset_group: null,
@@ -271,8 +272,17 @@ export function PlanBuilder({ trainerId, customerId, existingPlan, onSave }: Pla
                   </button>
                 </div>
 
-                {/* Notes Row */}
-                <div className="ml-7 mt-2">
+                {/* Video URL + Notes Row */}
+                <div className="ml-7 mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="relative">
+                    <Play className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#00D4FF]/50" />
+                    <Input
+                      value={ex.video_url ?? ''}
+                      onChange={(e) => updateExercise(ex.id, 'video_url', e.target.value || null)}
+                      placeholder="Video-URL (YouTube, Vimeo...)"
+                      className="bg-transparent border-transparent hover:border-white/[0.06] focus:border-[#00FF94]/40 h-8 text-xs text-muted-foreground placeholder:text-muted-foreground/30 pl-7"
+                    />
+                  </div>
                   <Input
                     value={ex.notes ?? ''}
                     onChange={(e) => updateExercise(ex.id, 'notes', e.target.value || null)}

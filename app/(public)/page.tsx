@@ -4,427 +4,508 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { GradientButton } from '@/components/gradient-button'
 import { GlassCard } from '@/components/glass-card'
-import { SectionHeading } from '@/components/section-heading'
 import { StarRating } from '@/components/star-rating'
 import { FAQAccordion } from '@/components/faq-accordion'
-import { TrainerCard } from '@/components/trainer-card'
 import { AnimatedSection, StaggerGroup, StaggerItem, motion } from '@/components/motion'
-import { mockTrainers, platformStats, pricingPlans, faqItems, testimonials } from '@/lib/mock-data'
+import { ContainerScroll } from '@/components/ui/container-scroll-animation'
+import { faqItems, testimonials } from '@/lib/mock-data'
 import {
-  Layers, Shield, Lock, UserPlus, Search, MessageCircle, Rocket,
-  Dumbbell, Users, ClipboardList, Apple, TrendingUp, Star, Check,
-  ArrowRight, MapPin, Zap, BarChart3, Clock, Eye,
+  Search, Zap, ArrowRight, X,
+  Dumbbell, Users, MapPin, Star, Check,
+  MessageCircle, TrendingUp, Shield, Lock,
+  Apple, BarChart3, Target, Layers, ClipboardList,
 } from 'lucide-react'
-
-const usps = [
-  {
-    icon: Layers,
-    title: 'Alles an einem Ort',
-    description: 'Trainingspläne, Ernährung, Buchungen und Kommunikation – zentral in einer Plattform.',
-  },
-  {
-    icon: Lock,
-    title: 'Anonymität garantiert',
-    description: 'Deine Daten bleiben geschützt. Erst nach Vertragsabschluss werden Kontaktdaten freigegeben.',
-  },
-  {
-    icon: Shield,
-    title: 'Sichere Verträge',
-    description: 'Digitale Verträge mit transparenter Preisstruktur. Fair, rechtssicher und jederzeit einsehbar.',
-  },
-]
-
-const steps = [
-  { number: '01', icon: UserPlus, title: 'Registrieren', description: 'Erstelle dein kostenloses Profil in unter 2 Minuten.' },
-  { number: '02', icon: Search, title: 'Coach finden', description: 'Filtere nach Standort, Spezialisierung und Bewertung.' },
-  { number: '03', icon: MessageCircle, title: 'Kennenlernen', description: 'Buche ein unverbindliches Erstgespräch mit deinem Coach.' },
-  { number: '04', icon: Rocket, title: 'Loslegen', description: 'Starte dein Training und tracke deinen Fortschritt.' },
-]
-
-const trainerFeatures = [
-  { icon: Users, label: 'Leads erhalten' },
-  { icon: ClipboardList, label: 'Kundenverwaltung' },
-  { icon: Dumbbell, label: 'Trainingspläne' },
-  { icon: Apple, label: 'Ernährungspläne' },
-  { icon: BarChart3, label: 'Analytics' },
-  { icon: Star, label: 'Bewertungen' },
-]
-
-// Show top 3 trainers as preview
-const previewTrainers = mockTrainers.slice(0, 3)
 
 export default function HomePage() {
   return (
     <>
-      {/* ═══ HERO ═══ */}
+      {/* ═══════════════════════════════════════════════════════════
+          HERO — Cinematic, purpose-driven
+          ═══════════════════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[#0B0F1A]" />
-        <div className="absolute inset-0 bg-radial-top" />
-        <div className="absolute inset-0 bg-grid opacity-30" />
+        {/* Background layers */}
+        <div className="absolute inset-0 bg-[#050810]" />
+        <div className="absolute inset-0 bg-dots opacity-20" />
+        <div className="absolute top-[-15%] right-[5%] w-[800px] h-[800px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.1)_0%,transparent_65%)]" />
+        <div className="absolute bottom-[-5%] left-[0%] w-[700px] h-[700px] bg-[radial-gradient(ellipse_at_center,rgba(0,255,148,0.06)_0%,transparent_65%)]" />
+        <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[1400px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.03)_0%,transparent_50%)]" />
 
-        {/* Ambient glows */}
-        <div className="absolute top-0 right-[20%] w-[500px] h-[500px] rotate-[-30deg] bg-gradient-to-b from-[#00A8FF]/[0.07] to-transparent blur-[100px] opacity-60" aria-hidden="true" />
-        <div className="absolute bottom-[10%] left-[10%] w-[400px] h-[400px] rotate-[15deg] bg-gradient-to-t from-[#00FF94]/[0.05] to-transparent blur-[100px] opacity-50" aria-hidden="true" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[#00A8FF]/[0.02] blur-[200px]" aria-hidden="true" />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+          <div className="flex flex-col items-center text-center">
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28 pb-20 text-center">
-          {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex justify-center mb-8"
-          >
-            <div className="animate-float">
-              <Image src="/logo.png" alt="FITNEXUS" width={120} height={120} className="drop-shadow-[0_0_30px_rgba(0,168,255,0.3)]" priority />
-            </div>
-          </motion.div>
+            {/* Logo — large, cinematic */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-center gap-5 mb-14"
+            >
+              <Image
+                src="/logo-icon.png"
+                alt="FITNEXUS"
+                width={260}
+                height={260}
+                className="object-contain w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px]"
+                priority
+              />
+              <span className="font-heading font-bold text-4xl sm:text-5xl md:text-6xl tracking-[0.05em] gradient-brand-text">
+                FITNEXUS
+              </span>
+            </motion.div>
 
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF94] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00FF94]" />
-            </span>
-            <span className="text-xs text-muted-foreground font-medium tracking-brand">
-              Jetzt in der Beta verfügbar
-            </span>
-          </motion.div>
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-heading font-bold leading-[0.92] tracking-tight mb-8 max-w-5xl"
+            >
+              <span className="text-foreground">Die Plattform, die</span>
+              <br />
+              <span className="text-foreground">Fitness Coaching</span>
+              <br />
+              <span className="gradient-brand-text">revolutioniert.</span>
+            </motion.h1>
 
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.08] mb-6"
-          >
-            <span className="text-foreground">Dein Coach.</span>
-            <br />
-            <span className="text-foreground">Deine Ziele.</span>
-            <br />
-            <span className="gradient-brand-text">Dein Nexus.</span>
-          </motion.h1>
+            {/* Subheadline */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="text-lg sm:text-xl md:text-2xl text-muted-foreground/70 max-w-2xl mb-14 leading-relaxed font-light"
+            >
+              Kunden finden den perfekten Coach. Coaches professionalisieren ihr Business.
+              Alles in <span className="text-foreground font-normal">einem System</span>.
+            </motion.p>
 
-          {/* Subheadline */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto mb-12 leading-relaxed"
-          >
-            Die All-in-One Plattform für Fitness Coaching.
-            <br className="hidden sm:block" />
-            Finde, buche und trainiere – alles in einem System.
-          </motion.p>
+            {/* Simple CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col sm:flex-row items-center gap-4"
+            >
+              <Link href="/fuer-kunden">
+                <GradientButton variant="cyan" size="xl" glow className="min-w-[220px]">
+                  <Search className="w-5 h-5" /> Coach finden
+                </GradientButton>
+              </Link>
+              <Link href="/for-coaches">
+                <GradientButton variant="green" size="xl" className="min-w-[220px]">
+                  <Zap className="w-5 h-5" /> Als Coach starten
+                </GradientButton>
+              </Link>
+            </motion.div>
 
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 max-w-md mx-auto sm:max-w-none"
-          >
-            <Link href="/trainers" className="w-full sm:w-auto">
-              <GradientButton variant="cyan" size="xl" className="w-full sm:w-auto">
-                <Search className="w-5 h-5" />
-                Coach finden
-              </GradientButton>
-            </Link>
-            <Link href="/register" className="w-full sm:w-auto">
-              <GradientButton variant="green" size="xl" className="w-full sm:w-auto">
-                <Zap className="w-5 h-5" />
-                Als Coach starten
-              </GradientButton>
-            </Link>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto"
-          >
-            {[
-              { value: platformStats.trainers, label: 'Verifizierte Trainer', icon: Dumbbell },
-              { value: platformStats.activeUsers, label: 'Aktive Nutzer', icon: Users },
-              { value: platformStats.cities, label: 'Städte', icon: MapPin },
-            ].map((stat) => (
-              <GlassCard key={stat.label} className="flex items-center justify-center gap-3 py-4 px-5">
-                <stat.icon className="w-5 h-5 text-[#00D4FF]" />
-                <div className="text-left">
-                  <p className="text-xl font-bold text-foreground">{stat.value}</p>
-                  <p className="text-[11px] text-muted-foreground">{stat.label}</p>
-                </div>
-              </GlassCard>
-            ))}
-          </motion.div>
+            {/* Trust line */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.95 }}
+              className="flex flex-wrap items-center justify-center gap-6 mt-14 text-xs text-muted-foreground/40"
+            >
+              {[
+                { icon: Dumbbell, text: '500+ Coaches' },
+                { icon: Users, text: '10.000+ Nutzer' },
+                { icon: MapPin, text: '50+ Städte' },
+                { icon: Star, text: '4.8 Bewertung' },
+              ].map((s) => (
+                <span key={s.text} className="flex items-center gap-1.5">
+                  <s.icon className="w-3.5 h-3.5 text-[#00D4FF]/40" /> {s.text}
+                </span>
+              ))}
+            </motion.div>
+          </div>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0F1A] to-transparent" />
       </section>
 
-      {/* ═══ USP ═══ */}
-      <section id="usp" className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-radial-center opacity-40" aria-hidden="true" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <SectionHeading
-              title="Warum FITNEXUS?"
-              subtitle="Eine Plattform, die Trainer und Kunden verbindet – sicher, effizient und modern."
-            />
-          </AnimatedSection>
-          <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {usps.map((usp) => (
-              <StaggerItem key={usp.title}>
-                <GlassCard className="text-center p-8 group h-full">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-cyan mb-6 group-hover:shadow-[0_0_25px_rgba(0,168,255,0.3)] transition-all duration-500">
-                    <usp.icon className="w-6 h-6 text-[#0B0F1A]" />
-                  </div>
-                  <h3 className="text-lg font-heading font-semibold text-foreground mb-3">{usp.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{usp.description}</p>
-                </GlassCard>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-        </div>
-      </section>
-
-      {/* ═══ HOW IT WORKS ═══ */}
-      <section id="how-it-works" className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-[#00A8FF]/[0.03] blur-[160px]" aria-hidden="true" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <SectionHeading title="In 4 Schritten zum Erfolg" subtitle="Vom Account bis zum ersten Training – einfacher geht es nicht." />
-          </AnimatedSection>
-          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 relative">
-            <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-[2px] bg-gradient-to-r from-[#00A8FF]/20 via-[#00D4FF]/10 to-[#00FF94]/20" aria-hidden="true" />
-            {steps.map((step) => (
-              <StaggerItem key={step.number}>
-                <div className="relative flex flex-col items-center text-center group">
-                  <div className="relative mb-6">
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center glass-card neon-border group-hover:shadow-[0_0_30px_rgba(0,168,255,0.15)] transition-all duration-500">
-                      <step.icon className="w-8 h-8 text-[#00D4FF]" />
-                    </div>
-                    <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full gradient-cyan flex items-center justify-center text-xs font-bold text-[#0B0F1A]">{step.number}</span>
-                  </div>
-                  <h3 className="text-lg font-heading font-semibold text-foreground mb-2">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed max-w-[220px]">{step.description}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-        </div>
-      </section>
-
-      {/* ═══ FEATURED COACHES ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-radial-center opacity-20" aria-hidden="true" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <SectionHeading title="Top Coaches entdecken" subtitle="Verifizierte Trainer mit nachgewiesener Expertise und echten Bewertungen." />
-          </AnimatedSection>
-          <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            {previewTrainers.map((trainer) => (
-              <StaggerItem key={trainer.id}>
-                <TrainerCard
-                  id={trainer.slug}
-                  name={trainer.display_name}
-                  image={trainer.profile_image_url}
-                  city={trainer.city}
-                  categories={trainer.categories}
-                  hourlyRate={trainer.hourly_rate}
-                  rating={trainer.rating_average}
-                  ratingCount={trainer.rating_count}
-                  isVerified={trainer.is_verified}
-                />
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-          <AnimatedSection className="text-center">
-            <Link href="/trainers">
-              <GradientButton variant="cyan" outline size="lg">
-                Alle Coaches ansehen <ArrowRight className="w-4 h-4" />
-              </GradientButton>
-            </Link>
-          </AnimatedSection>
-        </div>
-      </section>
-
-      {/* ═══ FOR TRAINERS ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#00FF94]/[0.03] blur-[160px]" aria-hidden="true" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <AnimatedSection variants={{
-              hidden: { opacity: 0, x: -32 },
-              visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-            }}>
-              <p className="text-sm font-semibold tracking-brand-wide uppercase gradient-green-text mb-3">Für Coaches</p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-tight mb-4">
-                Dein Business.<br />
-                <span className="gradient-green-text">Unsere Plattform.</span>
+      {/* ═══════════════════════════════════════════════════════════
+          3D SCROLL PREVIEW — Show what the platform looks like
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden -mt-20">
+        <ContainerScroll
+          titleComponent={
+            <div className="mb-4">
+              <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Die Plattform</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-foreground leading-[1.08]">
+                So sieht <span className="gradient-brand-text">FITNEXUS</span> aus
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                Konzentrier dich auf das Coaching. Kundenverwaltung, Trainingspläne, Kommunikation und Abrechnung – das übernehmen wir.
+              <p className="mt-4 text-muted-foreground/60 max-w-lg mx-auto text-base">
+                Ein Blick in die Zukunft deines Coachings.
               </p>
-              <ul className="space-y-3 mb-8">
-                {['Neue Kunden durch organische Sichtbarkeit', 'Professionelles Trainer-Profil', 'Bewertungen die Vertrauen schaffen', 'Alles in einer Plattform statt 5 Tools'].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-sm text-muted-foreground">
-                    <Check className="w-4 h-4 text-[#00FF94] flex-shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/for-coaches">
-                <GradientButton variant="green" size="lg">
-                  Mehr erfahren <ArrowRight className="w-4 h-4" />
-                </GradientButton>
-              </Link>
-            </AnimatedSection>
+            </div>
+          }
+        >
+          {/* Mock Dashboard Preview */}
+          <div className="w-full h-full p-6 md:p-8 overflow-hidden">
+            {/* Browser chrome */}
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-3 h-3 rounded-full bg-red-500/60" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
+              <div className="w-3 h-3 rounded-full bg-green-500/60" />
+              <div className="ml-4 flex-1 h-7 rounded-lg bg-[#1A2332]/60 flex items-center px-3">
+                <span className="text-[10px] text-muted-foreground/40">fitnexus.de/dashboard</span>
+              </div>
+            </div>
 
-            <AnimatedSection variants={{
-              hidden: { opacity: 0, x: 32 },
-              visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-            }}>
-              <GlassCard className="p-8 lg:p-10" hover={false} neonBorder>
-                <h3 className="text-lg font-heading font-semibold text-foreground mb-6">Deine Tools auf einen Blick</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {trainerFeatures.map((f) => (
-                    <div key={f.label} className="flex items-center gap-3 p-3 rounded-xl bg-[#00FF94]/[0.03] border border-[#00FF94]/[0.08] hover:border-[#00FF94]/20 hover:bg-[#00FF94]/[0.06] transition-all duration-300">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#00FF94]/[0.08]">
-                        <f.icon className="w-5 h-5 text-[#00FF94]" />
+            <div className="grid grid-cols-4 gap-4 mb-6">
+              {[
+                { label: 'Aktive Coaches', value: '3', color: '#00A8FF' },
+                { label: 'Trainingseinheiten', value: '24', color: '#00D4FF' },
+                { label: 'Fortschritt', value: '+12%', color: '#00FF94' },
+                { label: 'Nächste Session', value: 'Mo, 10:00', color: '#FFD700' },
+              ].map((s) => (
+                <div key={s.label} className="p-4 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                  <p className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
+                  <p className="text-[10px] text-muted-foreground/50 mt-1">{s.label}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-2 p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Trainingsplan — Woche 4</p>
+                <div className="space-y-2">
+                  {['Bankdrücken — 4×8 @ 80kg', 'Kniebeugen — 4×6 @ 100kg', 'Klimmzüge — 4×10'].map((ex) => (
+                    <div key={ex} className="flex items-center gap-3 p-2 rounded-lg bg-[#1A2332]/40">
+                      <div className="w-5 h-5 rounded border border-[#00FF94]/30 flex items-center justify-center">
+                        <Check className="w-3 h-3 text-[#00FF94]" />
                       </div>
-                      <span className="text-sm font-medium text-foreground">{f.label}</span>
+                      <span className="text-xs text-muted-foreground">{ex}</span>
                     </div>
                   ))}
                 </div>
-              </GlassCard>
+              </div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Chat</p>
+                <div className="space-y-2">
+                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Super Session heute!</div>
+                  <div className="p-2 rounded-lg bg-[#1A2332]/60 text-[10px] text-muted-foreground ml-4">Danke Coach!</div>
+                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Nächste Woche steigern wir.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ContainerScroll>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════
+          WAS IST FITNEXUS
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <AnimatedSection>
+            <div className="max-w-3xl mx-auto text-center mb-20">
+              <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Die Mission</p>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.08] mb-6">
+                Coaching verdient eine <span className="gradient-brand-text">bessere Infrastruktur</span>
+              </h2>
+              <p className="text-lg text-muted-foreground/70 leading-relaxed">
+                Millionen Menschen wollen fitter werden. Tausende Coaches können ihnen helfen.
+                Aber zwischen beiden steht ein Chaos aus WhatsApp, Excel und verstreuten Tools.
+                FITNEXUS räumt damit auf.
+              </p>
+            </div>
+          </AnimatedSection>
+
+          <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { icon: Layers, title: 'Eine Plattform. Alles drin.', desc: 'Coach-Suche, Kommunikation, Trainingspläne, Ernährung, Fortschritt und Verträge — gebündelt statt verstreut.', color: '#00A8FF' },
+              { icon: Shield, title: 'Vertrauen als Fundament.', desc: 'Verifizierte Coaches, echte Bewertungen, sichere Kommunikation. Keine Fake-Profile, keine leeren Versprechen.', color: '#00D4FF' },
+              { icon: Target, title: 'Ergebnisse statt Hoffnung.', desc: 'Strukturiertes Coaching mit messbarem Fortschritt. Datengetrieben, transparent und auf dein Ziel ausgerichtet.', color: '#00FF94' },
+            ].map((item) => (
+              <StaggerItem key={item.title}>
+                <motion.div whileHover={{ y: -4, transition: { duration: 0.25 } }} className="p-8 rounded-3xl bg-[#0D1320]/40 border border-[rgba(0,168,255,0.06)] hover:border-[rgba(0,168,255,0.15)] transition-all duration-500 h-full">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6" style={{ background: `${item.color}12` }}>
+                    <item.icon className="w-6 h-6" style={{ color: item.color }} />
+                  </div>
+                  <h3 className="text-lg font-heading font-bold text-foreground mb-3">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                </motion.div>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════
+          PROBLEM VS SOLUTION — High contrast split
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <AnimatedSection>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.08]">
+                Vorher vs. <span className="gradient-brand-text">Nachher</span>
+              </h2>
+            </div>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            {/* PROBLEM — Red-tinted card */}
+            <AnimatedSection variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6 } } }}>
+              <div className="h-full p-8 md:p-10 rounded-3xl bg-[#1a0a0a]/40 border border-red-500/[0.12] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[radial-gradient(ellipse_at_center,rgba(255,50,50,0.06)_0%,transparent_70%)]" />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-xl bg-red-500/15 flex items-center justify-center">
+                      <X className="w-5 h-5 text-red-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold tracking-brand-wide uppercase text-red-400">Ohne FITNEXUS</p>
+                      <p className="text-[11px] text-red-400/50">So läuft Coaching heute</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {[
+                      { icon: MessageCircle, title: 'WhatsApp-Chaos', desc: '15 Kunden in 15 Chats. Nachrichten gehen unter. Keine Struktur.' },
+                      { icon: ClipboardList, title: 'PDF-Trainingspläne', desc: 'Per E-Mail verschickt. Nicht trackbar. Nicht interaktiv.' },
+                      { icon: TrendingUp, title: 'Kein Tracking', desc: 'Fortschritt wird nicht dokumentiert. Motivation sinkt.' },
+                      { icon: Lock, title: 'Kein Vertrauen', desc: 'Keine echten Bewertungen. Kunden wissen nicht, wem sie vertrauen.' },
+                      { icon: BarChart3, title: 'Excel-Abrechnung', desc: 'Manuell, fehleranfällig, zeitraubend.' },
+                    ].map((item) => (
+                      <div key={item.title} className="flex items-start gap-4 p-3 rounded-xl bg-red-500/[0.04] border border-red-500/[0.06]">
+                        <div className="w-9 h-9 rounded-lg bg-red-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <item.icon className="w-4 h-4 text-red-400/70" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-red-300/90">{item.title}</p>
+                          <p className="text-xs text-red-300/40 leading-relaxed mt-0.5">{item.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            {/* SOLUTION — Green-tinted card */}
+            <AnimatedSection variants={{ hidden: { opacity: 0, x: 40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6 } } }}>
+              <div className="h-full p-8 md:p-10 rounded-3xl bg-[#0a1a0f]/40 border border-[#00FF94]/[0.12] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[radial-gradient(ellipse_at_center,rgba(0,255,148,0.06)_0%,transparent_70%)]" />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-xl bg-[#00FF94]/15 flex items-center justify-center">
+                      <Check className="w-5 h-5 text-[#00FF94]" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold tracking-brand-wide uppercase text-[#00FF94]">Mit FITNEXUS</p>
+                      <p className="text-[11px] text-[#00FF94]/50">So läuft Coaching in Zukunft</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {[
+                      { icon: MessageCircle, title: 'In-App Kommunikation', desc: 'Ein Chat pro Kunde. Bilder, Dateien, Read-Status. Alles zentral.' },
+                      { icon: Dumbbell, title: 'Interaktive Pläne', desc: 'Trainingspläne direkt in der App. Trackbar. Satz für Satz.' },
+                      { icon: TrendingUp, title: 'Automatisches Tracking', desc: 'Gewicht, Körperfett, Fotos — alles visualisiert in Echtzeit-Charts.' },
+                      { icon: Star, title: 'Echte Bewertungen', desc: '6 Dimensionen. Nur echte Kunden. Vertrauen durch Transparenz.' },
+                      { icon: Shield, title: 'Digitale Verträge', desc: 'Ein Klick. Fair, transparent, rechtssicher. Keine Excel-Tabelle.' },
+                    ].map((item) => (
+                      <div key={item.title} className="flex items-start gap-4 p-3 rounded-xl bg-[#00FF94]/[0.03] border border-[#00FF94]/[0.06]">
+                        <div className="w-9 h-9 rounded-lg bg-[#00FF94]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <item.icon className="w-4 h-4 text-[#00FF94]/80" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-[#00FF94]/90">{item.title}</p>
+                          <p className="text-xs text-[#00FF94]/40 leading-relaxed mt-0.5">{item.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </AnimatedSection>
           </div>
         </div>
       </section>
 
-      {/* ═══ TESTIMONIALS ═══ */}
-      <section id="testimonials" className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-radial-center opacity-20" aria-hidden="true" />
+      {/* ═══════════════════════════════════════════════════════════
+          HOW IT WORKS — Visual journey
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.03)_0%,transparent_50%)]" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
-            <SectionHeading title="Was unsere Community sagt" subtitle="Echte Stimmen von Trainern und Kunden auf FITNEXUS." />
+            <div className="text-center mb-20">
+              <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">So funktioniert&apos;s</p>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.1]">
+                Dein Weg zum <span className="gradient-brand-text">Ergebnis</span>
+              </h2>
+              <p className="mt-4 text-muted-foreground/60 max-w-lg mx-auto">Vier Schritte. Keine Hürden. Kein Papierkram.</p>
+            </div>
           </AnimatedSection>
+
+          <StaggerGroup className="space-y-6 max-w-4xl mx-auto">
+            {[
+              { num: '01', icon: Search, title: 'Entdecken', desc: 'Durchsuche hunderte verifizierte Coaches. Filtere nach Stadt, Spezialisierung, Preis, Bewertung und Coaching-Art. Finde genau den Coach, der zu deinen Zielen passt.', color: '#00A8FF', accent: 'rgba(0,168,255,0.06)' },
+              { num: '02', icon: MessageCircle, title: 'Kennenlernen', desc: 'Buche ein kostenloses Erstgespräch — komplett anonym über die Plattform. Lerne deinen Coach kennen, bevor du dich entscheidest. Kein Risiko, keine Verpflichtung.', color: '#00D4FF', accent: 'rgba(0,212,255,0.06)' },
+              { num: '03', icon: Dumbbell, title: 'Trainieren', desc: 'Erhalte individuelle Trainingspläne und Ernährungsberatung direkt in FITNEXUS. Tracke jede Übung, jeden Satz, jedes Kilo. Dein Coach sieht deinen Fortschritt in Echtzeit.', color: '#00FF94', accent: 'rgba(0,255,148,0.06)' },
+              { num: '04', icon: TrendingUp, title: 'Wachsen', desc: 'Sieh deine Transformation in Daten und Fotos. Gewicht, Körperfett, Muskelmasse — alles visualisiert. Feiere deine Erfolge und setze dir neue Ziele.', color: '#39FF14', accent: 'rgba(57,255,20,0.06)' },
+            ].map((step, i) => (
+              <StaggerItem key={step.num}>
+                <motion.div whileHover={{ x: 8, transition: { duration: 0.25 } }}>
+                  <div className="flex gap-6 md:gap-8 items-start p-6 md:p-8 rounded-3xl border transition-all duration-400" style={{ borderColor: `${step.color}15`, background: step.accent }}>
+                    {/* Number + Icon */}
+                    <div className="flex-shrink-0">
+                      <div className="relative">
+                        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center" style={{ background: `${step.color}12` }}>
+                          <step.icon className="w-7 h-7 md:w-8 md:h-8" style={{ color: step.color }} />
+                        </div>
+                        <span className="absolute -top-2 -left-2 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-[#0B0F1A]" style={{ background: step.color }}>
+                          {step.num}
+                        </span>
+                      </div>
+                      {i < 3 && (
+                        <div className="hidden md:block w-[2px] h-6 mx-auto mt-2 rounded-full" style={{ background: `${step.color}20` }} />
+                      )}
+                    </div>
+                    {/* Content */}
+                    <div className="flex-1 pt-1">
+                      <h3 className="text-xl md:text-2xl font-heading font-bold text-foreground mb-2">{step.title}</h3>
+                      <p className="text-sm md:text-base text-muted-foreground/70 leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════
+          SOCIAL PROOF
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <AnimatedSection>
+            <div className="text-center mb-14">
+              <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Stimmen</p>
+              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground">
+                Was unsere Community sagt
+              </h2>
+            </div>
+          </AnimatedSection>
+
           <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t) => (
               <StaggerItem key={t.name}>
-                <GlassCard className="flex flex-col p-8 h-full">
-                  <StarRating rating={t.rating} className="mb-4" />
-                  <blockquote className="flex-1 text-sm text-muted-foreground leading-relaxed mb-6">&ldquo;{t.quote}&rdquo;</blockquote>
-                  <div className="border-t border-[rgba(0,168,255,0.06)] pt-4 flex items-center gap-3">
-                    <Image src={t.image} alt={t.name} width={40} height={40} className="rounded-full object-cover ring-2 ring-[rgba(0,168,255,0.15)]" />
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{t.role}</p>
+                <motion.div whileHover={{ y: -4, transition: { duration: 0.25 } }}>
+                  <GlassCard className="flex flex-col p-8 h-full" hover={false}>
+                    <div className="text-3xl font-serif text-[#00A8FF]/15 leading-none mb-3">&ldquo;</div>
+                    <StarRating rating={t.rating} className="mb-4" />
+                    <blockquote className="flex-1 text-sm text-muted-foreground/80 leading-relaxed mb-6">{t.quote}</blockquote>
+                    <div className="border-t border-[rgba(0,168,255,0.06)] pt-5 flex items-center gap-3">
+                      <Image src={t.image} alt={t.name} width={44} height={44} className="rounded-full object-cover ring-2 ring-[rgba(0,168,255,0.1)]" />
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                        <p className="text-xs text-muted-foreground">{t.role}</p>
+                      </div>
                     </div>
-                  </div>
-                </GlassCard>
+                  </GlassCard>
+                </motion.div>
               </StaggerItem>
             ))}
           </StaggerGroup>
         </div>
       </section>
 
-      {/* ═══ PRICING ═══ */}
-      <section id="pricing" className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#00A8FF]/[0.02] blur-[200px]" aria-hidden="true" />
+      {/* ═══════════════════════════════════════════════════════════
+          FAQ
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
-            <SectionHeading title="Transparente Preise" subtitle="Starte kostenlos als Kunde oder wähle den passenden Plan als Coach." />
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground">Noch Fragen?</h2>
+            </div>
           </AnimatedSection>
-          <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-            {pricingPlans.map((plan) => (
-              <StaggerItem key={plan.name}>
-                <GlassCard
-                  className={`flex flex-col p-8 h-full ${plan.highlighted ? 'relative lg:scale-105' : ''}`}
-                  hover={false}
-                  neonBorder={plan.highlighted}
-                >
-                  {plan.highlighted && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 gradient-brand text-[#0B0F1A] text-xs font-bold px-4 py-1 rounded-full shadow-[0_0_15px_rgba(0,168,255,0.3)]">
-                      Beliebt
-                    </span>
-                  )}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-heading font-semibold text-foreground">{plan.name}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{plan.description}</p>
-                  </div>
-                  <div className="mb-6">
-                    <span className="text-4xl font-heading font-bold text-foreground">{plan.price}</span>
-                    {plan.period && <span className="text-sm text-muted-foreground">{plan.period}</span>}
-                  </div>
-                  <ul className="flex-1 space-y-3 mb-8">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-3 text-sm">
-                        <Check className="w-4 h-4 text-[#00FF94] mt-0.5 flex-shrink-0" />
-                        <span className="text-muted-foreground">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href="/register">
-                    <GradientButton variant={plan.ctaVariant} outline={!plan.highlighted} size="md" className="w-full">
-                      {plan.ctaText}
+          <AnimatedSection>
+            <FAQAccordion items={faqItems.slice(0, 6)} />
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════
+          FINAL CTA — The Big Decision
+          ═══════════════════════════════════════════════════════════ */}
+      <section className="relative py-32 lg:py-40 overflow-hidden section-glow-top">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00A8FF]/[0.03] to-[#0B0F1A]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.05)_0%,transparent_60%)]" />
+
+        <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <AnimatedSection>
+            <div className="text-center mb-16">
+              <Image src="/logo-icon.png" alt="" width={64} height={64} className="object-contain mx-auto mb-6" />
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-[1.05] mb-4">
+                Bereit für dein <span className="gradient-brand-text">nächstes Level?</span>
+              </h2>
+              <p className="text-lg text-muted-foreground/60 max-w-lg mx-auto">
+                Wähle deinen Weg und starte in unter 60 Sekunden.
+              </p>
+            </div>
+          </AnimatedSection>
+
+          <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Ich suche einen Coach */}
+            <StaggerItem>
+              <Link href="/fuer-kunden" className="group block">
+                <motion.div whileHover={{ y: -6, transition: { duration: 0.25 } }} whileTap={{ scale: 0.98 }}>
+                  <div className="p-8 md:p-10 rounded-3xl border border-[#00A8FF]/15 bg-[#0A1628]/50 hover:border-[#00A8FF]/30 hover:shadow-[0_12px_50px_rgba(0,168,255,0.12)] transition-all duration-500 h-full">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00A8FF] to-[#00D4FF] flex items-center justify-center mb-6 group-hover:shadow-[0_0_30px_rgba(0,168,255,0.3)] transition-shadow duration-500">
+                      <Search className="w-7 h-7 text-[#0B0F1A]" />
+                    </div>
+                    <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Ich suche einen Coach</h3>
+                    <p className="text-muted-foreground/70 leading-relaxed mb-6">
+                      Finde verifizierte Trainer, lies echte Bewertungen, buche ein kostenloses Kennenlerngespräch und starte deine Transformation — alles kostenlos.
+                    </p>
+                    <ul className="space-y-2 mb-8">
+                      {['Komplett kostenlos', 'Anonyme Erstgespräche', '500+ verifizierte Coaches', 'Fortschritt sichtbar gemacht'].map((f) => (
+                        <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground/60">
+                          <Check className="w-3.5 h-3.5 text-[#00D4FF] flex-shrink-0" /> {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <GradientButton variant="cyan" size="lg" glow className="w-full">
+                      Coach finden <ArrowRight className="w-4 h-4" />
                     </GradientButton>
-                  </Link>
-                </GlassCard>
-              </StaggerItem>
-            ))}
+                  </div>
+                </motion.div>
+              </Link>
+            </StaggerItem>
+
+            {/* Ich bin ein Coach */}
+            <StaggerItem>
+              <Link href="/for-coaches" className="group block">
+                <motion.div whileHover={{ y: -6, transition: { duration: 0.25 } }} whileTap={{ scale: 0.98 }}>
+                  <div className="p-8 md:p-10 rounded-3xl border border-[#00FF94]/15 bg-[#0A1628]/50 hover:border-[#00FF94]/30 hover:shadow-[0_12px_50px_rgba(0,255,148,0.12)] transition-all duration-500 h-full">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00FF94] to-[#39FF14] flex items-center justify-center mb-6 group-hover:shadow-[0_0_30px_rgba(0,255,148,0.3)] transition-shadow duration-500">
+                      <Zap className="w-7 h-7 text-[#0B0F1A]" />
+                    </div>
+                    <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Ich bin ein Coach</h3>
+                    <p className="text-muted-foreground/70 leading-relaxed mb-6">
+                      Professionalisiere dein Coaching-Business. Erhalte qualifizierte Leads, verwalte Kunden, erstelle Pläne und baue deine Reputation auf.
+                    </p>
+                    <ul className="space-y-2 mb-8">
+                      {['In 5 Minuten online', 'Automatische Lead-Generierung', 'Alles-in-einem Dashboard', 'Ab 49€/Monat'].map((f) => (
+                        <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground/60">
+                          <Check className="w-3.5 h-3.5 text-[#00FF94] flex-shrink-0" /> {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <GradientButton variant="green" size="lg" className="w-full">
+                      Als Coach starten <ArrowRight className="w-4 h-4" />
+                    </GradientButton>
+                  </div>
+                </motion.div>
+              </Link>
+            </StaggerItem>
           </StaggerGroup>
-          <AnimatedSection className="text-center mt-8">
-            <p className="text-xs text-muted-foreground/60">
-              Alle Preise zzgl. MwSt. Monatlich kündbar, ohne Mindestlaufzeit.
-            </p>
-          </AnimatedSection>
         </div>
-      </section>
-
-      {/* ═══ FAQ ═══ */}
-      <section id="faq" className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <SectionHeading title="Häufig gestellte Fragen" subtitle="Hier findest du Antworten auf die wichtigsten Fragen." />
-          </AnimatedSection>
-          <AnimatedSection>
-            <FAQAccordion items={faqItems} />
-          </AnimatedSection>
-        </div>
-      </section>
-
-      {/* ═══ FINAL CTA ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00A8FF]/[0.04] to-transparent" aria-hidden="true" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#00A8FF]/[0.05] blur-[150px]" aria-hidden="true" />
-        <AnimatedSection className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex justify-center mb-6">
-            <Image src="/logo.png" alt="" width={80} height={80} className="drop-shadow-[0_0_20px_rgba(0,168,255,0.25)]" />
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-tight mb-4">
-            Bereit <span className="gradient-brand-text">loszulegen?</span>
-          </h2>
-          <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
-            Egal ob Kunde oder Coach – dein nächstes Level beginnt hier.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/register">
-              <GradientButton variant="cyan" size="lg">Als Kunde starten <ArrowRight className="w-4 h-4" /></GradientButton>
-            </Link>
-            <Link href="/register">
-              <GradientButton variant="green" size="lg">Als Coach starten <ArrowRight className="w-4 h-4" /></GradientButton>
-            </Link>
-          </div>
-        </AnimatedSection>
       </section>
     </>
   )

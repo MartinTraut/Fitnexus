@@ -19,9 +19,9 @@ const clientData: Record<string, {
   lastSession: string
   nextSession: string
 }> = {
-  'client-001': { name: 'Client#3847', customerId: 'c_demo', pkg: 'Premium Paket', sessions: { used: 8, total: 12 }, since: 'Januar 2026', goals: ['Muskelaufbau', 'Krafttraining', 'Ernährung'], lastSession: '05.04.2026', nextSession: '09.04.2026, 10:00' },
-  'client-002': { name: 'Client#1938', customerId: 'c_demo_2', pkg: 'Starter Paket', sessions: { used: 2, total: 4 }, since: 'März 2026', goals: ['Marathon', 'Ausdauer'], lastSession: '03.04.2026', nextSession: '10.04.2026, 09:00' },
-  'client-003': { name: 'Client#5612', customerId: 'c_demo_3', pkg: 'Premium Paket', sessions: { used: 12, total: 12 }, since: 'Dezember 2025', goals: ['Gewichtsverlust', 'Functional Fitness'], lastSession: '04.04.2026', nextSession: 'Nicht geplant' },
+  'client-001': { name: 'Client#3847', customerId: 'c_demo', pkg: 'Transformation', sessions: { used: 8, total: 12 }, since: 'Januar 2026', goals: ['Muskelaufbau', 'Krafttraining', 'Ernährung'], lastSession: '05.04.2026', nextSession: '09.04.2026, 10:00' },
+  'client-002': { name: 'Client#1938', customerId: 'c_demo_2', pkg: 'Starter', sessions: { used: 2, total: 4 }, since: 'März 2026', goals: ['Marathon', 'Ausdauer'], lastSession: '03.04.2026', nextSession: '10.04.2026, 09:00' },
+  'client-003': { name: 'Client#5612', customerId: 'c_demo_3', pkg: 'Premium', sessions: { used: 12, total: 12 }, since: 'Dezember 2025', goals: ['Gewichtsverlust', 'Functional Fitness'], lastSession: '04.04.2026', nextSession: 'Nicht geplant' },
 }
 
 const overviewTabs = [

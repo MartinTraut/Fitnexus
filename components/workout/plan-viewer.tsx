@@ -6,7 +6,7 @@ import { GlassCard } from '@/components/glass-card'
 import { cn } from '@/lib/utils'
 import {
   ChevronDown, ChevronRight, Check, Dumbbell,
-  Clock, Hash, Weight, StickyNote,
+  Clock, Hash, Weight, StickyNote, Play,
 } from 'lucide-react'
 
 const DAY_LABELS: Record<number, string> = {
@@ -25,9 +25,16 @@ interface PlanViewerProps {
   onUpdate?: (plan: WorkoutPlan) => void
 }
 
+interface SetLog {
+  reps: string
+  weight: string
+}
+
 export function PlanViewer({ plan, editable = false, onUpdate }: PlanViewerProps) {
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set())
   const [actualWeights, setActualWeights] = useState<Record<string, string>>({})
+  const [setLogs, setSetLogs] = useState<Record<string, SetLog[]>>({})
+  const [expandedTracking, setExpandedTracking] = useState<string | null>(null)
   const [collapsedDays, setCollapsedDays] = useState<Set<number>>(new Set())
 
   const exercisesByDay = useMemo(() => {
@@ -145,12 +152,13 @@ export function PlanViewer({ plan, editable = false, onUpdate }: PlanViewerProps
             {!isCollapsed && (
               <div className="border-t border-white/[0.04]">
                 {/* Desktop Header */}
-                <div className="hidden md:grid grid-cols-[2fr_0.7fr_0.7fr_0.7fr_0.8fr_1.2fr] gap-3 px-4 py-2.5 bg-[#0B0F1A]/50 border-b border-white/[0.04]">
+                <div className="hidden md:grid grid-cols-[2fr_0.7fr_0.7fr_0.7fr_0.8fr_0.8fr_1fr] gap-3 px-4 py-2.5 bg-[#0B0F1A]/50 border-b border-white/[0.04]">
                   <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Übung</span>
                   <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Sätze</span>
                   <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Wdh.</span>
                   <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Gewicht</span>
                   <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Pause</span>
+                  <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Ausführung</span>
                   <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Notizen</span>
                 </div>
 
@@ -166,7 +174,7 @@ export function PlanViewer({ plan, editable = false, onUpdate }: PlanViewerProps
                       )}
                     >
                       {/* Desktop Row */}
-                      <div className="hidden md:grid grid-cols-[2fr_0.7fr_0.7fr_0.7fr_0.8fr_1.2fr] gap-3 px-4 py-3 items-center">
+                      <div className="hidden md:grid grid-cols-[2fr_0.7fr_0.7fr_0.7fr_0.8fr_0.8fr_1fr] gap-3 px-4 py-3 items-center">
                         <div className="flex items-center gap-3">
                           {editable && (
                             <button
@@ -204,6 +212,21 @@ export function PlanViewer({ plan, editable = false, onUpdate }: PlanViewerProps
                           )}
                         </div>
                         <span className="text-sm text-muted-foreground">{ex.rest_seconds}s</span>
+                        <div>
+                          {ex.video_url ? (
+                            <a
+                              href={ex.video_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#00A8FF]/[0.08] border border-[#00A8FF]/15 text-[11px] font-medium text-[#00D4FF] hover:bg-[#00A8FF]/15 hover:border-[#00A8FF]/30 hover:shadow-[0_0_12px_rgba(0,168,255,0.15)] transition-all duration-200"
+                            >
+                              <Play className="w-3 h-3" />
+                              Video
+                            </a>
+                          ) : (
+                            <span className="text-xs text-muted-foreground/30">–</span>
+                          )}
+                        </div>
                         <span className="text-xs text-muted-foreground/70 truncate">{ex.notes || '–'}</span>
                       </div>
 
@@ -254,10 +277,97 @@ export function PlanViewer({ plan, editable = false, onUpdate }: PlanViewerProps
                             />
                           </div>
                         )}
+                        <div className="ml-9 mt-1 flex items-center gap-2 flex-wrap">
+                          {ex.video_url && (
+                            <a
+                              href={ex.video_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00A8FF]/[0.08] border border-[#00A8FF]/15 text-xs font-medium text-[#00D4FF] hover:bg-[#00A8FF]/15 transition-all duration-200"
+                            >
+                              <Play className="w-3 h-3" />
+                              Ausführung ansehen
+                            </a>
+                          )}
+                          {editable && (
+                            <button
+                              onClick={() => setExpandedTracking(expandedTracking === ex.id ? null : ex.id)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00FF94]/[0.06] border border-[#00FF94]/15 text-xs font-medium text-[#00FF94] hover:bg-[#00FF94]/12 transition-all duration-200"
+                            >
+                              <Hash className="w-3 h-3" />
+                              Sätze tracken
+                            </button>
+                          )}
+                        </div>
                         {ex.notes && (
-                          <p className="text-xs text-muted-foreground/70 ml-9">{ex.notes}</p>
+                          <p className="text-xs text-muted-foreground/70 ml-9 mt-1">{ex.notes}</p>
                         )}
                       </div>
+
+                      {/* ═══ SET-BY-SET TRACKING ═══ */}
+                      {editable && expandedTracking === ex.id && (
+                        <div className="px-4 pb-4 md:px-4">
+                          <div className="ml-0 md:ml-8 p-4 rounded-xl bg-[#00FF94]/[0.02] border border-[#00FF94]/10">
+                            <div className="flex items-center justify-between mb-3">
+                              <p className="text-xs font-medium text-[#00FF94]">
+                                Satz-Tracking — {ex.name}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground">
+                                Vorgabe: {ex.sets} × {ex.reps} @ {ex.weight ?? '–'}
+                              </p>
+                            </div>
+                            <div className="space-y-2">
+                              {Array.from({ length: ex.sets }).map((_, setIdx) => {
+                                const logs = setLogs[ex.id] ?? []
+                                const log = logs[setIdx] ?? { reps: '', weight: '' }
+                                return (
+                                  <div key={setIdx} className="flex items-center gap-3">
+                                    <span className="text-xs text-muted-foreground w-14 flex-shrink-0">
+                                      Satz {setIdx + 1}
+                                    </span>
+                                    <div className="flex items-center gap-2 flex-1">
+                                      <input
+                                        type="text"
+                                        value={log.reps}
+                                        onChange={(e) => {
+                                          const newLogs = [...(setLogs[ex.id] ?? Array.from({ length: ex.sets }, () => ({ reps: '', weight: '' })))]
+                                          newLogs[setIdx] = { ...newLogs[setIdx], reps: e.target.value }
+                                          setSetLogs(prev => ({ ...prev, [ex.id]: newLogs }))
+                                        }}
+                                        placeholder={ex.reps}
+                                        className="w-20 bg-[#1A2332]/60 border border-white/[0.06] rounded-lg px-2 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#00FF94]/40"
+                                      />
+                                      <span className="text-[10px] text-muted-foreground">Wdh.</span>
+                                      <input
+                                        type="text"
+                                        value={log.weight}
+                                        onChange={(e) => {
+                                          const newLogs = [...(setLogs[ex.id] ?? Array.from({ length: ex.sets }, () => ({ reps: '', weight: '' })))]
+                                          newLogs[setIdx] = { ...newLogs[setIdx], weight: e.target.value }
+                                          setSetLogs(prev => ({ ...prev, [ex.id]: newLogs }))
+                                        }}
+                                        placeholder={ex.weight ?? '–'}
+                                        className="w-20 bg-[#1A2332]/60 border border-white/[0.06] rounded-lg px-2 py-1.5 text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-[#00FF94]/40"
+                                      />
+                                      <span className="text-[10px] text-muted-foreground">kg</span>
+                                    </div>
+                                    {log.reps && (
+                                      <span className={cn(
+                                        'text-[10px] font-medium px-1.5 py-0.5 rounded',
+                                        parseInt(log.reps) >= parseInt(ex.reps)
+                                          ? 'bg-[#00FF94]/15 text-[#00FF94]'
+                                          : 'bg-[#FFD700]/15 text-[#FFD700]'
+                                      )}>
+                                        {parseInt(log.reps) >= parseInt(ex.reps) ? 'Erreicht' : 'Unter Vorgabe'}
+                                      </span>
+                                    )}
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )
                 })}

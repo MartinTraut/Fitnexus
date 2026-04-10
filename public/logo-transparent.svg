@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0A2540" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0D1B2A" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="hexBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A8FF" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#00D4FF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00FF94" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="armGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A8FF"/>
+      <stop offset="50%" stop-color="#00D4FF"/>
+      <stop offset="100%" stop-color="#00B8D4"/>
+    </linearGradient>
+    <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00FF94"/>
+      <stop offset="100%" stop-color="#39FF14"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="nodeGlow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Hexagon Background -->
+  <polygon
+    points="256,52 430,152 430,352 256,452 82,352 82,152"
+    fill="url(#hexGrad)"
+    stroke="url(#hexBorder)"
+    stroke-width="3"
+  />
+
+  <!-- Inner hexagon subtle line -->
+  <polygon
+    points="256,72 412,162 412,342 256,432 100,342 100,162"
+    fill="none"
+    stroke="url(#hexBorder)"
+    stroke-width="1"
+    stroke-opacity="0.15"
+  />
+
+  <!-- Bicep/Arm Shape -->
+  <g filter="url(#glow)">
+    <!-- Upper arm -->
+    <path
+      d="M160,300 C160,280 155,260 160,240 C170,200 185,180 200,170 C215,160 225,165 230,175 C240,195 250,200 260,210 C265,215 268,208 265,195 C260,170 250,145 260,125 C268,110 280,108 290,115 C300,125 295,150 285,175 C278,192 275,210 280,225"
+      fill="url(#armGrad)"
+      opacity="0.95"
+    />
+    <!-- Bicep bulge -->
+    <ellipse cx="225" cy="195" rx="35" ry="28" fill="url(#armGrad)" opacity="0.9" transform="rotate(-15, 225, 195)"/>
+    <!-- Forearm -->
+    <path
+      d="M160,300 C165,285 175,275 190,268 C205,262 215,258 220,250 C228,238 230,225 225,215"
+      fill="none"
+      stroke="url(#armGrad)"
+      stroke-width="22"
+      stroke-linecap="round"
+      opacity="0.85"
+    />
+    <!-- Shoulder cap -->
+    <ellipse cx="270" cy="130" rx="18" ry="14" fill="url(#armGrad)" opacity="0.7" transform="rotate(-20, 270, 130)"/>
+  </g>
+
+  <!-- Nexus Network Nodes -->
+  <g filter="url(#nodeGlow)">
+    <!-- Connection lines -->
+    <line x1="310" y1="200" x2="350" y2="260" stroke="url(#nodeGrad)" stroke-width="3.5" stroke-linecap="round" opacity="0.8"/>
+    <line x1="350" y1="260" x2="320" y2="330" stroke="url(#nodeGrad)" stroke-width="3.5" stroke-linecap="round" opacity="0.8"/>
+    <line x1="310" y1="200" x2="370" y2="190" stroke="url(#nodeGrad)" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- Nodes -->
+    <circle cx="310" cy="200" r="14" fill="url(#nodeGrad)"/>
+    <circle cx="310" cy="200" r="7" fill="#0D1B2A" opacity="0.4"/>
+
+    <circle cx="350" cy="260" r="11" fill="url(#nodeGrad)"/>
+    <circle cx="350" cy="260" r="5" fill="#0D1B2A" opacity="0.4"/>
+
+    <circle cx="320" cy="330" r="14" fill="url(#nodeGrad)"/>
+    <circle cx="320" cy="330" r="7" fill="#0D1B2A" opacity="0.4"/>
+
+    <circle cx="370" cy="190" r="8" fill="url(#nodeGrad)" opacity="0.7"/>
+    <circle cx="370" cy="190" r="4" fill="#0D1B2A" opacity="0.3"/>
+  </g>
+</svg>

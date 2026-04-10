@@ -12,7 +12,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* Logo */}
       <Link href="/" className="relative z-10 flex items-center gap-3 mb-8">
-        <Image src="/logo.png" alt="FITNEXUS" width={48} height={48} priority />
+        <Image src="/logo-icon.png" alt="FITNEXUS" width={48} height={48} className="object-contain" priority />
         <span className="font-heading font-bold text-2xl tracking-brand gradient-brand-text">FITNEXUS</span>
       </Link>
 
