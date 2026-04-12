@@ -35,7 +35,7 @@ export default function ForCoachesPage() {
             </motion.div>
 
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[0.95] tracking-tight mb-8">
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.1] tracking-normal mb-8">
               <span className="text-foreground">Mehr Kunden.</span><br />
               <span className="text-foreground">Weniger Chaos.</span><br />
               <span className="gradient-green-text text-glow-green">Mehr Umsatz.</span>

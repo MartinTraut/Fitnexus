@@ -69,7 +69,7 @@ export default function TrainersPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <AnimatedSection>
             <div className="text-center mb-10">
-              <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08]">
+              <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-[-0.01em] leading-[1.05]">
                 <span className="text-foreground">Finde deinen </span>
                 <span className="gradient-brand-text">Coach</span>
               </h1>
@@ -94,70 +94,66 @@ export default function TrainersPage() {
                 />
               </div>
 
-              {/* Filter Row */}
-              <div className="rounded-2xl bg-[#0D1320]/50 border border-[rgba(0,168,255,0.06)] p-3">
-                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-0.5">
-                  {/* City */}
+              {/* Filter Box */}
+              <div className="rounded-2xl bg-[#0D1320]/50 border border-[rgba(0,168,255,0.06)] p-4 space-y-2.5">
+                {/* Zeile 1: 5 gleichmäßige Dropdowns */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
                   <select value={city} onChange={(e) => setCity(e.target.value)}
-                    className="appearance-none px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground focus:outline-none focus:border-[#00A8FF]/25 transition-all min-w-[110px] cursor-pointer flex-shrink-0">
+                    className="appearance-none px-4 py-3 rounded-xl bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-sm text-foreground focus:outline-none focus:border-[#00A8FF]/30 transition-all cursor-pointer w-full">
                     <option value="">Stadt</option>
                     {GERMAN_CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
 
-                  {/* Category */}
                   <select value={category} onChange={(e) => setCategory(e.target.value)}
-                    className="appearance-none px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground focus:outline-none focus:border-[#00A8FF]/25 transition-all min-w-[120px] cursor-pointer flex-shrink-0">
+                    className="appearance-none px-4 py-3 rounded-xl bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-sm text-foreground focus:outline-none focus:border-[#00A8FF]/30 transition-all cursor-pointer w-full">
                     <option value="">Kategorie</option>
                     {TRAINER_CATEGORIES.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
                   </select>
 
-                  {/* Price Min */}
-                  <input type="number" placeholder="Min €" value={priceMin} onChange={(e) => setPriceMin(e.target.value)}
-                    className="w-[80px] px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground placeholder:text-muted-foreground/35 focus:outline-none focus:border-[#00A8FF]/25 transition-all flex-shrink-0"
-                  />
-                  <span className="text-muted-foreground/20 text-[10px] flex-shrink-0">–</span>
-                  {/* Price Max */}
-                  <input type="number" placeholder="Max €" value={priceMax} onChange={(e) => setPriceMax(e.target.value)}
-                    className="w-[80px] px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground placeholder:text-muted-foreground/35 focus:outline-none focus:border-[#00A8FF]/25 transition-all flex-shrink-0"
-                  />
+                  <div className="flex items-center gap-1.5">
+                    <input type="number" placeholder="Min €" value={priceMin} onChange={(e) => setPriceMin(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-[#00A8FF]/30 transition-all"
+                    />
+                    <span className="text-muted-foreground/20 text-sm">–</span>
+                    <input type="number" placeholder="Max €" value={priceMax} onChange={(e) => setPriceMax(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-[#00A8FF]/30 transition-all"
+                    />
+                  </div>
 
-                  {/* Gender */}
                   <select value={gender} onChange={(e) => setGender(e.target.value)}
-                    className="appearance-none px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground focus:outline-none focus:border-[#00A8FF]/25 transition-all min-w-[100px] cursor-pointer flex-shrink-0">
+                    className="appearance-none px-4 py-3 rounded-xl bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-sm text-foreground focus:outline-none focus:border-[#00A8FF]/30 transition-all cursor-pointer w-full">
                     <option value="">Geschlecht</option>
                     <option value="männlich">Männlich</option>
                     <option value="weiblich">Weiblich</option>
                   </select>
 
-                  {/* Sort */}
                   <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none px-3 py-2 rounded-lg bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-xs text-foreground focus:outline-none focus:border-[#00A8FF]/25 transition-all min-w-[110px] cursor-pointer flex-shrink-0">
+                    className="appearance-none px-4 py-3 rounded-xl bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-sm text-foreground focus:outline-none focus:border-[#00A8FF]/30 transition-all cursor-pointer w-full">
                     {SORT_OPTIONS.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
                   </select>
+                </div>
 
-                  {/* Coaching Mode Chips */}
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    {COACHING_MODES.map((m) => {
-                      const isActive = mode === m
-                      const Icon = m === 'Online' ? Monitor : m === 'Vor Ort' ? Navigation : Repeat
-                      return (
-                        <button key={m} onClick={() => setMode(isActive ? '' : m)}
-                          className={`flex items-center gap-1 px-2.5 py-2 rounded-lg text-[11px] font-medium transition-all duration-200 flex-shrink-0 ${
-                            isActive
-                              ? 'bg-[#00A8FF]/15 text-[#00D4FF] border border-[#00A8FF]/25'
-                              : 'bg-[#1A2332]/40 text-muted-foreground/50 border border-transparent hover:text-muted-foreground hover:bg-[#1A2332]/60'
-                          }`}>
-                          <Icon className="w-3 h-3" /> {m}
-                        </button>
-                      )
-                    })}
-                  </div>
+                {/* Zeile 2: Coaching-Art Buttons + Reset */}
+                <div className="flex items-center gap-2.5">
+                  {COACHING_MODES.map((m) => {
+                    const isActive = mode === m
+                    const Icon = m === 'Online' ? Monitor : m === 'Vor Ort' ? Navigation : Repeat
+                    return (
+                      <button key={m} onClick={() => setMode(isActive ? '' : m)}
+                        className={`flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                          isActive
+                            ? 'bg-[#00A8FF]/15 text-[#00D4FF] border border-[#00A8FF]/30'
+                            : 'bg-[#1A2332]/40 text-muted-foreground/40 border border-transparent hover:text-muted-foreground/70 hover:bg-[#1A2332]/60'
+                        }`}>
+                        <Icon className="w-4 h-4" /> {m}
+                      </button>
+                    )
+                  })}
 
-                  {/* Clear */}
                   {hasActiveFilters && (
                     <button onClick={clearFilters}
-                      className="flex items-center gap-1 px-2.5 py-2 rounded-lg text-[11px] font-medium text-red-400/70 hover:text-red-400 hover:bg-red-400/10 transition-all flex-shrink-0">
-                      <X className="w-3 h-3" /> Reset
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium text-red-400/60 hover:text-red-400 hover:bg-red-400/10 transition-all ml-auto">
+                      <X className="w-4 h-4" /> Reset
                     </button>
                   )}
                 </div>

@@ -211,6 +211,57 @@ export interface Review {
   created_at: string
 }
 
+// Workout Log — tracks what the client actually did per exercise
+export interface ActualSet {
+  set_number: number
+  reps: number
+  weight: number
+  completed: boolean
+}
+
+export interface WorkoutLog {
+  id: string
+  customer_id: string
+  plan_id: string
+  exercise_id: string
+  exercise_name: string
+  date: string
+  prescribed_sets: number
+  prescribed_reps: string
+  prescribed_weight: string | null
+  actual_sets: ActualSet[]
+  notes: string | null
+  created_at: string
+}
+
+// Meal Log — tracks what the client actually ate
+export interface LoggedFood {
+  name: string
+  amount: string
+  calories: number
+  protein: number
+  carbs: number
+  fat: number
+}
+
+export interface LoggedMeal {
+  id: string
+  name: string
+  time: string
+  foods: LoggedFood[]
+}
+
+export interface MealLog {
+  id: string
+  customer_id: string
+  date: string
+  meals: LoggedMeal[]
+  water_ml: number
+  notes: string | null
+  created_at: string
+  updated_at: string
+}
+
 // Payment
 export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'refunded'
 

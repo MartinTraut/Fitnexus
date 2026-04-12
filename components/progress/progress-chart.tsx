@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import type { ProgressMetric } from '@/types'
 import { GlassCard } from '@/components/glass-card'
 import { cn } from '@/lib/utils'
@@ -46,9 +46,14 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 }
 
 export function ProgressChart({ metrics }: ProgressChartProps) {
+  const [mounted, setMounted] = useState(false)
   const [activeLines, setActiveLines] = useState<Set<LineKey>>(
     new Set(LINES.filter((l) => l.defaultOn).map((l) => l.key))
   )
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const chartData = useMemo(() => {
     return metrics.map((m) => ({
@@ -78,7 +83,7 @@ export function ProgressChart({ metrics }: ProgressChartProps) {
     ? (latestMetric.weight_kg - previousMetric.weight_kg).toFixed(1)
     : null
 
-  if (metrics.length === 0) {
+  if (!mounted || metrics.length === 0) {
     return (
       <GlassCard className="p-8 text-center" hover={false}>
         <TrendingUp className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />

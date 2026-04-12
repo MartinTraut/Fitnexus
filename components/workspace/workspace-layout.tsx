@@ -5,12 +5,15 @@ import type { WorkoutPlan, NutritionPlan, ProgressMetric, Contract } from '@/typ
 import {
   initializeStore, getWorkoutPlans, getNutritionPlans,
   getProgressMetrics, getContractsForCustomer, getOrCreateThread,
+  updateProgressMetric, deleteProgressMetric,
+  getWorkoutLogs, getMealLogHistory,
 } from '@/lib/store'
+import type { WorkoutLog, MealLog } from '@/types'
 import { GlassCard } from '@/components/glass-card'
 import { cn } from '@/lib/utils'
 import {
   MessageCircle, Dumbbell, UtensilsCrossed, TrendingUp, Camera,
-  CheckCircle2, AlertCircle, Package,
+  CheckCircle2, AlertCircle, Package, X,
 } from 'lucide-react'
 
 // Lazy-ish imports to keep component structure clean
@@ -19,6 +22,7 @@ import { PlanViewer } from '@/components/workout/plan-viewer'
 import { PlanBuilder } from '@/components/workout/plan-builder'
 import { NutritionPlanViewer } from '@/components/nutrition/plan-viewer'
 import { NutritionPlanEditor } from '@/components/nutrition/plan-editor'
+import { MealTracker } from '@/components/nutrition/meal-tracker'
 import { ProgressChart } from '@/components/progress/progress-chart'
 import { ProgressForm } from '@/components/progress/progress-form'
 import { PhotoGallery } from '@/components/progress/photo-gallery'
@@ -214,12 +218,55 @@ export function WorkspaceLayout({
                 </GlassCard>
               )
             ) : (
-              <PlanBuilder
-                trainerId={trainerId}
-                customerId={customerId}
-                existingPlan={latestWorkout ?? undefined}
-                onSave={() => refreshWorkoutPlans()}
-              />
+              <div className="space-y-6">
+                <PlanBuilder
+                  trainerId={trainerId}
+                  customerId={customerId}
+                  existingPlan={latestWorkout ?? undefined}
+                  onSave={() => refreshWorkoutPlans()}
+                />
+                {/* Client Workout Logs — visible to coach */}
+                {(() => {
+                  const logs = getWorkoutLogs(customerId)
+                  if (logs.length === 0) return null
+                  const grouped = logs.reduce((acc, log) => {
+                    if (!acc[log.exercise_name]) acc[log.exercise_name] = []
+                    acc[log.exercise_name].push(log)
+                    return acc
+                  }, {} as Record<string, WorkoutLog[]>)
+                  return (
+                    <GlassCard className="overflow-hidden" hover={false}>
+                      <div className="p-4 border-b border-white/[0.04]">
+                        <h3 className="text-sm font-heading font-semibold text-foreground">Kunden-Tracking — Übungshistorie</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">Was dein Kunde tatsächlich trainiert hat</p>
+                      </div>
+                      <div className="divide-y divide-white/[0.04]">
+                        {Object.entries(grouped).slice(0, 8).map(([name, exLogs]) => {
+                          const latest = exLogs[exLogs.length - 1]
+                          const maxW = Math.max(...latest.actual_sets.map(s => s.weight))
+                          const maxR = Math.max(...latest.actual_sets.map(s => s.reps))
+                          const prescribed = latest.prescribed_weight ? parseFloat(latest.prescribed_weight) : 0
+                          const hit = prescribed > 0 && maxW >= prescribed
+                          return (
+                            <div key={name} className="px-4 py-3 flex items-center gap-4">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-foreground">{name}</p>
+                                <p className="text-xs text-muted-foreground">{exLogs.length} Einträge · Letzter: {new Date(latest.date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}</p>
+                              </div>
+                              <div className="text-right flex-shrink-0">
+                                <p className="text-sm font-bold text-[#00D4FF]">{maxW} kg × {maxR}</p>
+                                <span className={cn('text-[10px] font-medium px-1.5 py-0.5 rounded', hit ? 'bg-[#00FF94]/15 text-[#00FF94]' : 'bg-[#FFD700]/15 text-[#FFD700]')}>
+                                  {latest.prescribed_weight ? (hit ? 'Ziel erreicht' : `Vorgabe: ${latest.prescribed_weight}`) : 'Kein Ziel'}
+                                </span>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </GlassCard>
+                  )
+                })()}
+              </div>
             )}
           </>
         )}
@@ -228,22 +275,71 @@ export function WorkspaceLayout({
         {activeTab === 'nutrition' && (
           <>
             {role === 'customer' ? (
-              latestNutrition ? (
-                <NutritionPlanViewer plan={latestNutrition} />
-              ) : (
-                <GlassCard className="p-10 text-center" hover={false}>
-                  <UtensilsCrossed className="w-12 h-12 text-muted-foreground/20 mx-auto mb-3" />
-                  <p className="text-sm text-muted-foreground">Dein Trainer hat noch keinen Ernährungsplan erstellt.</p>
-                  <p className="text-xs text-muted-foreground/50 mt-1">Sobald ein Plan vorliegt, siehst du ihn hier.</p>
-                </GlassCard>
-              )
+              <div className="space-y-6">
+                {/* Coach Plan (if exists) */}
+                {latestNutrition && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground/50 uppercase tracking-wider mb-3">Coach-Vorgabe</p>
+                    <NutritionPlanViewer plan={latestNutrition} />
+                  </div>
+                )}
+                {/* Meal Tracker */}
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground/50 uppercase tracking-wider mb-3">Dein Ernährungs-Log</p>
+                  <MealTracker customerId={customerId} nutritionPlan={latestNutrition} />
+                </div>
+              </div>
             ) : (
-              <NutritionPlanEditor
-                trainerId={trainerId}
-                customerId={customerId}
-                existingPlan={latestNutrition ?? undefined}
-                onSave={() => refreshNutritionPlans()}
-              />
+              <div className="space-y-6">
+                <NutritionPlanEditor
+                  trainerId={trainerId}
+                  customerId={customerId}
+                  existingPlan={latestNutrition ?? undefined}
+                  onSave={() => refreshNutritionPlans()}
+                />
+                {/* Client Meal Logs — visible to coach */}
+                {(() => {
+                  const mealLogs = getMealLogHistory(customerId, 14)
+                  if (mealLogs.length === 0) return null
+                  return (
+                    <GlassCard className="overflow-hidden" hover={false}>
+                      <div className="p-4 border-b border-white/[0.04]">
+                        <h3 className="text-sm font-heading font-semibold text-foreground">Kunden-Ernährungslog</h3>
+                        <p className="text-xs text-muted-foreground mt-0.5">Was dein Kunde in den letzten 14 Tagen gegessen hat</p>
+                      </div>
+                      <div className="divide-y divide-white/[0.04]">
+                        {mealLogs.map((log) => {
+                          let cal = 0, pro = 0, carb = 0, fat = 0
+                          for (const meal of log.meals) for (const f of meal.foods) { cal += f.calories; pro += f.protein; carb += f.carbs; fat += f.fat }
+                          const target = latestNutrition?.calories_target ?? 0
+                          const pct = target > 0 ? Math.round((cal / target) * 100) : 0
+                          return (
+                            <div key={log.id} className="px-4 py-3 flex items-center gap-4">
+                              <div className="w-10 text-center flex-shrink-0">
+                                <p className="text-xs font-bold text-foreground">{new Date(log.date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}</p>
+                                <p className="text-[9px] text-muted-foreground">{log.meals.length} Mahlz.</p>
+                              </div>
+                              <div className="flex-1 grid grid-cols-4 gap-2 text-center text-xs">
+                                <div><span className="text-[#FF8C00] font-semibold">{Math.round(cal)}</span><span className="text-muted-foreground/40 ml-0.5">kcal</span></div>
+                                <div><span className="text-[#00D4FF] font-semibold">{Math.round(pro)}</span><span className="text-muted-foreground/40 ml-0.5">P</span></div>
+                                <div><span className="text-[#00FF94] font-semibold">{Math.round(carb)}</span><span className="text-muted-foreground/40 ml-0.5">C</span></div>
+                                <div><span className="text-[#FFD700] font-semibold">{Math.round(fat)}</span><span className="text-muted-foreground/40 ml-0.5">F</span></div>
+                              </div>
+                              {target > 0 && (
+                                <span className={cn('text-[10px] font-medium px-1.5 py-0.5 rounded flex-shrink-0',
+                                  pct >= 80 && pct <= 120 ? 'bg-[#00FF94]/15 text-[#00FF94]' : 'bg-[#FFD700]/15 text-[#FFD700]'
+                                )}>
+                                  {pct}%
+                                </span>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </GlassCard>
+                  )
+                })()}
+              </div>
             )}
           </>
         )}
@@ -256,7 +352,7 @@ export function WorkspaceLayout({
             )}
             <ProgressChart metrics={metrics} />
 
-            {/* Metrics Table */}
+            {/* Metrics Table — editable */}
             {metrics.length > 0 && (
               <GlassCard className="overflow-hidden" hover={false}>
                 <div className="p-4 border-b border-white/[0.04]">
@@ -271,6 +367,7 @@ export function WorkspaceLayout({
                         <th className="text-left px-4 py-2.5 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Körperfett</th>
                         <th className="text-left px-4 py-2.5 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Muskelmasse</th>
                         <th className="text-left px-4 py-2.5 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Notizen</th>
+                        {role === 'customer' && <th className="text-right px-4 py-2.5 text-[11px] font-medium text-muted-foreground uppercase tracking-wider w-20" />}
                       </tr>
                     </thead>
                     <tbody>
@@ -285,18 +382,66 @@ export function WorkspaceLayout({
                           <td className="px-4 py-2.5 text-muted-foreground whitespace-nowrap">
                             {new Date(m.recorded_at).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}
                           </td>
-                          <td className="px-4 py-2.5 text-foreground font-medium">
-                            {m.weight_kg ? `${m.weight_kg} kg` : '–'}
-                          </td>
-                          <td className="px-4 py-2.5 text-foreground">
-                            {m.body_fat_percent ? `${m.body_fat_percent}%` : '–'}
-                          </td>
-                          <td className="px-4 py-2.5 text-foreground">
-                            {m.muscle_mass_kg ? `${m.muscle_mass_kg} kg` : '–'}
-                          </td>
+                          {role === 'customer' ? (
+                            <>
+                              <td className="px-4 py-1.5">
+                                <input
+                                  type="number" step="0.1"
+                                  defaultValue={m.weight_kg ?? ''}
+                                  onBlur={(e) => {
+                                    const v = e.target.value ? parseFloat(e.target.value) : null
+                                    if (v !== m.weight_kg) { updateProgressMetric(m.id, { weight_kg: v }); setMetrics(getProgressMetrics(customerId)) }
+                                  }}
+                                  className="w-20 bg-transparent border border-transparent hover:border-white/[0.06] focus:border-[#00A8FF]/40 rounded-lg px-2 py-1 text-sm text-foreground font-medium focus:outline-none transition-colors"
+                                  placeholder="–"
+                                />
+                              </td>
+                              <td className="px-4 py-1.5">
+                                <input
+                                  type="number" step="0.1"
+                                  defaultValue={m.body_fat_percent ?? ''}
+                                  onBlur={(e) => {
+                                    const v = e.target.value ? parseFloat(e.target.value) : null
+                                    if (v !== m.body_fat_percent) { updateProgressMetric(m.id, { body_fat_percent: v }); setMetrics(getProgressMetrics(customerId)) }
+                                  }}
+                                  className="w-20 bg-transparent border border-transparent hover:border-white/[0.06] focus:border-[#00A8FF]/40 rounded-lg px-2 py-1 text-sm text-foreground focus:outline-none transition-colors"
+                                  placeholder="–"
+                                />
+                              </td>
+                              <td className="px-4 py-1.5">
+                                <input
+                                  type="number" step="0.1"
+                                  defaultValue={m.muscle_mass_kg ?? ''}
+                                  onBlur={(e) => {
+                                    const v = e.target.value ? parseFloat(e.target.value) : null
+                                    if (v !== m.muscle_mass_kg) { updateProgressMetric(m.id, { muscle_mass_kg: v }); setMetrics(getProgressMetrics(customerId)) }
+                                  }}
+                                  className="w-20 bg-transparent border border-transparent hover:border-white/[0.06] focus:border-[#00A8FF]/40 rounded-lg px-2 py-1 text-sm text-foreground focus:outline-none transition-colors"
+                                  placeholder="–"
+                                />
+                              </td>
+                            </>
+                          ) : (
+                            <>
+                              <td className="px-4 py-2.5 text-foreground font-medium">{m.weight_kg ? `${m.weight_kg} kg` : '–'}</td>
+                              <td className="px-4 py-2.5 text-foreground">{m.body_fat_percent ? `${m.body_fat_percent}%` : '–'}</td>
+                              <td className="px-4 py-2.5 text-foreground">{m.muscle_mass_kg ? `${m.muscle_mass_kg} kg` : '–'}</td>
+                            </>
+                          )}
                           <td className="px-4 py-2.5 text-muted-foreground/70 truncate max-w-[200px]">
                             {m.notes || '–'}
                           </td>
+                          {role === 'customer' && (
+                            <td className="px-4 py-2.5 text-right">
+                              <button
+                                onClick={() => { deleteProgressMetric(m.id); setMetrics(getProgressMetrics(customerId)) }}
+                                className="p-1 rounded-lg text-muted-foreground/30 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                                title="Eintrag löschen"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>

@@ -365,23 +365,79 @@ export const mockReviews: (Review & { customer_display_name: string })[] = [
 
 // ─── Mock Bookings ────────────────────────────────────────
 export const mockBookings: Booking[] = [
+  // c_demo bookings (Kunde)
   {
-    id: 'bk_1', trainer_id: 'tr_1', customer_id: 'c_1', status: 'confirmed',
-    scheduled_at: '2026-04-12T10:00:00Z', duration_minutes: 60,
-    notes: 'Erstgespräch - Ziele besprechen', meeting_url: null,
+    id: 'bk_1', trainer_id: 'tr_1', customer_id: 'c_demo', status: 'confirmed',
+    scheduled_at: '2026-04-14T10:00:00Z', duration_minutes: 60,
+    notes: 'Oberkörper-Training – Fokus Brust & Trizeps', meeting_url: null,
     created_at: '2026-04-05T10:00:00Z', updated_at: '2026-04-06T10:00:00Z',
   },
   {
-    id: 'bk_2', trainer_id: 'tr_2', customer_id: 'c_1', status: 'pending',
-    scheduled_at: '2026-04-15T14:00:00Z', duration_minutes: 45,
-    notes: 'Yoga Probestunde', meeting_url: null,
-    created_at: '2026-04-07T10:00:00Z', updated_at: '2026-04-07T10:00:00Z',
+    id: 'bk_2', trainer_id: 'tr_1', customer_id: 'c_demo', status: 'confirmed',
+    scheduled_at: '2026-04-16T10:00:00Z', duration_minutes: 60,
+    notes: 'Bein-Tag – Kniebeugen & Beinpresse', meeting_url: null,
+    created_at: '2026-04-06T10:00:00Z', updated_at: '2026-04-06T10:00:00Z',
   },
   {
-    id: 'bk_3', trainer_id: 'tr_4', customer_id: 'c_1', status: 'completed',
+    id: 'bk_3', trainer_id: 'tr_1', customer_id: 'c_demo', status: 'completed',
+    scheduled_at: '2026-04-10T10:00:00Z', duration_minutes: 60,
+    notes: 'Rücken & Bizeps', meeting_url: null,
+    created_at: '2026-04-03T10:00:00Z', updated_at: '2026-04-10T11:00:00Z',
+  },
+  {
+    id: 'bk_4', trainer_id: 'tr_1', customer_id: 'c_demo', status: 'completed',
+    scheduled_at: '2026-04-07T15:00:00Z', duration_minutes: 60,
+    notes: 'Oberkörper – Push Day', meeting_url: null,
+    created_at: '2026-04-01T10:00:00Z', updated_at: '2026-04-07T16:00:00Z',
+  },
+  {
+    id: 'bk_5', trainer_id: 'tr_1', customer_id: 'c_demo', status: 'completed',
+    scheduled_at: '2026-04-03T10:00:00Z', duration_minutes: 60,
+    notes: 'Erstgespräch & Körperanalyse', meeting_url: null,
+    created_at: '2026-03-28T10:00:00Z', updated_at: '2026-04-03T11:00:00Z',
+  },
+  {
+    id: 'bk_6', trainer_id: 'tr_2', customer_id: 'c_demo', status: 'pending',
+    scheduled_at: '2026-04-18T14:00:00Z', duration_minutes: 45,
+    notes: 'Yoga Probestunde', meeting_url: null,
+    created_at: '2026-04-09T10:00:00Z', updated_at: '2026-04-09T10:00:00Z',
+  },
+  {
+    id: 'bk_7', trainer_id: 'tr_4', customer_id: 'c_demo', status: 'completed',
     scheduled_at: '2026-04-01T16:00:00Z', duration_minutes: 30,
     notes: 'Online Kennenlernen', meeting_url: 'https://meet.google.com/abc',
     created_at: '2026-03-28T10:00:00Z', updated_at: '2026-04-01T17:00:00Z',
+  },
+  // Other customer bookings (for trainer dashboard)
+  {
+    id: 'bk_8', trainer_id: 'tr_1', customer_id: 'c_2', status: 'pending',
+    scheduled_at: '2026-04-15T09:00:00Z', duration_minutes: 60,
+    notes: 'Erstgespräch – Abnehmen & Fitness', meeting_url: null,
+    created_at: '2026-04-10T08:00:00Z', updated_at: '2026-04-10T08:00:00Z',
+  },
+  {
+    id: 'bk_9', trainer_id: 'tr_1', customer_id: 'c_3', status: 'pending',
+    scheduled_at: '2026-04-17T11:00:00Z', duration_minutes: 45,
+    notes: 'Probetraining – Kraftaufbau', meeting_url: null,
+    created_at: '2026-04-11T09:00:00Z', updated_at: '2026-04-11T09:00:00Z',
+  },
+  {
+    id: 'bk_10', trainer_id: 'tr_1', customer_id: 'c_4', status: 'confirmed',
+    scheduled_at: '2026-04-15T16:00:00Z', duration_minutes: 60,
+    notes: 'Wöchentliches Coaching – Woche 8', meeting_url: null,
+    created_at: '2026-04-08T10:00:00Z', updated_at: '2026-04-09T10:00:00Z',
+  },
+  {
+    id: 'bk_11', trainer_id: 'tr_1', customer_id: 'c_5', status: 'confirmed',
+    scheduled_at: '2026-04-13T14:00:00Z', duration_minutes: 60,
+    notes: 'Ernährungsberatung & Check-in', meeting_url: null,
+    created_at: '2026-04-07T10:00:00Z', updated_at: '2026-04-08T10:00:00Z',
+  },
+  {
+    id: 'bk_12', trainer_id: 'tr_1', customer_id: 'c_6', status: 'completed',
+    scheduled_at: '2026-04-09T10:00:00Z', duration_minutes: 60,
+    notes: 'Mobility & Recovery Session', meeting_url: null,
+    created_at: '2026-04-02T10:00:00Z', updated_at: '2026-04-09T11:00:00Z',
   },
 ]
 

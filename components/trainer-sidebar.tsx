@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Logo } from '@/components/ui/logo'
+// Logo text only — no icon
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
@@ -32,8 +32,8 @@ export function TrainerSidebar() {
   return (
     <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-40">
       <div className="flex flex-col flex-1 bg-[#0D1320] border-r border-[rgba(0,255,148,0.1)]">
-        <div className="flex items-center h-20 px-6 border-b border-[rgba(0,255,148,0.08)]">
-          <Logo size="lg" />
+        <div className="flex items-center justify-center h-20 px-6 border-b border-[rgba(0,255,148,0.08)]">
+          <Link href="/" className="font-heading font-bold text-xl tracking-[0.04em] gradient-brand-text">FITNEXUS</Link>
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">

@@ -128,146 +128,138 @@ export default function TrainerDashboardPage() {
     loadData()
   }
 
+  // Upcoming sessions
+  const upcomingSessions = bookings
+    .filter(b => b.status === 'confirmed' && new Date(b.scheduled_at) >= new Date())
+    .sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime())
+    .slice(0, 4)
+
+  // Unread messages
+  const threads = mounted ? getThreadsForUser('tr_1') : []
+  const unreadThreads = threads.filter(t => {
+    const msgs = getMessages(t.id)
+    return msgs.some(m => !m.is_read && m.sender_id !== 'tr_1')
+  }).length
+
   return (
-    <div className="p-4 md:p-8 space-y-8">
+    <div className="p-4 md:p-8 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
-            {greeting()}{user ? `, ${user.display_name}` : ''}!
-          </h1>
-          <p className="text-muted-foreground mt-1">Dein Trainer-Dashboard im Überblick</p>
-        </div>
-        <Link href="/dashboard/trainer/leads">
-          <GradientButton variant="green" size="sm">
-            <Inbox className="w-4 h-4" /> Leads ansehen
-          </GradientButton>
-        </Link>
+      <div>
+        <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground">
+          {greeting()}{user ? `, ${user.display_name}` : ''}!
+        </h1>
+        <p className="text-muted-foreground mt-1">Dein Trainer-Dashboard im Überblick</p>
       </div>
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Stat Cards — compact row */}
+      <div className="grid grid-cols-5 gap-3">
         {[
-          { label: 'Aktive Kunden', value: mounted ? `${activeClients}` : '...', icon: Users, color: 'text-[#00FF94]', bg: 'bg-[#00FF94]/10' },
-          { label: 'Neue Leads', value: mounted ? `${pendingLeads}` : '...', icon: Inbox, color: 'text-[#00D4FF]', bg: 'bg-[#00A8FF]/10' },
-          { label: 'Bewertung', value: mounted ? (reviewCount > 0 ? `${avgRating}/5` : '--') : '...', icon: Star, color: 'text-[#FFD700]', bg: 'bg-[#FFD700]/10' },
-          { label: 'Umsatz (Monat)', value: mounted ? `${monthlyRevenue.toLocaleString('de-DE')}€` : '...', icon: Euro, color: 'text-[#00FF94]', bg: 'bg-[#00FF94]/10' },
+          { label: 'Kunden', value: mounted ? `${activeClients}` : '–', icon: Users, color: '#00FF94', href: '/dashboard/trainer/clients' },
+          { label: 'Leads', value: mounted ? `${pendingLeads}` : '–', icon: Inbox, color: '#00D4FF', href: '/dashboard/trainer/leads' },
+          { label: 'Nachrichten', value: mounted ? `${unreadThreads}` : '–', icon: MessageCircle, color: '#00A8FF', href: '/dashboard/trainer/messages' },
+          { label: 'Bewertung', value: mounted ? (reviewCount > 0 ? `${avgRating}` : '–') : '–', icon: Star, color: '#FFD700', href: '/dashboard/trainer/profile' },
+          { label: 'Umsatz', value: mounted ? `${monthlyRevenue.toLocaleString('de-DE')}€` : '–', icon: Euro, color: '#00FF94', href: '/dashboard/trainer/billing' },
         ].map((stat) => (
-          <GlassCard key={stat.label} className="p-4">
-            <div className={`w-10 h-10 rounded-xl ${stat.bg} flex items-center justify-center mb-3`}>
-              <stat.icon className={`w-5 h-5 ${stat.color}`} />
-            </div>
-            <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-            <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
-          </GlassCard>
+          <Link key={stat.label} href={stat.href}>
+            <GlassCard className="p-4 group cursor-pointer">
+              <div className="flex items-center justify-between mb-2">
+                <stat.icon className="w-4 h-4" style={{ color: `${stat.color}60` }} />
+              </div>
+              <p className="text-2xl font-bold text-foreground group-hover:text-[#00FF94] transition-colors">{stat.value}</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">{stat.label}</p>
+            </GlassCard>
+          </Link>
         ))}
       </div>
 
-      {/* Quick Actions */}
-      <div>
-        <h2 className="text-lg font-heading font-semibold text-foreground mb-4">Schnellzugriff</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
-            { href: '/dashboard/trainer/profile', icon: Edit3, label: 'Profil bearbeiten', desc: 'Dein öffentliches Trainerprofil anpassen', color: '#00FF94' },
-            { href: '/dashboard/trainer/leads', icon: Eye, label: 'Leads ansehen', desc: 'Neue Anfragen prüfen und beantworten', color: '#00D4FF' },
-          ].map((action) => (
-            <Link key={action.href} href={action.href}>
-              <GlassCard className="p-5 flex items-center gap-4 group cursor-pointer">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${action.color}15` }}>
-                  <action.icon className="w-6 h-6" style={{ color: action.color }} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground group-hover:text-[#00FF94] transition-colors">{action.label}</p>
-                  <p className="text-sm text-muted-foreground">{action.desc}</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-[#00FF94] transition-colors" />
-              </GlassCard>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Recent Leads */}
-        <div>
-          <h2 className="text-lg font-heading font-semibold text-foreground mb-4">Neue Leads</h2>
-          <GlassCard className="p-5" hover={false}>
-            <div className="space-y-4">
+      {/* Main Content — 2 columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left: Leads + Termine */}
+        <div className="space-y-6">
+          {/* Leads */}
+          <GlassCard className="overflow-hidden" hover={false}>
+            <div className="flex items-center justify-between p-4 border-b border-white/[0.04]">
+              <h2 className="text-sm font-heading font-semibold text-foreground">Offene Leads</h2>
+              <Link href="/dashboard/trainer/leads" className="text-xs text-[#00FF94] hover:text-[#00CC76] transition-colors flex items-center gap-1">
+                Alle <ChevronRight className="w-3 h-3" />
+              </Link>
+            </div>
+            <div className="p-4 space-y-3">
               {pendingBookings.length === 0 && mounted && (
-                <p className="text-sm text-muted-foreground text-center py-4">
-                  Keine offenen Anfragen
-                </p>
+                <p className="text-sm text-muted-foreground text-center py-2">Keine offenen Anfragen</p>
               )}
               {pendingBookings.map((lead) => (
-                <div key={lead.id} className="p-3 rounded-xl bg-[#0B0F1A]/50 space-y-3">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-[#00FF94]/10 flex items-center justify-center flex-shrink-0">
-                      <UserPlus className="w-4 h-4 text-[#00FF94]" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="font-medium text-sm text-foreground">
-                          Client#{lead.customer_id.slice(-4).toUpperCase()}
-                        </p>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-[#FFD700]/10 text-[#FFD700]">
-                          Offen
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {lead.notes ?? 'Keine Nachricht'}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground/60 mt-0.5">
-                        {new Date(lead.created_at).toLocaleDateString('de-DE')}
-                      </p>
-                    </div>
+                <div key={lead.id} className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-[#00FF94]/10 flex items-center justify-center flex-shrink-0">
+                    <UserPlus className="w-4 h-4 text-[#00FF94]" />
                   </div>
-                  <div className="flex items-center gap-2 pl-14">
-                    <button
-                      onClick={() => handleAccept(lead.id)}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#00FF94]/10 text-[#00FF94] text-xs font-medium hover:bg-[#00FF94]/20 transition-colors"
-                    >
-                      <CheckCircle2 className="w-3 h-3" /> Annehmen
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">Client#{lead.customer_id.slice(-4).toUpperCase()}</p>
+                    <p className="text-[11px] text-muted-foreground truncate">{lead.notes ?? 'Keine Nachricht'}</p>
+                  </div>
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <button onClick={() => handleAccept(lead.id)} className="px-2.5 py-1.5 rounded-lg bg-[#00FF94]/10 text-[#00FF94] text-[11px] font-medium hover:bg-[#00FF94]/20 transition-colors">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                     </button>
-                    <button
-                      onClick={() => handleDecline(lead.id)}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-colors"
-                    >
-                      <XCircle className="w-3 h-3" /> Ablehnen
+                    <button onClick={() => handleDecline(lead.id)} className="px-2.5 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-[11px] font-medium hover:bg-red-500/20 transition-colors">
+                      <XCircle className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
               ))}
             </div>
-            <Link href="/dashboard/trainer/leads" className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-[rgba(0,255,148,0.08)] text-sm text-[#00FF94] hover:text-[#00CC76] transition-colors">
-              Alle Leads <ChevronRight className="w-4 h-4" />
-            </Link>
+          </GlassCard>
+
+          {/* Termine */}
+          <GlassCard className="overflow-hidden" hover={false}>
+            <div className="p-4 border-b border-white/[0.04]">
+              <h2 className="text-sm font-heading font-semibold text-foreground">Nächste Termine</h2>
+            </div>
+            <div className="p-4 space-y-2.5">
+              {upcomingSessions.length === 0 && mounted && (
+                <p className="text-sm text-muted-foreground text-center py-2">Keine anstehenden Termine</p>
+              )}
+              {upcomingSessions.map((session) => {
+                const date = new Date(session.scheduled_at)
+                return (
+                  <div key={session.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-[#0B0F1A]/50">
+                    <div className="w-10 h-10 rounded-xl bg-[#00A8FF]/10 flex flex-col items-center justify-center flex-shrink-0">
+                      <span className="text-[10px] font-bold text-[#00D4FF]">{date.toLocaleDateString('de-DE', { weekday: 'short' })}</span>
+                      <span className="text-[9px] text-muted-foreground/40">{date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-foreground">Client#{session.customer_id.slice(-4).toUpperCase()}</p>
+                      <p className="text-[11px] text-muted-foreground">{session.duration_minutes} Min · {session.notes ?? 'Kein Betreff'}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </GlassCard>
         </div>
 
-        {/* Activity Feed */}
-        <div>
-          <h2 className="text-lg font-heading font-semibold text-foreground mb-4">Letzte Aktivitäten</h2>
-          <GlassCard className="p-5" hover={false}>
-            <div className="space-y-4">
-              {recentActivity.length === 0 && mounted && (
-                <p className="text-sm text-muted-foreground text-center py-4">
-                  Noch keine Aktivitäten
-                </p>
-              )}
-              {recentActivity.map((activity, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-[#0B0F1A]/50">
-                  <div className={`w-8 h-8 rounded-lg ${activity.bg} flex items-center justify-center flex-shrink-0`}>
-                    <activity.icon className={`w-4 h-4 ${activity.color}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-foreground">{activity.text}</p>
-                    <p className="text-[10px] text-muted-foreground">{activity.time}</p>
-                  </div>
+        {/* Right: Aktivitäten */}
+        <GlassCard className="overflow-hidden" hover={false}>
+          <div className="p-4 border-b border-white/[0.04]">
+            <h2 className="text-sm font-heading font-semibold text-foreground">Letzte Aktivitäten</h2>
+          </div>
+          <div className="p-4 space-y-3">
+            {recentActivity.length === 0 && mounted && (
+              <p className="text-sm text-muted-foreground text-center py-4">Noch keine Aktivitäten</p>
+            )}
+            {recentActivity.map((activity, i) => (
+              <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-[#0B0F1A]/50">
+                <div className={`w-8 h-8 rounded-lg ${activity.bg} flex items-center justify-center flex-shrink-0`}>
+                  <activity.icon className={`w-4 h-4 ${activity.color}`} />
                 </div>
-              ))}
-            </div>
-          </GlassCard>
-        </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-foreground">{activity.text}</p>
+                  <p className="text-[10px] text-muted-foreground">{activity.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </GlassCard>
       </div>
     </div>
   )

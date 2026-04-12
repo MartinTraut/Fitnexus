@@ -8,6 +8,7 @@ import type {
   Booking, BookingStatus, Contract, ContractStatus,
   ChatThread, Message, WorkoutPlan, WorkoutExercise,
   NutritionPlan, ProgressMetric, ProgressPhoto, Review,
+  WorkoutLog, MealLog,
 } from '@/types'
 import { mockTrainers, mockReviews, mockBookings } from '@/lib/mock-data'
 
@@ -22,7 +23,9 @@ const KEYS = {
   progressMetrics: 'fn_progress_metrics',
   progressPhotos: 'fn_progress_photos',
   reviews: 'fn_reviews',
-  initialized: 'fn_initialized',
+  workoutLogs: 'fn_workout_logs',
+  mealLogs: 'fn_meal_logs',
+  initialized: 'fn_initialized_v4',
 } as const
 
 // ─── Helpers ──────────────────────────────────────────────
@@ -53,6 +56,9 @@ function set<T>(key: string, data: T[]): void {
 export function initializeStore(): void {
   if (typeof window === 'undefined') return
   if (localStorage.getItem(KEYS.initialized)) return
+
+  // Clear all old data on version bump
+  Object.values(KEYS).forEach(key => localStorage.removeItem(key))
 
   // Seed bookings
   set(KEYS.bookings, mockBookings)
@@ -168,23 +174,206 @@ export function initializeStore(): void {
   ]
   set(KEYS.progressMetrics, seedProgress)
 
-  // Seed contract
-  const seedContract: Contract = {
-    id: 'ct_1',
-    trainer_id: 'tr_1',
-    customer_id: 'c_demo',
-    package_id: 'pkg_1b',
-    start_date: '2026-03-01T00:00:00Z',
-    end_date: '2026-04-26T00:00:00Z',
-    status: 'active',
-    monthly_rate: 720,
-    platform_fee_percent: 7,
-    sessions_total: 12,
-    sessions_used: 6,
-    created_at: '2026-02-28T10:00:00Z',
-    updated_at: '2026-04-01T10:00:00Z',
-  }
-  set(KEYS.contracts, [seedContract])
+  // Seed contracts
+  const seedContracts: Contract[] = [
+    {
+      id: 'ct_1',
+      trainer_id: 'tr_1',
+      customer_id: 'c_demo',
+      package_id: 'pkg_1b',
+      start_date: '2026-03-01T00:00:00Z',
+      end_date: '2026-04-26T00:00:00Z',
+      status: 'active',
+      monthly_rate: 720,
+      platform_fee_percent: 7,
+      sessions_total: 12,
+      sessions_used: 6,
+      created_at: '2026-02-28T10:00:00Z',
+      updated_at: '2026-04-01T10:00:00Z',
+    },
+    {
+      id: 'ct_2',
+      trainer_id: 'tr_1',
+      customer_id: 'c_4',
+      package_id: 'pkg_1a',
+      start_date: '2026-02-15T00:00:00Z',
+      end_date: '2026-05-15T00:00:00Z',
+      status: 'active',
+      monthly_rate: 480,
+      platform_fee_percent: 7,
+      sessions_total: 8,
+      sessions_used: 5,
+      created_at: '2026-02-14T10:00:00Z',
+      updated_at: '2026-04-01T10:00:00Z',
+    },
+    {
+      id: 'ct_3',
+      trainer_id: 'tr_1',
+      customer_id: 'c_5',
+      package_id: 'pkg_1b',
+      start_date: '2026-01-10T00:00:00Z',
+      end_date: '2026-04-10T00:00:00Z',
+      status: 'active',
+      monthly_rate: 720,
+      platform_fee_percent: 7,
+      sessions_total: 12,
+      sessions_used: 10,
+      created_at: '2026-01-09T10:00:00Z',
+      updated_at: '2026-04-01T10:00:00Z',
+    },
+    {
+      id: 'ct_4',
+      trainer_id: 'tr_1',
+      customer_id: 'c_6',
+      package_id: 'pkg_1a',
+      start_date: '2026-03-01T00:00:00Z',
+      end_date: '2026-06-01T00:00:00Z',
+      status: 'active',
+      monthly_rate: 480,
+      platform_fee_percent: 7,
+      sessions_total: 8,
+      sessions_used: 3,
+      created_at: '2026-02-28T10:00:00Z',
+      updated_at: '2026-04-01T10:00:00Z',
+    },
+    {
+      id: 'ct_5',
+      trainer_id: 'tr_1',
+      customer_id: 'c_7',
+      package_id: 'pkg_1b',
+      start_date: '2025-12-01T00:00:00Z',
+      end_date: '2026-03-01T00:00:00Z',
+      status: 'completed',
+      monthly_rate: 720,
+      platform_fee_percent: 7,
+      sessions_total: 12,
+      sessions_used: 12,
+      created_at: '2025-11-30T10:00:00Z',
+      updated_at: '2026-03-01T10:00:00Z',
+    },
+  ]
+  set(KEYS.contracts, seedContracts)
+
+  // Seed workout logs — realistic progression over 8+ weeks
+  const seedWorkoutLogs: WorkoutLog[] = [
+    // ═══ Bankdrücken — 8 Sessions (Montag, Push Day) ═══
+    // Woche 1: Start bei 60kg
+    { id: 'wl_1', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_1', exercise_name: 'Bankdrücken', date: '2026-02-17T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '80kg', actual_sets: [
+      { set_number: 1, reps: 8, weight: 60, completed: true }, { set_number: 2, reps: 7, weight: 60, completed: true }, { set_number: 3, reps: 6, weight: 60, completed: true }, { set_number: 4, reps: 6, weight: 55, completed: true },
+    ], notes: null, created_at: '2026-02-17T10:00:00Z' },
+    // Woche 2
+    { id: 'wl_2', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_1', exercise_name: 'Bankdrücken', date: '2026-02-24T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '80kg', actual_sets: [
+      { set_number: 1, reps: 9, weight: 62.5, completed: true }, { set_number: 2, reps: 8, weight: 62.5, completed: true }, { set_number: 3, reps: 7, weight: 60, completed: true }, { set_number: 4, reps: 6, weight: 60, completed: true },
+    ], notes: null, created_at: '2026-02-24T10:00:00Z' },
+    // Woche 3
+    { id: 'wl_3', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_1', exercise_name: 'Bankdrücken', date: '2026-03-03T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '80kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 65, completed: true }, { set_number: 2, reps: 9, weight: 65, completed: true }, { set_number: 3, reps: 8, weight: 65, completed: true }, { set_number: 4, reps: 7, weight: 62.5, completed: true },
+    ], notes: null, created_at: '2026-03-03T10:00:00Z' },
+    // Woche 4
+    { id: 'wl_4', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_1', exercise_name: 'Bankdrücken', date: '2026-03-10T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '80kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 70, completed: true }, { set_number: 2, reps: 9, weight: 70, completed: true }, { set_number: 3, reps: 8, weight: 67.5, completed: true }, { set_number: 4, reps: 7, weight: 67.5, completed: true },
+    ], notes: null, created_at: '2026-03-10T10:00:00Z' },
+    // Woche 5
+    { id: 'wl_5', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_1', exercise_name: 'Bankdrücken', date: '2026-03-17T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '80kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 72.5, completed: true }, { set_number: 2, reps: 10, weight: 72.5, completed: true }, { set_number: 3, reps: 9, weight: 70, completed: true }, { set_number: 4, reps: 8, weight: 70, completed: true },
+    ], notes: null, created_at: '2026-03-17T10:00:00Z' },
+    // Woche 6
+    { id: 'wl_6', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_1', exercise_name: 'Bankdrücken', date: '2026-03-24T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '80kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 75, completed: true }, { set_number: 2, reps: 10, weight: 75, completed: true }, { set_number: 3, reps: 9, weight: 75, completed: true }, { set_number: 4, reps: 8, weight: 72.5, completed: true },
+    ], notes: null, created_at: '2026-03-24T10:00:00Z' },
+    // Woche 7
+    { id: 'wl_7', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_1', exercise_name: 'Bankdrücken', date: '2026-03-31T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '80kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 77.5, completed: true }, { set_number: 2, reps: 10, weight: 77.5, completed: true }, { set_number: 3, reps: 9, weight: 75, completed: true }, { set_number: 4, reps: 8, weight: 75, completed: true },
+    ], notes: null, created_at: '2026-03-31T10:00:00Z' },
+    // Woche 8
+    { id: 'wl_8', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_1', exercise_name: 'Bankdrücken', date: '2026-04-07T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '80kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 80, completed: true }, { set_number: 2, reps: 10, weight: 80, completed: true }, { set_number: 3, reps: 9, weight: 77.5, completed: true }, { set_number: 4, reps: 8, weight: 77.5, completed: true },
+    ], notes: 'Ziel 80kg erreicht!', created_at: '2026-04-07T10:00:00Z' },
+
+    // ═══ Kniebeugen — 7 Sessions (Dienstag, Leg Day) ═══
+    { id: 'wl_9', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_5', exercise_name: 'Kniebeugen', date: '2026-02-18T10:00:00Z', prescribed_sets: 4, prescribed_reps: '6-8', prescribed_weight: '100kg', actual_sets: [
+      { set_number: 1, reps: 6, weight: 70, completed: true }, { set_number: 2, reps: 5, weight: 70, completed: true }, { set_number: 3, reps: 5, weight: 65, completed: true }, { set_number: 4, reps: 4, weight: 65, completed: true },
+    ], notes: null, created_at: '2026-02-18T10:00:00Z' },
+    { id: 'wl_10', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_5', exercise_name: 'Kniebeugen', date: '2026-02-25T10:00:00Z', prescribed_sets: 4, prescribed_reps: '6-8', prescribed_weight: '100kg', actual_sets: [
+      { set_number: 1, reps: 7, weight: 75, completed: true }, { set_number: 2, reps: 6, weight: 75, completed: true }, { set_number: 3, reps: 6, weight: 72.5, completed: true }, { set_number: 4, reps: 5, weight: 72.5, completed: true },
+    ], notes: null, created_at: '2026-02-25T10:00:00Z' },
+    { id: 'wl_11', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_5', exercise_name: 'Kniebeugen', date: '2026-03-04T10:00:00Z', prescribed_sets: 4, prescribed_reps: '6-8', prescribed_weight: '100kg', actual_sets: [
+      { set_number: 1, reps: 8, weight: 80, completed: true }, { set_number: 2, reps: 7, weight: 80, completed: true }, { set_number: 3, reps: 6, weight: 77.5, completed: true }, { set_number: 4, reps: 6, weight: 77.5, completed: true },
+    ], notes: null, created_at: '2026-03-04T10:00:00Z' },
+    { id: 'wl_12', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_5', exercise_name: 'Kniebeugen', date: '2026-03-11T10:00:00Z', prescribed_sets: 4, prescribed_reps: '6-8', prescribed_weight: '100kg', actual_sets: [
+      { set_number: 1, reps: 8, weight: 82.5, completed: true }, { set_number: 2, reps: 7, weight: 82.5, completed: true }, { set_number: 3, reps: 7, weight: 80, completed: true }, { set_number: 4, reps: 6, weight: 80, completed: true },
+    ], notes: null, created_at: '2026-03-11T10:00:00Z' },
+    { id: 'wl_13', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_5', exercise_name: 'Kniebeugen', date: '2026-03-18T10:00:00Z', prescribed_sets: 4, prescribed_reps: '6-8', prescribed_weight: '100kg', actual_sets: [
+      { set_number: 1, reps: 8, weight: 85, completed: true }, { set_number: 2, reps: 8, weight: 85, completed: true }, { set_number: 3, reps: 7, weight: 82.5, completed: true }, { set_number: 4, reps: 6, weight: 82.5, completed: true },
+    ], notes: null, created_at: '2026-03-18T10:00:00Z' },
+    { id: 'wl_14', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_5', exercise_name: 'Kniebeugen', date: '2026-03-25T10:00:00Z', prescribed_sets: 4, prescribed_reps: '6-8', prescribed_weight: '100kg', actual_sets: [
+      { set_number: 1, reps: 8, weight: 90, completed: true }, { set_number: 2, reps: 8, weight: 87.5, completed: true }, { set_number: 3, reps: 7, weight: 87.5, completed: true }, { set_number: 4, reps: 6, weight: 85, completed: true },
+    ], notes: null, created_at: '2026-03-25T10:00:00Z' },
+    { id: 'wl_15', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_5', exercise_name: 'Kniebeugen', date: '2026-04-08T10:00:00Z', prescribed_sets: 4, prescribed_reps: '6-8', prescribed_weight: '100kg', actual_sets: [
+      { set_number: 1, reps: 8, weight: 95, completed: true }, { set_number: 2, reps: 8, weight: 92.5, completed: true }, { set_number: 3, reps: 7, weight: 92.5, completed: true }, { set_number: 4, reps: 7, weight: 90, completed: true },
+    ], notes: null, created_at: '2026-04-08T10:00:00Z' },
+
+    // ═══ Langhantelrudern — 7 Sessions (Mittwoch, Pull Day) ═══
+    { id: 'wl_16', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_10', exercise_name: 'Langhantelrudern', date: '2026-02-19T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '70kg', actual_sets: [
+      { set_number: 1, reps: 8, weight: 45, completed: true }, { set_number: 2, reps: 7, weight: 45, completed: true }, { set_number: 3, reps: 7, weight: 42.5, completed: true }, { set_number: 4, reps: 6, weight: 42.5, completed: true },
+    ], notes: null, created_at: '2026-02-19T10:00:00Z' },
+    { id: 'wl_17', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_10', exercise_name: 'Langhantelrudern', date: '2026-02-26T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '70kg', actual_sets: [
+      { set_number: 1, reps: 9, weight: 47.5, completed: true }, { set_number: 2, reps: 8, weight: 47.5, completed: true }, { set_number: 3, reps: 8, weight: 45, completed: true }, { set_number: 4, reps: 7, weight: 45, completed: true },
+    ], notes: null, created_at: '2026-02-26T10:00:00Z' },
+    { id: 'wl_18', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_10', exercise_name: 'Langhantelrudern', date: '2026-03-05T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '70kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 50, completed: true }, { set_number: 2, reps: 9, weight: 50, completed: true }, { set_number: 3, reps: 8, weight: 50, completed: true }, { set_number: 4, reps: 7, weight: 47.5, completed: true },
+    ], notes: null, created_at: '2026-03-05T10:00:00Z' },
+    { id: 'wl_19', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_10', exercise_name: 'Langhantelrudern', date: '2026-03-12T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '70kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 55, completed: true }, { set_number: 2, reps: 9, weight: 55, completed: true }, { set_number: 3, reps: 9, weight: 52.5, completed: true }, { set_number: 4, reps: 8, weight: 52.5, completed: true },
+    ], notes: null, created_at: '2026-03-12T10:00:00Z' },
+    { id: 'wl_20', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_10', exercise_name: 'Langhantelrudern', date: '2026-03-19T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '70kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 57.5, completed: true }, { set_number: 2, reps: 10, weight: 57.5, completed: true }, { set_number: 3, reps: 9, weight: 55, completed: true }, { set_number: 4, reps: 8, weight: 55, completed: true },
+    ], notes: null, created_at: '2026-03-19T10:00:00Z' },
+    { id: 'wl_21', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_10', exercise_name: 'Langhantelrudern', date: '2026-04-02T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '70kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 60, completed: true }, { set_number: 2, reps: 10, weight: 60, completed: true }, { set_number: 3, reps: 9, weight: 60, completed: true }, { set_number: 4, reps: 9, weight: 57.5, completed: true },
+    ], notes: null, created_at: '2026-04-02T10:00:00Z' },
+    { id: 'wl_22', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_10', exercise_name: 'Langhantelrudern', date: '2026-04-09T10:00:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: '70kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 65, completed: true }, { set_number: 2, reps: 10, weight: 62.5, completed: true }, { set_number: 3, reps: 10, weight: 62.5, completed: true }, { set_number: 4, reps: 9, weight: 60, completed: true },
+    ], notes: null, created_at: '2026-04-09T10:00:00Z' },
+
+    // ═══ Klimmzüge — 6 Sessions (Bodyweight, Wdh-Steigerung) ═══
+    { id: 'wl_23', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_9', exercise_name: 'Klimmzüge', date: '2026-02-19T10:30:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: 'Bodyweight', actual_sets: [
+      { set_number: 1, reps: 5, weight: 0, completed: true }, { set_number: 2, reps: 4, weight: 0, completed: true }, { set_number: 3, reps: 4, weight: 0, completed: true }, { set_number: 4, reps: 3, weight: 0, completed: true },
+    ], notes: null, created_at: '2026-02-19T10:30:00Z' },
+    { id: 'wl_24', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_9', exercise_name: 'Klimmzüge', date: '2026-03-05T10:30:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: 'Bodyweight', actual_sets: [
+      { set_number: 1, reps: 6, weight: 0, completed: true }, { set_number: 2, reps: 5, weight: 0, completed: true }, { set_number: 3, reps: 5, weight: 0, completed: true }, { set_number: 4, reps: 4, weight: 0, completed: true },
+    ], notes: null, created_at: '2026-03-05T10:30:00Z' },
+    { id: 'wl_25', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_9', exercise_name: 'Klimmzüge', date: '2026-03-12T10:30:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: 'Bodyweight', actual_sets: [
+      { set_number: 1, reps: 7, weight: 0, completed: true }, { set_number: 2, reps: 6, weight: 0, completed: true }, { set_number: 3, reps: 6, weight: 0, completed: true }, { set_number: 4, reps: 5, weight: 0, completed: true },
+    ], notes: null, created_at: '2026-03-12T10:30:00Z' },
+    { id: 'wl_26', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_9', exercise_name: 'Klimmzüge', date: '2026-03-19T10:30:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: 'Bodyweight', actual_sets: [
+      { set_number: 1, reps: 8, weight: 0, completed: true }, { set_number: 2, reps: 7, weight: 0, completed: true }, { set_number: 3, reps: 6, weight: 0, completed: true }, { set_number: 4, reps: 6, weight: 0, completed: true },
+    ], notes: null, created_at: '2026-03-19T10:30:00Z' },
+    { id: 'wl_27', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_9', exercise_name: 'Klimmzüge', date: '2026-04-02T10:30:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: 'Bodyweight', actual_sets: [
+      { set_number: 1, reps: 9, weight: 0, completed: true }, { set_number: 2, reps: 8, weight: 0, completed: true }, { set_number: 3, reps: 7, weight: 0, completed: true }, { set_number: 4, reps: 7, weight: 0, completed: true },
+    ], notes: null, created_at: '2026-04-02T10:30:00Z' },
+    { id: 'wl_28', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_9', exercise_name: 'Klimmzüge', date: '2026-04-09T10:30:00Z', prescribed_sets: 4, prescribed_reps: '8-10', prescribed_weight: 'Bodyweight', actual_sets: [
+      { set_number: 1, reps: 10, weight: 0, completed: true }, { set_number: 2, reps: 9, weight: 0, completed: true }, { set_number: 3, reps: 8, weight: 0, completed: true }, { set_number: 4, reps: 7, weight: 0, completed: true },
+    ], notes: null, created_at: '2026-04-09T10:30:00Z' },
+
+    // ═══ Beinpresse — 5 Sessions ═══
+    { id: 'wl_29', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_6', exercise_name: 'Beinpresse', date: '2026-02-18T10:30:00Z', prescribed_sets: 3, prescribed_reps: '10-12', prescribed_weight: '180kg', actual_sets: [
+      { set_number: 1, reps: 10, weight: 120, completed: true }, { set_number: 2, reps: 9, weight: 120, completed: true }, { set_number: 3, reps: 8, weight: 110, completed: true },
+    ], notes: null, created_at: '2026-02-18T10:30:00Z' },
+    { id: 'wl_30', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_6', exercise_name: 'Beinpresse', date: '2026-03-04T10:30:00Z', prescribed_sets: 3, prescribed_reps: '10-12', prescribed_weight: '180kg', actual_sets: [
+      { set_number: 1, reps: 12, weight: 130, completed: true }, { set_number: 2, reps: 10, weight: 130, completed: true }, { set_number: 3, reps: 9, weight: 125, completed: true },
+    ], notes: null, created_at: '2026-03-04T10:30:00Z' },
+    { id: 'wl_31', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_6', exercise_name: 'Beinpresse', date: '2026-03-18T10:30:00Z', prescribed_sets: 3, prescribed_reps: '10-12', prescribed_weight: '180kg', actual_sets: [
+      { set_number: 1, reps: 12, weight: 145, completed: true }, { set_number: 2, reps: 11, weight: 145, completed: true }, { set_number: 3, reps: 10, weight: 140, completed: true },
+    ], notes: null, created_at: '2026-03-18T10:30:00Z' },
+    { id: 'wl_32', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_6', exercise_name: 'Beinpresse', date: '2026-04-01T10:30:00Z', prescribed_sets: 3, prescribed_reps: '10-12', prescribed_weight: '180kg', actual_sets: [
+      { set_number: 1, reps: 12, weight: 160, completed: true }, { set_number: 2, reps: 11, weight: 155, completed: true }, { set_number: 3, reps: 10, weight: 150, completed: true },
+    ], notes: null, created_at: '2026-04-01T10:30:00Z' },
+    { id: 'wl_33', customer_id: 'c_demo', plan_id: 'wp_1', exercise_id: 'ex_6', exercise_name: 'Beinpresse', date: '2026-04-08T10:30:00Z', prescribed_sets: 3, prescribed_reps: '10-12', prescribed_weight: '180kg', actual_sets: [
+      { set_number: 1, reps: 12, weight: 170, completed: true }, { set_number: 2, reps: 12, weight: 165, completed: true }, { set_number: 3, reps: 10, weight: 160, completed: true },
+    ], notes: null, created_at: '2026-04-08T10:30:00Z' },
+  ]
+  set(KEYS.workoutLogs, seedWorkoutLogs)
 
   localStorage.setItem(KEYS.initialized, 'true')
 }
@@ -452,6 +641,19 @@ export function addProgressMetric(data: {
   return metric
 }
 
+export function updateProgressMetric(id: string, data: Partial<Pick<ProgressMetric, 'weight_kg' | 'body_fat_percent' | 'muscle_mass_kg' | 'notes'>>): void {
+  const metrics = get<ProgressMetric>(KEYS.progressMetrics)
+  const idx = metrics.findIndex(m => m.id === id)
+  if (idx >= 0) {
+    metrics[idx] = { ...metrics[idx], ...data }
+    set(KEYS.progressMetrics, metrics)
+  }
+}
+
+export function deleteProgressMetric(id: string): void {
+  set(KEYS.progressMetrics, get<ProgressMetric>(KEYS.progressMetrics).filter(m => m.id !== id))
+}
+
 export function getProgressPhotos(customerId: string): ProgressPhoto[] {
   return get<ProgressPhoto>(KEYS.progressPhotos)
     .filter(p => p.customer_id === customerId)
@@ -520,6 +722,69 @@ export function createReview(data: {
   reviews.unshift({ ...review, customer_display_name: `Client#${Math.floor(1000 + Math.random() * 9000)}` })
   set(KEYS.reviews, reviews)
   return review
+}
+
+// ═══════════════════════════════════════════════════════════
+// WORKOUT LOGS
+// ═══════════════════════════════════════════════════════════
+
+export function getWorkoutLogs(customerId: string, exerciseName?: string): WorkoutLog[] {
+  let logs = get<WorkoutLog>(KEYS.workoutLogs).filter(l => l.customer_id === customerId)
+  if (exerciseName) {
+    logs = logs.filter(l => l.exercise_name === exerciseName)
+  }
+  return logs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+}
+
+export function getExerciseHistory(customerId: string, exerciseName: string): WorkoutLog[] {
+  return getWorkoutLogs(customerId, exerciseName)
+}
+
+export function addWorkoutLog(data: Omit<WorkoutLog, 'id' | 'created_at'>): WorkoutLog {
+  const log: WorkoutLog = {
+    ...data,
+    id: `wl_${uid()}`,
+    created_at: now(),
+  }
+  const logs = get<WorkoutLog>(KEYS.workoutLogs)
+  logs.push(log)
+  set(KEYS.workoutLogs, logs)
+  return log
+}
+
+// ═══════════════════════════════════════════════════════════
+// MEAL LOGS
+// ═══════════════════════════════════════════════════════════
+
+export function getMealLogs(customerId: string, date?: string): MealLog[] {
+  let logs = get<MealLog>(KEYS.mealLogs).filter(l => l.customer_id === customerId)
+  if (date) {
+    logs = logs.filter(l => l.date === date)
+  }
+  return logs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+}
+
+export function getMealLog(customerId: string, date: string): MealLog | null {
+  return getMealLogs(customerId, date)[0] ?? null
+}
+
+export function saveMealLog(log: MealLog): void {
+  const logs = get<MealLog>(KEYS.mealLogs)
+  const idx = logs.findIndex(l => l.id === log.id)
+  if (idx >= 0) {
+    logs[idx] = { ...log, updated_at: now() }
+  } else {
+    logs.push({ ...log, id: log.id || `ml_${uid()}`, created_at: now(), updated_at: now() })
+  }
+  set(KEYS.mealLogs, logs)
+}
+
+export function getMealLogHistory(customerId: string, days: number = 7): MealLog[] {
+  const cutoff = new Date()
+  cutoff.setDate(cutoff.getDate() - days)
+  return get<MealLog>(KEYS.mealLogs)
+    .filter(l => l.customer_id === customerId && new Date(l.date) >= cutoff)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
 // ═══════════════════════════════════════════════════════════
