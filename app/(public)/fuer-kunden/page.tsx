@@ -224,39 +224,132 @@ export default function FuerKundenPage() {
                 <span className="text-[9px] text-muted-foreground/30">fitnexus.de/dashboard/customer</span>
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-3 mb-5">
+            {/* KPIs */}
+            <div className="grid grid-cols-4 gap-4 mb-5">
               {[
-                { l: 'Mein Coach', v: 'Max M.', c: '#00A8FF' },
+                { l: 'Mein Coach', v: 'Max K.', c: '#00A8FF' },
                 { l: 'Nächste Session', v: 'Mo, 10:00', c: '#00D4FF' },
-                { l: 'Fortschritt', v: '-2.8 kg', c: '#00FF94' },
+                { l: 'Fortschritt', v: '-4.8 kg', c: '#00FF94' },
                 { l: 'Streak', v: '12 Tage', c: '#FFD700' },
               ].map((s) => (
-                <div key={s.l} className="p-3 rounded-xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
-                  <p className="text-lg font-bold" style={{ color: s.c }}>{s.v}</p>
-                  <p className="text-[9px] text-muted-foreground/40 mt-0.5">{s.l}</p>
+                <div key={s.l} className="p-4 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                  <p className="text-2xl font-bold" style={{ color: s.c }}>{s.v}</p>
+                  <p className="text-[10px] text-muted-foreground/50 mt-1">{s.l}</p>
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="col-span-2 p-4 rounded-xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
-                <p className="text-xs font-semibold text-foreground mb-3">Trainingsplan — Woche 4</p>
-                <div className="space-y-1.5">
-                  {['Bankdrücken — 4×8 @ 80kg', 'Kniebeugen — 4×6 @ 100kg', 'Klimmzüge — 4×10 BW'].map((ex) => (
-                    <div key={ex} className="flex items-center gap-2 p-1.5 rounded bg-[#1A2332]/40 text-[10px] text-muted-foreground">
-                      <div className="w-4 h-4 rounded border border-[#00FF94]/30 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-2.5 h-2.5 text-[#00FF94]" />
+
+            {/* Trainingsplan + Chat */}
+            <div className="grid grid-cols-3 gap-4 mb-5">
+              <div className="col-span-2 p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-semibold text-foreground">Trainingsplan — Push Day</p>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00A8FF]/10 text-[#00A8FF]">3/5 erledigt</span>
+                </div>
+                <div className="space-y-2">
+                  {[
+                    { ex: 'Bankdrücken — 4×8 @ 45kg', done: true },
+                    { ex: 'Schrägbank Kurzhantel — 3×12 @ 14kg', done: true },
+                    { ex: 'Schulterdrücken — 4×10 @ 20kg', done: true },
+                    { ex: 'Seitheben — 4×15 @ 6kg', done: false },
+                    { ex: 'Trizeps Dips — 3×12 BW', done: false },
+                  ].map((item) => (
+                    <div key={item.ex} className="flex items-center gap-3 p-2 rounded-lg bg-[#1A2332]/40">
+                      <div className={`w-5 h-5 rounded border flex items-center justify-center ${item.done ? 'border-[#00FF94]/30 bg-[#00FF94]/5' : 'border-muted-foreground/15'}`}>
+                        {item.done && <Check className="w-3 h-3 text-[#00FF94]" />}
                       </div>
-                      {ex}
+                      <span className={`text-xs ${item.done ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}>{item.ex}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
-                <p className="text-xs font-semibold text-foreground mb-3">Ernährung</p>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Chat — Coach Max</p>
                 <div className="space-y-2">
-                  <div><p className="text-[10px] text-muted-foreground/40">Kalorien</p><p className="text-sm font-bold text-[#00D4FF]">2.800</p></div>
-                  <div><p className="text-[10px] text-muted-foreground/40">Protein</p><p className="text-sm font-bold text-[#00FF94]">180g</p></div>
-                  <div><p className="text-[10px] text-muted-foreground/40">Carbs</p><p className="text-sm font-bold text-[#FFD700]">320g</p></div>
+                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Wie geht&apos;s dir heute?</div>
+                  <div className="p-2 rounded-lg bg-[#1A2332]/60 text-[10px] text-muted-foreground ml-4">Gut! Bin motiviert</div>
+                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Schulterdrücken steigern wir auf 20kg</div>
+                  <div className="p-2 rounded-lg bg-[#1A2332]/60 text-[10px] text-muted-foreground ml-4">Neuer PR!</div>
+                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Ernährung sieht top aus.</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ernährung + Fortschritt + Termine + Coach */}
+            <div className="grid grid-cols-4 gap-4">
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Ernährung</p>
+                <div className="space-y-3">
+                  {[
+                    { label: 'Kalorien', pct: 92, color: '#00D4FF' },
+                    { label: 'Protein', pct: 90, color: '#00FF94' },
+                    { label: 'Carbs', pct: 87, color: '#FFD700' },
+                    { label: 'Fett', pct: 86, color: '#00A8FF' },
+                  ].map((m) => (
+                    <div key={m.label}>
+                      <div className="flex justify-between text-[10px] mb-1">
+                        <span className="text-muted-foreground/50">{m.label}</span>
+                        <span className="font-semibold" style={{ color: m.color }}>{m.pct}%</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-[#1A2332]/60 overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: `${m.pct}%`, background: m.color }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Fortschritt</p>
+                <div className="space-y-2.5">
+                  {[
+                    { label: 'Gewicht', value: '68.2 kg', change: '-4.8 kg', color: '#00FF94' },
+                    { label: 'Körperfett', value: '21.3%', change: '-3.1%', color: '#00D4FF' },
+                    { label: 'Muskelmasse', value: '27.8 kg', change: '+1.7 kg', color: '#39FF14' },
+                  ].map((b) => (
+                    <div key={b.label} className="flex items-center justify-between p-2 rounded-lg bg-[#1A2332]/40">
+                      <div>
+                        <p className="text-[10px] text-muted-foreground/40">{b.label}</p>
+                        <p className="text-sm font-bold text-foreground">{b.value}</p>
+                      </div>
+                      <span className="text-xs font-bold" style={{ color: b.color }}>{b.change}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Termine</p>
+                <div className="space-y-2">
+                  {[
+                    { time: 'Mo 10:00', title: 'Push Training', active: true },
+                    { time: 'Mi 18:00', title: 'Beintraining', active: false },
+                    { time: 'Fr 09:00', title: 'Pull Training', active: false },
+                    { time: 'Sa 10:00', title: 'Yoga Flow', active: false },
+                  ].map((t) => (
+                    <div key={t.time} className="flex items-center gap-3 p-2 rounded-lg bg-[#1A2332]/40">
+                      <div className={`w-1 h-6 rounded-full ${t.active ? 'bg-[#00FF94]' : 'bg-[#00A8FF]/25'}`} />
+                      <div>
+                        <p className="text-xs font-semibold text-foreground">{t.title}</p>
+                        <p className="text-[10px] text-muted-foreground/30">{t.time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Mein Coach</p>
+                <div className="flex items-center gap-3 p-2 rounded-lg bg-[#1A2332]/40 mb-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#00A8FF] flex items-center justify-center text-xs font-bold text-[#0B0F1A]">MK</div>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">Max Krüger</p>
+                    <p className="text-[10px] text-muted-foreground/30">Kraft & Hypertrophie</p>
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  {['Verifiziert', '127 Bewertungen', '4.9 ★ Rating'].map((f) => (
+                    <div key={f} className="flex items-center gap-2 text-[10px] text-muted-foreground/50">
+                      <Check className="w-3 h-3 text-[#00FF94]" /> {f}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

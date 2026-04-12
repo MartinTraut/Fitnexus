@@ -150,12 +150,13 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-6">
+            {/* KPIs */}
+            <div className="grid grid-cols-4 gap-4 mb-5">
               {[
-                { label: 'Aktive Coaches', value: '3', color: '#00A8FF' },
-                { label: 'Trainingseinheiten', value: '24', color: '#00D4FF' },
-                { label: 'Fortschritt', value: '+12%', color: '#00FF94' },
-                { label: 'Nächste Session', value: 'Mo, 10:00', color: '#FFD700' },
+                { label: 'Trainingseinheiten', value: '24', color: '#00A8FF' },
+                { label: 'Streak', value: '12 Tage', color: '#FFD700' },
+                { label: 'Fortschritt', value: '-3.6 kg', color: '#00FF94' },
+                { label: 'Nächste Session', value: 'Mo, 10:00', color: '#00D4FF' },
               ].map((s) => (
                 <div key={s.label} className="p-4 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
                   <p className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
@@ -164,26 +165,149 @@ export default function HomePage() {
               ))}
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            {/* Trainingsplan + Chat */}
+            <div className="grid grid-cols-3 gap-4 mb-5">
               <div className="col-span-2 p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
-                <p className="text-sm font-semibold text-foreground mb-3">Trainingsplan — Woche 4</p>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-semibold text-foreground">Trainingsplan — Push Day</p>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00A8FF]/10 text-[#00A8FF]">3/5 erledigt</span>
+                </div>
                 <div className="space-y-2">
-                  {['Bankdrücken — 4×8 @ 80kg', 'Kniebeugen — 4×6 @ 100kg', 'Klimmzüge — 4×10'].map((ex) => (
-                    <div key={ex} className="flex items-center gap-3 p-2 rounded-lg bg-[#1A2332]/40">
-                      <div className="w-5 h-5 rounded border border-[#00FF94]/30 flex items-center justify-center">
-                        <Check className="w-3 h-3 text-[#00FF94]" />
+                  {[
+                    { ex: 'Bankdrücken — 4×8 @ 80kg', done: true },
+                    { ex: 'Schrägbank — 3×10 @ 60kg', done: true },
+                    { ex: 'Schulterdrücken — 4×10 @ 42.5kg', done: true },
+                    { ex: 'Seitheben — 4×15 @ 12kg', done: false },
+                    { ex: 'Trizeps Pushdown — 3×12 @ 30kg', done: false },
+                  ].map((item) => (
+                    <div key={item.ex} className="flex items-center gap-3 p-2 rounded-lg bg-[#1A2332]/40">
+                      <div className={`w-5 h-5 rounded border flex items-center justify-center ${item.done ? 'border-[#00FF94]/30 bg-[#00FF94]/5' : 'border-muted-foreground/15'}`}>
+                        {item.done && <Check className="w-3 h-3 text-[#00FF94]" />}
                       </div>
-                      <span className="text-xs text-muted-foreground">{ex}</span>
+                      <span className={`text-xs ${item.done ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}>{item.ex}</span>
                     </div>
                   ))}
                 </div>
               </div>
               <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
-                <p className="text-sm font-semibold text-foreground mb-3">Chat</p>
+                <p className="text-sm font-semibold text-foreground mb-3">Chat — Coach Max</p>
                 <div className="space-y-2">
-                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Super Session heute!</div>
+                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Gewicht eingetragen?</div>
+                  <div className="p-2 rounded-lg bg-[#1A2332]/60 text-[10px] text-muted-foreground ml-4">82.4 kg — neuer Tiefpunkt!</div>
+                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Mega, 3.6 kg runter! Sauber.</div>
                   <div className="p-2 rounded-lg bg-[#1A2332]/60 text-[10px] text-muted-foreground ml-4">Danke Coach!</div>
-                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Nächste Woche steigern wir.</div>
+                  <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Schulterdrücken steigern wir.</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ernährung + Fortschritt + Termine + Coaches */}
+            <div className="grid grid-cols-4 gap-4">
+              {/* Ernährung */}
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Ernährung</p>
+                <div className="space-y-3">
+                  {[
+                    { label: 'Kalorien', pct: 94, color: '#00D4FF' },
+                    { label: 'Protein', pct: 92, color: '#00FF94' },
+                    { label: 'Carbs', pct: 87, color: '#FFD700' },
+                    { label: 'Fett', pct: 85, color: '#00A8FF' },
+                  ].map((m) => (
+                    <div key={m.label}>
+                      <div className="flex justify-between text-[10px] mb-1">
+                        <span className="text-muted-foreground/50">{m.label}</span>
+                        <span className="font-semibold" style={{ color: m.color }}>{m.pct}%</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-[#1A2332]/60 overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: `${m.pct}%`, background: m.color }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Gewichtsverlauf + Fortschritt */}
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-semibold text-foreground">Gewichtsverlauf</p>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00FF94]/10 text-[#00FF94]">-3.6 kg</span>
+                </div>
+                {/* SVG Chart */}
+                <svg viewBox="0 0 200 60" className="w-full h-[60px] mb-3" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#00FF94" stopOpacity="0.2" />
+                      <stop offset="100%" stopColor="#00FF94" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient id="lineFill" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#00A8FF" />
+                      <stop offset="100%" stopColor="#00FF94" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M0,2 L18,6 L36,10 L54,15 L72,19 L90,24 L108,28 L126,33 L144,38 L162,42 L180,47 L200,54 L200,60 L0,60 Z" fill="url(#areaFill)" />
+                  <path d="M0,2 L18,6 L36,10 L54,15 L72,19 L90,24 L108,28 L126,33 L144,38 L162,42 L180,47 L200,54" fill="none" stroke="url(#lineFill)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="200" cy="54" r="3" fill="#00FF94" />
+                  <circle cx="0" cy="2" r="2" fill="#00A8FF" opacity="0.5" />
+                </svg>
+                <div className="flex justify-between text-[9px] text-muted-foreground/25 mb-3">
+                  <span>86 kg</span><span>Woche 1–12</span><span>82.4 kg</span>
+                </div>
+                <div className="space-y-1.5">
+                  {[
+                    { label: 'Körperfett', value: '14.8%', change: '-2.4%', color: '#00D4FF' },
+                    { label: 'Muskelmasse', value: '38.2 kg', change: '+1.8 kg', color: '#39FF14' },
+                  ].map((b) => (
+                    <div key={b.label} className="flex items-center justify-between">
+                      <span className="text-[10px] text-muted-foreground/40">{b.label}: <span className="text-foreground font-semibold">{b.value}</span></span>
+                      <span className="text-[10px] font-bold" style={{ color: b.color }}>{b.change}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Termine */}
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Termine</p>
+                <div className="space-y-2">
+                  {[
+                    { time: 'Mo 10:00', title: 'Push Training', active: true },
+                    { time: 'Mi 18:00', title: 'Beintraining', active: false },
+                    { time: 'Fr 09:00', title: 'Pull Training', active: false },
+                    { time: 'Sa 11:00', title: 'Mobility', active: false },
+                  ].map((t) => (
+                    <div key={t.time} className="flex items-center gap-3 p-2 rounded-lg bg-[#1A2332]/40">
+                      <div className={`w-1 h-6 rounded-full ${t.active ? 'bg-[#00FF94]' : 'bg-[#00A8FF]/25'}`} />
+                      <div>
+                        <p className="text-xs font-semibold text-foreground">{t.title}</p>
+                        <p className="text-[10px] text-muted-foreground/30">{t.time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Meine Coaches */}
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Meine Coaches</p>
+                <div className="space-y-2">
+                  {[
+                    { name: 'Max Krüger', spec: 'Kraft & Hypertrophie', rating: 4.9, color: '#00A8FF' },
+                    { name: 'Lisa Meier', spec: 'Mobility & Yoga', rating: 4.8, color: '#00D4FF' },
+                  ].map((c) => (
+                    <div key={c.name} className="flex items-center gap-3 p-2 rounded-lg bg-[#1A2332]/40">
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-[#0B0F1A]" style={{ background: c.color }}>
+                        {c.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-semibold text-foreground">{c.name}</p>
+                        <p className="text-[10px] text-muted-foreground/30">{c.spec}</p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-[#FFD700] fill-[#FFD700]" />
+                        <span className="text-xs font-semibold text-foreground">{c.rating}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

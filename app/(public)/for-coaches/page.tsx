@@ -156,49 +156,150 @@ export default function ForCoachesPage() {
                 <span className="text-[9px] text-muted-foreground/30">fitnexus.de/dashboard/trainer</span>
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-3 mb-5">
+            {/* KPIs */}
+            <div className="grid grid-cols-4 gap-4 mb-5">
               {[
-                { l: 'Aktive Kunden', v: '24', c: '#00FF94' },
-                { l: 'Neue Leads', v: '7', c: '#00D4FF' },
-                { l: 'Bewertung', v: '4.9', c: '#FFD700' },
-                { l: 'Umsatz/Monat', v: '4.280€', c: '#00FF94' },
+                { l: 'Aktive Kunden', v: '47', c: '#00FF94' },
+                { l: 'Neue Leads', v: '12', c: '#00A8FF' },
+                { l: 'Bewertung', v: '4.9 ★', c: '#FFD700' },
+                { l: 'Umsatz/Monat', v: '8.340€', c: '#00FF94' },
               ].map((s) => (
-                <div key={s.l} className="p-3 rounded-xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
-                  <p className="text-lg font-bold" style={{ color: s.c }}>{s.v}</p>
-                  <p className="text-[9px] text-muted-foreground/40 mt-0.5">{s.l}</p>
+                <div key={s.l} className="p-4 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
+                  <p className="text-2xl font-bold" style={{ color: s.c }}>{s.v}</p>
+                  <p className="text-[10px] text-muted-foreground/50 mt-1">{s.l}</p>
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="p-4 rounded-xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
-                <p className="text-xs font-semibold text-foreground mb-3">Neue Leads</p>
-                <div className="space-y-1.5">
-                  {['Client#4821 — Muskelaufbau', 'Client#7193 — Abnehmen', 'Client#2547 — Yoga'].map((l) => (
-                    <div key={l} className="flex items-center gap-2 p-1.5 rounded bg-[#00FF94]/[0.04] text-[10px] text-muted-foreground">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#00FF94]" /> {l}
-                    </div>
-                  ))}
+
+            {/* Leads + Kunden + Chat */}
+            <div className="grid grid-cols-3 gap-4 mb-5">
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-semibold text-foreground">Neue Leads</p>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00FF94]/10 text-[#00FF94]">3 offen</span>
                 </div>
-              </div>
-              <div className="p-4 rounded-xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
-                <p className="text-xs font-semibold text-foreground mb-3">Kunden</p>
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {[
-                    { n: 'Client#3847', p: 'Transformation', s: '8/12' },
-                    { n: 'Client#1938', p: 'Starter', s: '2/4' },
-                  ].map((c) => (
-                    <div key={c.n} className="p-1.5 rounded bg-[#1A2332]/40 text-[10px] text-muted-foreground">
-                      <span className="text-foreground font-medium">{c.n}</span> · {c.p} · {c.s} Sessions
+                    { id: '#4821', goal: 'Muskelaufbau', city: 'München' },
+                    { id: '#7193', goal: 'Abnehmen', city: 'München' },
+                    { id: '#2547', goal: 'Krafttraining', city: 'Online' },
+                    { id: '#8912', goal: 'Reha-Training', city: 'München' },
+                  ].map((l) => (
+                    <div key={l.id} className="flex items-center gap-2 p-2 rounded-lg bg-[#00FF94]/[0.04] border border-[#00FF94]/[0.06]">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#00FF94] animate-pulse" />
+                      <div className="flex-1">
+                        <p className="text-xs text-foreground font-medium">Client{l.id}</p>
+                        <p className="text-[10px] text-muted-foreground/30">{l.goal} · {l.city}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
-                <p className="text-xs font-semibold text-foreground mb-3">Chat</p>
-                <div className="space-y-1.5">
-                  <div className="p-1.5 rounded bg-[#1A2332]/60 text-[10px] text-muted-foreground">Wie lief das Training?</div>
-                  <div className="p-1.5 rounded bg-[#00FF94]/10 text-[10px] text-[#00FF94] ml-4">Super, 80kg geschafft!</div>
-                  <div className="p-1.5 rounded bg-[#1A2332]/60 text-[10px] text-muted-foreground">Nächste Woche steigern wir</div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Aktive Kunden</p>
+                <div className="space-y-2">
+                  {[
+                    { n: 'Laura M.', p: 'Transformation 12W', s: '4/12' },
+                    { n: 'Tim R.', p: 'Starter 4W', s: '2/4' },
+                    { n: 'Anna S.', p: 'Premium 12W', s: '9/12' },
+                    { n: 'Markus B.', p: 'Online Coaching', s: '6/12' },
+                  ].map((c) => (
+                    <div key={c.n} className="flex items-center justify-between p-2 rounded-lg bg-[#1A2332]/40">
+                      <div>
+                        <p className="text-xs text-foreground font-medium">{c.n}</p>
+                        <p className="text-[10px] text-muted-foreground/30">{c.p}</p>
+                      </div>
+                      <span className="text-[10px] font-semibold text-[#00D4FF]">{c.s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Nachrichten</p>
+                <div className="space-y-2">
+                  <div className="p-2 rounded-lg bg-[#1A2332]/60 text-[10px] text-muted-foreground">Wie lief das Training?</div>
+                  <div className="p-2 rounded-lg bg-[#00FF94]/10 text-[10px] text-[#00FF94] ml-4">Super, 80kg geschafft!</div>
+                  <div className="p-2 rounded-lg bg-[#1A2332]/60 text-[10px] text-muted-foreground">Stark! Nächste Woche steigern.</div>
+                  <div className="p-2 rounded-lg bg-[#00FF94]/10 text-[10px] text-[#00FF94] ml-4">Bin bereit, Coach!</div>
+                  <div className="p-2 rounded-lg bg-[#1A2332]/60 text-[10px] text-muted-foreground">Ernährungsplan aktualisiert.</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Termine + Bewertungen + Verträge + Umsatz */}
+            <div className="grid grid-cols-4 gap-4">
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Heute — 5 Sessions</p>
+                <div className="space-y-2">
+                  {[
+                    { time: '08:00', client: 'Anna S.', done: true },
+                    { time: '10:00', client: 'Markus B.', done: true },
+                    { time: '14:00', client: 'Laura M.', done: false },
+                    { time: '16:00', client: 'Tim R.', done: false },
+                    { time: '18:00', client: 'Neuer Lead', done: false },
+                  ].map((t) => (
+                    <div key={t.time} className="flex items-center gap-2 p-2 rounded-lg bg-[#1A2332]/40">
+                      <span className="text-[10px] font-mono text-muted-foreground/30 w-10">{t.time}</span>
+                      <div className={`w-1.5 h-1.5 rounded-full ${t.done ? 'bg-[#00FF94]' : 'bg-muted-foreground/15'}`} />
+                      <span className="text-xs text-foreground">{t.client}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Bewertungen</p>
+                <div className="space-y-2">
+                  {[
+                    { dim: 'Fachwissen', val: 98 },
+                    { dim: 'Kommunikation', val: 95 },
+                    { dim: 'Motivation', val: 100 },
+                    { dim: 'Preis-Leistung', val: 88 },
+                    { dim: 'Ergebnisse', val: 94 },
+                  ].map((r) => (
+                    <div key={r.dim}>
+                      <div className="flex justify-between text-[10px] mb-1">
+                        <span className="text-muted-foreground/50">{r.dim}</span>
+                        <span className="font-semibold text-[#FFD700]">{r.val}%</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-[#1A2332]/60 overflow-hidden">
+                        <div className="h-full rounded-full bg-[#FFD700]" style={{ width: `${r.val}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Verträge</p>
+                <div className="space-y-2">
+                  {[
+                    { name: 'Transformation 12W', clients: 8, color: '#00FF94' },
+                    { name: 'Starter 4W', clients: 5, color: '#00D4FF' },
+                    { name: 'Premium 12W', clients: 4, color: '#39FF14' },
+                    { name: 'Online Coaching', clients: 12, color: '#00A8FF' },
+                  ].map((p) => (
+                    <div key={p.name} className="flex items-center gap-2 p-2 rounded-lg bg-[#1A2332]/40">
+                      <div className="w-1 h-5 rounded-full" style={{ background: p.color }} />
+                      <div className="flex-1">
+                        <p className="text-xs text-foreground font-medium">{p.name}</p>
+                      </div>
+                      <span className="text-[10px] font-semibold" style={{ color: p.color }}>{p.clients} Kunden</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
+                <p className="text-sm font-semibold text-foreground mb-3">Umsatz</p>
+                <div className="space-y-2.5">
+                  {[
+                    { label: 'Dieser Monat', value: '8.340€', color: '#00FF94' },
+                    { label: 'Vormonat', value: '7.100€', color: '#00D4FF' },
+                    { label: 'Wachstum', value: '+18%', color: '#39FF14' },
+                  ].map((u) => (
+                    <div key={u.label} className="flex items-center justify-between p-2 rounded-lg bg-[#1A2332]/40">
+                      <p className="text-[10px] text-muted-foreground/40">{u.label}</p>
+                      <p className="text-sm font-bold" style={{ color: u.color }}>{u.value}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
