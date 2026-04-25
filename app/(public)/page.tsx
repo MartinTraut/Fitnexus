@@ -14,6 +14,7 @@ import {
   Dumbbell, Users, MapPin, Star, Check,
   MessageCircle, TrendingUp, Shield, Lock,
   Apple, BarChart3, Target, Layers, ClipboardList,
+  Activity, Sparkles,
 } from 'lucide-react'
 
 export default function HomePage() {
@@ -449,55 +450,191 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════
-          HOW IT WORKS — Visual journey
+          HOW IT WORKS — Editorial alternating, with visual mockups
           ═══════════════════════════════════════════════════════════ */}
       <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.03)_0%,transparent_50%)]" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          {/* Header */}
           <AnimatedSection>
-            <div className="text-center mb-20">
-              <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">So funktioniert&apos;s</p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.1]">
-                Dein Weg zum <span className="gradient-brand-text">Ergebnis</span>
+            <div className="text-center mb-24">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full border border-[#00FF94]/25 bg-[#00FF94]/[0.06]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00FF94] animate-pulse" />
+                <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#00FF94]/90">So funktioniert&apos;s</span>
+              </div>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground leading-[1.18] tracking-tight pb-2">
+                Dein Weg zum <span className="gradient-brand-text italic inline-block pr-2 pb-1">Ergebnis</span><span className="text-foreground">.</span>
               </h2>
-              <p className="mt-4 text-muted-foreground/60 max-w-lg mx-auto">Vier Schritte. Keine Hürden. Kein Papierkram.</p>
+              <p className="mt-5 text-sm md:text-base text-muted-foreground/60">Vier Schritte. Keine Hürden. Kein Papierkram.</p>
             </div>
           </AnimatedSection>
 
-          <StaggerGroup className="space-y-6 max-w-4xl mx-auto">
-            {[
-              { num: '01', icon: Search, title: 'Entdecken', desc: 'Durchsuche hunderte verifizierte Coaches. Filtere nach Stadt, Spezialisierung, Preis, Bewertung und Coaching-Art. Finde genau den Coach, der zu deinen Zielen passt.', color: '#00A8FF', accent: 'rgba(0,168,255,0.06)' },
-              { num: '02', icon: MessageCircle, title: 'Kennenlernen', desc: 'Buche ein kostenloses Erstgespräch — komplett anonym über die Plattform. Lerne deinen Coach kennen, bevor du dich entscheidest. Kein Risiko, keine Verpflichtung.', color: '#00D4FF', accent: 'rgba(0,212,255,0.06)' },
-              { num: '03', icon: Dumbbell, title: 'Trainieren', desc: 'Erhalte individuelle Trainingspläne und Ernährungsberatung direkt in FITNEXUS. Tracke jede Übung, jeden Satz, jedes Kilo. Dein Coach sieht deinen Fortschritt in Echtzeit.', color: '#00FF94', accent: 'rgba(0,255,148,0.06)' },
-              { num: '04', icon: TrendingUp, title: 'Wachsen', desc: 'Sieh deine Transformation in Daten und Fotos. Gewicht, Körperfett, Muskelmasse — alles visualisiert. Feiere deine Erfolge und setze dir neue Ziele.', color: '#39FF14', accent: 'rgba(57,255,20,0.06)' },
-            ].map((step, i) => (
-              <StaggerItem key={step.num}>
-                <motion.div whileHover={{ x: 8, transition: { duration: 0.25 } }}>
-                  <div className="flex gap-6 md:gap-8 items-start p-6 md:p-8 rounded-3xl border transition-all duration-400" style={{ borderColor: `${step.color}15`, background: step.accent }}>
-                    {/* Number + Icon */}
-                    <div className="flex-shrink-0">
-                      <div className="relative">
-                        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center" style={{ background: `${step.color}12` }}>
-                          <step.icon className="w-7 h-7 md:w-8 md:h-8" style={{ color: step.color }} />
-                        </div>
-                        <span className="absolute -top-2 -left-2 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-[#0B0F1A]" style={{ background: step.color }}>
-                          {step.num}
-                        </span>
-                      </div>
-                      {i < 3 && (
-                        <div className="hidden md:block w-[2px] h-6 mx-auto mt-2 rounded-full" style={{ background: `${step.color}20` }} />
-                      )}
+          {/* ─── Steps ─── */}
+          <div className="space-y-28 lg:space-y-36">
+
+            {/* ──── STEP 01 — Entdecken (text left / visual right) ──── */}
+            <AnimatedSection>
+              <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <div className="relative order-2 lg:order-1">
+                  <span aria-hidden className="absolute -top-20 -left-2 lg:-top-24 lg:-left-4 font-heading font-extrabold text-[180px] lg:text-[260px] leading-none text-[#00A8FF]/[0.04] select-none pointer-events-none tracking-tighter">01</span>
+                  <div className="relative">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full border border-[#00A8FF]/25 bg-[#00A8FF]/[0.06]">
+                      <Search className="w-3.5 h-3.5 text-[#00D4FF]" />
+                      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#00D4FF]">Schritt 01</span>
                     </div>
-                    {/* Content */}
-                    <div className="flex-1 pt-1">
-                      <h3 className="text-xl md:text-2xl font-heading font-bold text-foreground mb-2">{step.title}</h3>
-                      <p className="text-sm md:text-base text-muted-foreground/70 leading-relaxed">{step.desc}</p>
+                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">Entdecken</h3>
+                    <p className="text-base lg:text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                      Durchsuche hunderte verifizierte Coaches. Filtere nach Stadt, Spezialisierung, Preis und Bewertung. Finde genau den Coach, der zu deinen Zielen passt.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Visual: Search + city tiles */}
+                <div className="order-1 lg:order-2">
+                  <div className="p-5 sm:p-6 rounded-3xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.12)] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#0B0F1A]/80 border border-[rgba(0,168,255,0.1)] mb-4">
+                      <Search className="w-4 h-4 text-[#00D4FF]/70 flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground/70 truncate">Coaches in Berlin · Kraft · 60–90€</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { city: 'Berlin', active: true },
+                        { city: 'München', active: false },
+                        { city: 'Hamburg', active: false },
+                        { city: 'Köln', active: false },
+                      ].map((c) => (
+                        <div key={c.city} className={`px-4 py-3 rounded-2xl text-sm transition ${c.active ? 'border border-[#00A8FF]/35 bg-[#00A8FF]/[0.08] text-[#00D4FF]' : 'border border-[rgba(0,168,255,0.08)] bg-[#0B0F1A]/60 text-muted-foreground/70'}`}>
+                          {c.city}
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </motion.div>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            {/* ──── STEP 02 — Kennenlernen (visual left / text right) ──── */}
+            <AnimatedSection>
+              <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                {/* Visual: time slots */}
+                <div className="order-1">
+                  <div className="p-5 sm:p-6 rounded-3xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.12)] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+                    <p className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground/50 mb-4">Verfügbar diese Woche</p>
+                    <div className="grid grid-cols-3 gap-2.5 mb-4">
+                      {[
+                        { slot: 'Mo 10:00', active: false },
+                        { slot: 'Di 14:00', active: false },
+                        { slot: 'Mi 09:30', active: true },
+                        { slot: 'Do 17:00', active: false },
+                        { slot: 'Fr 11:00', active: false },
+                        { slot: 'Sa 09:00', active: false },
+                      ].map((s) => (
+                        <div key={s.slot} className={`px-3 py-2.5 rounded-xl text-center text-xs sm:text-sm font-medium transition ${s.active ? 'border border-[#00FF94]/40 bg-[#00FF94]/[0.08] text-[#00FF94]' : 'border border-[rgba(0,168,255,0.1)] bg-[#0B0F1A]/60 text-foreground/70'}`}>
+                          {s.slot}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#00FF94]/20 bg-[#00FF94]/[0.05]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00FF94]" />
+                      <span className="text-xs font-medium text-[#00FF94]">Kostenloses Kennenlern-Gespräch · Anonym</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative order-2">
+                  <span aria-hidden className="absolute -top-20 -right-2 lg:-top-24 lg:-right-4 font-heading font-extrabold text-[180px] lg:text-[260px] leading-none text-[#00D4FF]/[0.04] select-none pointer-events-none tracking-tighter">02</span>
+                  <div className="relative">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full border border-[#00D4FF]/25 bg-[#00D4FF]/[0.06]">
+                      <MessageCircle className="w-3.5 h-3.5 text-[#00D4FF]" />
+                      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#00D4FF]">Schritt 02</span>
+                    </div>
+                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">Kennenlernen</h3>
+                    <p className="text-base lg:text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                      Buche ein kostenloses Erstgespräch — komplett anonym über die Plattform. Lerne deinen Coach kennen, bevor du dich entscheidest.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            {/* ──── STEP 03 — Trainieren (text left / visual right) ──── */}
+            <AnimatedSection>
+              <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <div className="relative order-2 lg:order-1">
+                  <span aria-hidden className="absolute -top-20 -left-2 lg:-top-24 lg:-left-4 font-heading font-extrabold text-[180px] lg:text-[260px] leading-none text-[#00FF94]/[0.04] select-none pointer-events-none tracking-tighter">03</span>
+                  <div className="relative">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full border border-[#00FF94]/25 bg-[#00FF94]/[0.06]">
+                      <Activity className="w-3.5 h-3.5 text-[#00FF94]" />
+                      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#00FF94]">Schritt 03</span>
+                    </div>
+                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">Trainieren</h3>
+                    <p className="text-base lg:text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                      Erhalte individuelle Trainingspläne und Ernährungsberatung direkt in FITNEXUS. Tracke jede Übung, jeden Satz, jedes Kilo.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Visual: workout list */}
+                <div className="order-1 lg:order-2">
+                  <div className="p-5 sm:p-6 rounded-3xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.12)] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-sm space-y-3">
+                    {[
+                      { ex: 'Bankdrücken 4×8 @ 80kg', badge: '+5kg', color: '#00FF94' },
+                      { ex: 'Kniebeugen 5×5 @ 100kg', badge: 'PR', color: '#FFD700' },
+                      { ex: 'Kreuzheben 3×5 @ 130kg', badge: '+2,5kg', color: '#00FF94' },
+                    ].map((row) => (
+                      <div key={row.ex} className="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-[rgba(0,168,255,0.1)] bg-[#0B0F1A]/60">
+                        <span className="text-sm font-medium text-foreground/85">{row.ex}</span>
+                        <span className="text-xs font-bold px-2 py-0.5 rounded-md" style={{ color: row.color, background: `${row.color}14` }}>{row.badge}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            {/* ──── STEP 04 — Wachsen (visual left / text right) ──── */}
+            <AnimatedSection>
+              <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                {/* Visual: transformation card */}
+                <div className="order-1">
+                  <div className="p-5 sm:p-6 rounded-3xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.12)] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+                    <p className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground/50 mb-4">12-Wochen Transformation</p>
+                    <div className="flex items-baseline gap-3 mb-5">
+                      <span className="font-heading font-extrabold text-5xl sm:text-6xl text-[#00FF94] tracking-tight">−3,6 kg</span>
+                      <span className="text-xs text-muted-foreground/60">86,0 → 82,4 kg</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2.5">
+                      {[
+                        { value: '−2,4%', label: 'Körperfett' },
+                        { value: '+1,8 kg', label: 'Muskelmasse' },
+                        { value: '48', label: 'Sessions' },
+                      ].map((m) => (
+                        <div key={m.label} className="px-3 py-3 rounded-xl border border-[rgba(0,168,255,0.1)] bg-[#0B0F1A]/60 text-center">
+                          <p className="text-sm font-bold text-foreground">{m.value}</p>
+                          <p className="text-[10px] text-muted-foreground/50 mt-0.5">{m.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative order-2">
+                  <span aria-hidden className="absolute -top-20 -right-2 lg:-top-24 lg:-right-4 font-heading font-extrabold text-[180px] lg:text-[260px] leading-none text-[#39FF14]/[0.04] select-none pointer-events-none tracking-tighter">04</span>
+                  <div className="relative">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full border border-[#39FF14]/25 bg-[#39FF14]/[0.06]">
+                      <Sparkles className="w-3.5 h-3.5 text-[#39FF14]" />
+                      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#39FF14]">Schritt 04</span>
+                    </div>
+                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">Wachsen</h3>
+                    <p className="text-base lg:text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                      Sieh deine Transformation in Daten und Fotos. Gewicht, Körperfett, Muskelmasse — alles visualisiert. Setze dir neue Ziele.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
         </div>
       </section>
 
