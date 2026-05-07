@@ -1,6 +1,5 @@
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
-import { NexusAssistant } from '@/components/nexus-assistant'
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,7 +7,6 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <Navbar />
       <main className="min-h-screen">{children}</main>
       <Footer />
-      <NexusAssistant />
     </>
   )
 }
