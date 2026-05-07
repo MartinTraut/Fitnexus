@@ -17,6 +17,9 @@ CREATE TYPE payment_status AS ENUM ('pending', 'succeeded', 'failed', 'refunded'
 CREATE TYPE message_type AS ENUM ('text', 'image', 'file', 'system');
 CREATE TYPE subscription_tier AS ENUM ('starter', 'pro');
 CREATE TYPE photo_category AS ENUM ('front', 'side', 'back', 'other');
+CREATE TYPE lead_status AS ENUM ('new', 'contacted', 'in_progress', 'converted', 'declined', 'lost');
+CREATE TYPE notification_type AS ENUM ('booking', 'message', 'contract', 'payment', 'review', 'system');
+CREATE TYPE audit_action AS ENUM ('insert', 'update', 'delete', 'login', 'export');
 
 -- ─────────────────────────────────────────────
 -- PROFILES
@@ -73,11 +76,19 @@ CREATE TABLE trainer_packages (
 );
 
 -- Customer profiles
+-- WICHTIG: Anonymitaet wird hier durchgesetzt - Klarnamen liegen in profiles
+-- aber RLS auf customer_profiles erlaubt Trainer nur Zugriff bei aktivem Vertrag.
+-- Solange is_anonymous=true ist, darf KEIN Klarname-Lookup ueber profiles passieren.
 CREATE TABLE customer_profiles (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL UNIQUE REFERENCES profiles(id) ON DELETE CASCADE,
   display_name TEXT NOT NULL, -- Client#XXXX
   is_anonymous BOOLEAN DEFAULT TRUE,
+  -- Optionale Klarnamen-Felder, werden bei Vertragsabschluss aus profiles gespiegelt
+  -- damit RLS sauberer durchsetzbar ist (statt JOIN auf profiles).
+  first_name TEXT,
+  last_name TEXT,
+  avatar_url TEXT,
   fitness_goals TEXT[] DEFAULT '{}',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -291,6 +302,209 @@ CREATE TABLE payments (
 );
 
 -- ─────────────────────────────────────────────
+-- WORKOUT LOGS (was wurde wirklich trainiert)
+-- ─────────────────────────────────────────────
+
+CREATE TABLE workout_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  customer_id UUID NOT NULL REFERENCES customer_profiles(id) ON DELETE CASCADE,
+  plan_id UUID REFERENCES workout_plans(id) ON DELETE SET NULL,
+  exercise_id TEXT NOT NULL,            -- ID aus dem JSONB-Plan
+  exercise_name TEXT NOT NULL,
+  recorded_at DATE NOT NULL DEFAULT CURRENT_DATE,
+  prescribed_sets INTEGER,
+  prescribed_reps TEXT,
+  prescribed_weight TEXT,
+  actual_sets JSONB NOT NULL DEFAULT '[]',  -- [{ reps, weight, rpe }]
+  notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ─────────────────────────────────────────────
+-- MEAL LOGS (was wurde wirklich gegessen)
+-- ─────────────────────────────────────────────
+
+CREATE TABLE meal_logs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  customer_id UUID NOT NULL REFERENCES customer_profiles(id) ON DELETE CASCADE,
+  recorded_at DATE NOT NULL DEFAULT CURRENT_DATE,
+  meals JSONB NOT NULL DEFAULT '[]',     -- [{ name, time, foods:[{name,amount,kcal,p,c,f}] }]
+  water_ml INTEGER DEFAULT 0,
+  notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(customer_id, recorded_at)
+);
+
+-- ─────────────────────────────────────────────
+-- TRAINER AVAILABILITY (Slots / Kalender)
+-- ─────────────────────────────────────────────
+
+CREATE TABLE trainer_availability (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  trainer_id UUID NOT NULL REFERENCES trainer_profiles(id) ON DELETE CASCADE,
+  weekday SMALLINT CHECK (weekday BETWEEN 0 AND 6), -- 0=Sonntag
+  start_time TIME,
+  end_time TIME,
+  -- Einmal-Slots oder Blockaden:
+  date DATE,
+  is_blocked BOOLEAN DEFAULT FALSE,      -- Urlaub / nicht buchbar
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ─────────────────────────────────────────────
+-- LEADS (Anfragen ueber Marketplace)
+-- ─────────────────────────────────────────────
+
+CREATE TABLE leads (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  trainer_id UUID NOT NULL REFERENCES trainer_profiles(id) ON DELETE CASCADE,
+  customer_id UUID NOT NULL REFERENCES customer_profiles(id) ON DELETE CASCADE,
+  status lead_status NOT NULL DEFAULT 'new',
+  message TEXT,
+  goals TEXT[] DEFAULT '{}',
+  preferred_modes TEXT[] DEFAULT '{}',   -- online / vor-ort / hybrid
+  budget_monthly NUMERIC(10,2),
+  source TEXT,                           -- z.B. 'profile_page', 'category', 'city_page'
+  converted_contract_id UUID REFERENCES contracts(id),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ─────────────────────────────────────────────
+-- TRAINER CERTIFICATES (verifizierbare Qualifikationen)
+-- ─────────────────────────────────────────────
+
+CREATE TABLE trainer_certificates (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  trainer_id UUID NOT NULL REFERENCES trainer_profiles(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  issuer TEXT NOT NULL,
+  year TEXT,
+  document_url TEXT,                     -- Storage: certificates/
+  is_verified BOOLEAN DEFAULT FALSE,     -- Manuell durch Admin
+  verified_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ─────────────────────────────────────────────
+-- CATEGORIES (Master-Tabelle, statt TEXT[])
+-- ─────────────────────────────────────────────
+
+CREATE TABLE categories (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  slug TEXT NOT NULL UNIQUE,             -- z.B. 'krafttraining', 'yoga'
+  name TEXT NOT NULL,                    -- 'Krafttraining'
+  description TEXT,
+  icon TEXT,                             -- Lucide-Icon-Name
+  sort_order INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- N:M Trainer <-> Categories (zusaetzlich zu trainer_profiles.categories TEXT[])
+CREATE TABLE trainer_category_links (
+  trainer_id UUID NOT NULL REFERENCES trainer_profiles(id) ON DELETE CASCADE,
+  category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+  PRIMARY KEY (trainer_id, category_id)
+);
+
+-- ─────────────────────────────────────────────
+-- NOTIFICATIONS (Push / E-Mail / In-App)
+-- ─────────────────────────────────────────────
+
+CREATE TABLE notifications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  type notification_type NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT,
+  link_url TEXT,                         -- Deep-Link ins Dashboard
+  related_entity_type TEXT,              -- 'booking' / 'message' / 'contract'
+  related_entity_id UUID,
+  is_read BOOLEAN DEFAULT FALSE,
+  read_at TIMESTAMPTZ,
+  sent_via TEXT[] DEFAULT '{}',          -- ['in_app','push','email']
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ─────────────────────────────────────────────
+-- COACH-ABOS (Plattform-Subscription, NICHT Kunden-Vertrag!)
+-- ─────────────────────────────────────────────
+
+CREATE TABLE coach_subscriptions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  trainer_id UUID NOT NULL REFERENCES trainer_profiles(id) ON DELETE CASCADE,
+  tier subscription_tier NOT NULL DEFAULT 'starter',
+  stripe_subscription_id TEXT,
+  stripe_customer_id TEXT,
+  status TEXT NOT NULL DEFAULT 'active', -- active / past_due / cancelled / trialing
+  monthly_price_cents INTEGER NOT NULL DEFAULT 4900,  -- 49 EUR default
+  current_period_start TIMESTAMPTZ,
+  current_period_end TIMESTAMPTZ,
+  cancel_at_period_end BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ─────────────────────────────────────────────
+-- AUDIT LOG (Compliance / DSGVO)
+-- ─────────────────────────────────────────────
+
+CREATE TABLE audit_log (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  action audit_action NOT NULL,
+  entity_type TEXT NOT NULL,             -- 'contract' / 'profile' / 'payment' / ...
+  entity_id UUID,
+  diff JSONB,                            -- before/after fuer Updates
+  ip_address INET,
+  user_agent TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ─────────────────────────────────────────────
+-- AUTH-SIGNUP TRIGGER (KRITISCH!)
+-- Legt automatisch profiles + role-spezifisches Profil an
+-- ─────────────────────────────────────────────
+
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_role user_role;
+BEGIN
+  -- Rolle aus raw_user_meta_data lesen, default 'customer'
+  v_role := COALESCE(
+    (NEW.raw_user_meta_data->>'role')::user_role,
+    'customer'
+  );
+
+  -- Basis-Profil
+  INSERT INTO profiles (id, email, role, first_name, last_name)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    v_role,
+    NEW.raw_user_meta_data->>'first_name',
+    NEW.raw_user_meta_data->>'last_name'
+  );
+
+  -- Rollen-spezifisches Profil
+  IF v_role = 'customer' THEN
+    INSERT INTO customer_profiles (user_id) VALUES (NEW.id);
+  ELSIF v_role = 'trainer' THEN
+    INSERT INTO trainer_profiles (user_id) VALUES (NEW.id);
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
+-- ─────────────────────────────────────────────
 -- INDEXES
 -- ─────────────────────────────────────────────
 
@@ -309,6 +523,18 @@ CREATE INDEX idx_workout_plans_customer ON workout_plans(customer_id);
 CREATE INDEX idx_nutrition_plans_customer ON nutrition_plans(customer_id);
 CREATE INDEX idx_progress_metrics_customer ON progress_metrics(customer_id, recorded_at DESC);
 CREATE INDEX idx_reviews_trainer ON reviews(trainer_id);
+CREATE INDEX idx_workout_logs_customer_date ON workout_logs(customer_id, recorded_at DESC);
+CREATE INDEX idx_meal_logs_customer_date ON meal_logs(customer_id, recorded_at DESC);
+CREATE INDEX idx_availability_trainer ON trainer_availability(trainer_id);
+CREATE INDEX idx_availability_date ON trainer_availability(date) WHERE date IS NOT NULL;
+CREATE INDEX idx_leads_trainer_status ON leads(trainer_id, status);
+CREATE INDEX idx_leads_customer ON leads(customer_id);
+CREATE INDEX idx_certificates_trainer ON trainer_certificates(trainer_id);
+CREATE INDEX idx_categories_slug ON categories(slug);
+CREATE INDEX idx_notifications_user_unread ON notifications(user_id, is_read, created_at DESC);
+CREATE INDEX idx_coach_sub_trainer ON coach_subscriptions(trainer_id);
+CREATE INDEX idx_audit_user_date ON audit_log(user_id, created_at DESC);
+CREATE INDEX idx_audit_entity ON audit_log(entity_type, entity_id);
 
 -- ─────────────────────────────────────────────
 -- ROW LEVEL SECURITY (RLS)
@@ -328,6 +554,16 @@ ALTER TABLE progress_metrics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE progress_photos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workout_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE meal_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE trainer_availability ENABLE ROW LEVEL SECURITY;
+ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE trainer_certificates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE trainer_category_links ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE coach_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_log ENABLE ROW LEVEL SECURITY;
 
 -- Profiles: users can read all, update own
 CREATE POLICY "Profiles are viewable by everyone" ON profiles FOR SELECT USING (true);
@@ -368,6 +604,12 @@ CREATE POLICY "Users can view own bookings" ON bookings FOR SELECT
   );
 CREATE POLICY "Customers can create bookings" ON bookings FOR INSERT
   WITH CHECK (customer_id IN (SELECT id FROM customer_profiles WHERE user_id = auth.uid()));
+-- Trainer kann Buchungen bestaetigen / absagen / abschliessen
+CREATE POLICY "Trainers can update their bookings" ON bookings FOR UPDATE
+  USING (trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid()));
+-- Customer kann eigene Buchung stornieren
+CREATE POLICY "Customers can update own bookings" ON bookings FOR UPDATE
+  USING (customer_id IN (SELECT id FROM customer_profiles WHERE user_id = auth.uid()));
 
 -- Contracts: participants only
 CREATE POLICY "Users can view own contracts" ON contracts FOR SELECT
@@ -448,6 +690,72 @@ CREATE POLICY "Users can view own payments" ON payments FOR SELECT
     )
   );
 
+-- Workout-Logs: Kunde self + verbundener Coach
+CREATE POLICY "Customers manage own workout logs" ON workout_logs FOR ALL
+  USING (customer_id IN (SELECT id FROM customer_profiles WHERE user_id = auth.uid()));
+CREATE POLICY "Trainers can view client workout logs" ON workout_logs FOR SELECT
+  USING (
+    customer_id IN (
+      SELECT customer_id FROM contracts
+      WHERE trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid())
+      AND status = 'active'
+    )
+  );
+
+-- Meal-Logs: identisch
+CREATE POLICY "Customers manage own meal logs" ON meal_logs FOR ALL
+  USING (customer_id IN (SELECT id FROM customer_profiles WHERE user_id = auth.uid()));
+CREATE POLICY "Trainers can view client meal logs" ON meal_logs FOR SELECT
+  USING (
+    customer_id IN (
+      SELECT customer_id FROM contracts
+      WHERE trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid())
+      AND status = 'active'
+    )
+  );
+
+-- Availability: public-read (fuer Booking-UI), Owner schreibt
+CREATE POLICY "Availability public read" ON trainer_availability FOR SELECT USING (true);
+CREATE POLICY "Trainer manages own availability" ON trainer_availability FOR ALL
+  USING (trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid()));
+
+-- Leads: Trainer sieht eigene, Customer sieht eigene
+CREATE POLICY "Trainer sees own leads" ON leads FOR SELECT
+  USING (trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid()));
+CREATE POLICY "Customer sees own leads" ON leads FOR SELECT
+  USING (customer_id IN (SELECT id FROM customer_profiles WHERE user_id = auth.uid()));
+CREATE POLICY "Customer creates lead" ON leads FOR INSERT
+  WITH CHECK (customer_id IN (SELECT id FROM customer_profiles WHERE user_id = auth.uid()));
+CREATE POLICY "Trainer updates lead status" ON leads FOR UPDATE
+  USING (trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid()));
+
+-- Certificates: public read, Trainer manages
+CREATE POLICY "Certificates public read" ON trainer_certificates FOR SELECT USING (true);
+CREATE POLICY "Trainer manages own certificates" ON trainer_certificates FOR ALL
+  USING (trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid()));
+
+-- Categories: public read, nur Admin schreibt (default-deny)
+CREATE POLICY "Categories public read" ON categories FOR SELECT USING (true);
+
+-- Category-Links: public read, Trainer pflegt eigene
+CREATE POLICY "Category links public read" ON trainer_category_links FOR SELECT USING (true);
+CREATE POLICY "Trainer manages own category links" ON trainer_category_links FOR ALL
+  USING (trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid()));
+
+-- Notifications: nur Empfaenger
+CREATE POLICY "Users see own notifications" ON notifications FOR SELECT
+  USING (user_id = auth.uid());
+CREATE POLICY "Users mark own notifications read" ON notifications FOR UPDATE
+  USING (user_id = auth.uid());
+
+-- Coach-Subscriptions: nur Owner
+CREATE POLICY "Trainer sees own subscription" ON coach_subscriptions FOR SELECT
+  USING (trainer_id IN (SELECT id FROM trainer_profiles WHERE user_id = auth.uid()));
+
+-- Audit-Log: nur self - SELECT, INSERT/UPDATE nur via Service-Role
+CREATE POLICY "Users see own audit entries" ON audit_log FOR SELECT
+  USING (user_id = auth.uid());
+
 -- ─────────────────────────────────────────────
 -- AUTO-UPDATE updated_at
 -- ─────────────────────────────────────────────
@@ -467,10 +775,31 @@ CREATE TRIGGER update_bookings_updated_at BEFORE UPDATE ON bookings FOR EACH ROW
 CREATE TRIGGER update_contracts_updated_at BEFORE UPDATE ON contracts FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 CREATE TRIGGER update_workout_plans_updated_at BEFORE UPDATE ON workout_plans FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 CREATE TRIGGER update_nutrition_plans_updated_at BEFORE UPDATE ON nutrition_plans FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_meal_logs_updated_at BEFORE UPDATE ON meal_logs FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_leads_updated_at BEFORE UPDATE ON leads FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_coach_subs_updated_at BEFORE UPDATE ON coach_subscriptions FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
 -- ─────────────────────────────────────────────
--- REALTIME SUBSCRIPTIONS (enable for chat)
+-- REALTIME SUBSCRIPTIONS
 -- ─────────────────────────────────────────────
 -- Run in Supabase Dashboard → SQL Editor:
 -- ALTER PUBLICATION supabase_realtime ADD TABLE messages;
 -- ALTER PUBLICATION supabase_realtime ADD TABLE chat_threads;
+-- ALTER PUBLICATION supabase_realtime ADD TABLE notifications;
+-- ALTER PUBLICATION supabase_realtime ADD TABLE leads;
+
+-- ─────────────────────────────────────────────
+-- SEED: Default-Kategorien
+-- ─────────────────────────────────────────────
+INSERT INTO categories (slug, name, icon, sort_order) VALUES
+  ('krafttraining',   'Krafttraining',     'Dumbbell',  1),
+  ('functional',      'Functional',        'Activity',  2),
+  ('hiit',            'HIIT',              'Zap',       3),
+  ('yoga',            'Yoga',              'Flower',    4),
+  ('mobility',        'Mobility',          'Move',      5),
+  ('ausdauer',        'Ausdauer',          'Heart',     6),
+  ('kampfsport',      'Kampfsport',        'Sword',     7),
+  ('ernaehrung',      'Ernaehrungsberatung','Apple',    8),
+  ('rehabilitation',  'Rehabilitation',    'Stethoscope', 9),
+  ('schwangerschaft', 'Schwangerschaft',   'Baby',      10)
+ON CONFLICT (slug) DO NOTHING;
