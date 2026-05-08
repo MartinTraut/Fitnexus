@@ -19,10 +19,17 @@ interface TrainerCardProps {
   isVerified?: boolean
   certificateCount?: number
   className?: string
+  /**
+   * Preview mode for the public marketing pages: renders both action buttons
+   * as <button> elements that call `onPreview` instead of navigating.
+   */
+  preview?: boolean
+  onPreview?: () => void
 }
 
 export function TrainerCard({
-  id, name, image, city, categories, hourlyRate, rating, ratingCount, isVerified, certificateCount, className
+  id, name, image, city, categories, hourlyRate, rating, ratingCount, isVerified, certificateCount, className,
+  preview = false, onPreview,
 }: TrainerCardProps) {
   return (
     <GlassCard className={cn('p-5 group', className)}>
@@ -94,11 +101,23 @@ export function TrainerCard({
             Profil ansehen
           </GradientButton>
         </Link>
-        <Link href={`/trainers/${id}#contact`} className="flex-1">
-          <GradientButton variant="green" size="sm" className="w-full text-xs">
+        {preview ? (
+          <GradientButton
+            type="button"
+            variant="green"
+            size="sm"
+            className="flex-1 w-full text-xs"
+            onClick={onPreview}
+          >
             Kennenlernen
           </GradientButton>
-        </Link>
+        ) : (
+          <Link href={`/trainers/${id}#contact`} className="flex-1">
+            <GradientButton variant="green" size="sm" className="w-full text-xs">
+              Kennenlernen
+            </GradientButton>
+          </Link>
+        )}
       </div>
     </GlassCard>
   )

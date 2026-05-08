@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState } from 'react'
 import { GradientButton } from '@/components/gradient-button'
 import { GlassCard } from '@/components/glass-card'
 import { TrainerCard } from '@/components/trainer-card'
+import { LoginRequiredModal } from '@/components/login-required-modal'
 import { AnimatedSection, StaggerGroup, StaggerItem, motion } from '@/components/motion'
 import { ContainerScroll } from '@/components/ui/container-scroll-animation'
 import { mockTrainers } from '@/lib/mock-data'
@@ -18,6 +20,9 @@ import {
 const previewTrainers = mockTrainers.slice(0, 3)
 
 export default function FuerKundenPage() {
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const openLogin = () => setIsLoginOpen(true)
+
   return (
     <>
       {/* ═══ HERO ═══ */}
@@ -383,6 +388,7 @@ export default function FuerKundenPage() {
                   id={t.slug} name={t.display_name} image={t.profile_image_url}
                   city={t.city} categories={t.categories} hourlyRate={t.hourly_rate}
                   rating={t.rating_average} ratingCount={t.rating_count} isVerified={t.is_verified} certificateCount={t.certificates?.length}
+                  preview onPreview={openLogin}
                 />
               </StaggerItem>
             ))}
@@ -440,6 +446,13 @@ export default function FuerKundenPage() {
           </Link>
         </AnimatedSection>
       </section>
+
+      <LoginRequiredModal
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        title="Coach-Profile freischalten"
+        description="In dieser Vorschau zeigen wir dir, wie die Plattform aussieht. Sobald du registriert bist, kannst du Profile öffnen, Pakete vergleichen und kostenlose Erstgespräche anfragen."
+      />
     </>
   )
 }

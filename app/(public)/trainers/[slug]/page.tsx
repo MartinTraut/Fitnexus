@@ -10,11 +10,10 @@ import { GradientButton } from '@/components/gradient-button'
 import { StarRating } from '@/components/star-rating'
 import { Badge } from '@/components/ui/badge'
 import { AnimatedSection, StaggerGroup, StaggerItem } from '@/components/motion'
-import { BookingModal } from '@/components/booking/booking-modal'
-import { initializeStore } from '@/lib/store'
+import { LoginRequiredModal } from '@/components/login-required-modal'
 import {
   Shield, MapPin, Clock, Users, Calendar, Globe, Monitor, Navigation, Repeat,
-  ArrowLeft, MessageCircle, Package, Sparkles, ChevronRight, Zap, Play,
+  ArrowLeft, MessageCircle, Package, Sparkles, ChevronRight, Zap, Play, Lock,
 } from 'lucide-react'
 
 // ─── Review dimension labels ─────────────────────────────
@@ -31,12 +30,8 @@ export default function TrainerProfilePage() {
   const params = useParams()
   const slug = params.slug as string
   const trainer = getTrainerBySlug(slug)
-  const [isBookingOpen, setIsBookingOpen] = useState(false)
-
-  // Initialize store for booking functionality
-  if (typeof window !== 'undefined') {
-    initializeStore()
-  }
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const openLogin = () => setIsLoginOpen(true)
 
   if (!trainer) {
     return (
@@ -192,10 +187,13 @@ export default function TrainerProfilePage() {
                       <p className="text-3xl font-bold gradient-cyan-text">ab {trainer.hourly_rate}€</p>
                       <p className="text-sm text-muted-foreground/50">/Std.</p>
                     </div>
-                    <GradientButton variant="green" size="lg" className="min-w-[180px]" onClick={() => setIsBookingOpen(true)}>
-                      <MessageCircle className="w-4 h-4" />
+                    <GradientButton variant="green" size="lg" className="min-w-[180px]" onClick={openLogin}>
+                      <Lock className="w-4 h-4" />
                       Kennenlernen
                     </GradientButton>
+                    <p className="text-[11px] text-muted-foreground/40 text-center lg:text-right max-w-[200px] leading-snug">
+                      Vorschau — Erstgespräch nach kostenloser Registrierung
+                    </p>
                   </div>
                 </div>
               </div>
@@ -524,29 +522,29 @@ export default function TrainerProfilePage() {
                 Buche ein kostenloses Kennenlerngespräch und finde heraus, ob {trainer.first_name} der richtige Coach für dich ist.
               </p>
               <div className="flex items-center justify-center gap-4 flex-wrap">
-                <GradientButton variant="brand" size="lg" onClick={() => setIsBookingOpen(true)}>
-                  <MessageCircle className="w-5 h-5" />
-                  Kostenlos kennenlernen
+                <GradientButton variant="brand" size="lg" onClick={openLogin}>
+                  <Sparkles className="w-5 h-5" />
+                  Jetzt registrieren & anfragen
                 </GradientButton>
-                <GradientButton variant="cyan" outline size="lg">
+                <GradientButton variant="cyan" outline size="lg" onClick={openLogin}>
                   <ChevronRight className="w-4 h-4" />
                   Pakete ansehen
                 </GradientButton>
               </div>
+              <p className="text-xs text-muted-foreground/50 mt-4">
+                Du befindest dich in der Vorschau. Erstgespräche und Buchungen sind nach kostenloser Registrierung verfügbar.
+              </p>
             </GlassCard>
           </div>
         </AnimatedSection>
       </div>
 
-      {/* Booking Modal */}
-      {trainer && (
-        <BookingModal
-          trainerId={trainer.id}
-          trainerName={trainer.display_name}
-          isOpen={isBookingOpen}
-          onClose={() => setIsBookingOpen(false)}
-        />
-      )}
+      <LoginRequiredModal
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        title={`Mit ${trainer.first_name} starten`}
+        description="Du siehst gerade eine Vorschau dieses Coach-Profils. Sobald du kostenlos registriert bist, kannst du ein unverbindliches Erstgespräch anfragen, Pakete buchen und direkt mit dem Coach kommunizieren."
+      />
     </div>
   )
 }
