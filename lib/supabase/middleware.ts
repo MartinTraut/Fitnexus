@@ -30,34 +30,13 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // Protected routes
-  const protectedPaths = ['/dashboard']
-  const isProtectedPath = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  )
-
-  if (isProtectedPath && !user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth/login'
-    url.searchParams.set('redirect', request.nextUrl.pathname)
-    return NextResponse.redirect(url)
-  }
-
-  // Redirect logged in users from auth pages
-  const authPaths = ['/auth/login', '/auth/register']
-  const isAuthPath = authPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  )
-
-  if (isAuthPath && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
-    return NextResponse.redirect(url)
-  }
+  // Refresh the Supabase session cookie if present (keeps tokens fresh).
+  // NOTE: Route protection is currently handled client-side via the mock
+  // auth layer in `lib/auth.ts` (localStorage `fitnexus_user`). We must NOT
+  // gate `/dashboard/*` on a Supabase server session here — the demo/mock
+  // login never creates one, which would bounce every request back to /login.
+  // Re-enable the guard below once auth is migrated to real Supabase Auth.
+  await supabase.auth.getUser()
 
   return supabaseResponse
 }

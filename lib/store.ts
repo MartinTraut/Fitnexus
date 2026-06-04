@@ -25,7 +25,7 @@ const KEYS = {
   reviews: 'fn_reviews',
   workoutLogs: 'fn_workout_logs',
   mealLogs: 'fn_meal_logs',
-  initialized: 'fn_initialized_v4',
+  initialized: 'fn_initialized_v6',
 } as const
 
 // ─── Helpers ──────────────────────────────────────────────
@@ -374,6 +374,106 @@ export function initializeStore(): void {
     ], notes: null, created_at: '2026-04-08T10:30:00Z' },
   ]
   set(KEYS.workoutLogs, seedWorkoutLogs)
+
+  // Seed meal logs — what the client actually ate (recent ~2 weeks)
+  // dayA ≈ 2700 kcal (im Ziel) · dayB ≈ 2590 kcal (im Ziel) · dayC ≈ 2150 kcal (Ruhetag, etwas niedriger)
+  const dayA = () => [
+    { name: 'Frühstück', time: '07:30', foods: [
+      { name: 'Haferflocken', amount: '120g', calories: 444, protein: 16, carbs: 72, fat: 8 },
+      { name: 'Banane', amount: '1 Stück', calories: 95, protein: 1, carbs: 24, fat: 0 },
+      { name: 'Whey Protein', amount: '30g', calories: 120, protein: 24, carbs: 3, fat: 1 },
+      { name: 'Erdnussbutter', amount: '20g', calories: 118, protein: 5, carbs: 4, fat: 10 },
+    ] },
+    { name: 'Mittagessen', time: '12:45', foods: [
+      { name: 'Hähnchenbrust', amount: '250g', calories: 275, protein: 58, carbs: 0, fat: 4 },
+      { name: 'Reis', amount: '220g (gekocht)', calories: 286, protein: 6, carbs: 63, fat: 1 },
+      { name: 'Brokkoli', amount: '150g', calories: 50, protein: 4, carbs: 7, fat: 1 },
+      { name: 'Olivenöl', amount: '10g', calories: 90, protein: 0, carbs: 0, fat: 10 },
+    ] },
+    { name: 'Snack', time: '15:30', foods: [
+      { name: 'Magerquark', amount: '250g', calories: 175, protein: 30, carbs: 10, fat: 1 },
+      { name: 'Mandeln', amount: '30g', calories: 174, protein: 6, carbs: 6, fat: 15 },
+      { name: 'Reiswaffeln', amount: '4 Stück', calories: 140, protein: 3, carbs: 30, fat: 1 },
+    ] },
+    { name: 'Abendessen', time: '19:15', foods: [
+      { name: 'Lachs', amount: '200g', calories: 400, protein: 40, carbs: 0, fat: 26 },
+      { name: 'Süßkartoffel', amount: '250g', calories: 213, protein: 4, carbs: 50, fat: 0 },
+      { name: 'Avocado', amount: '½ Stück', calories: 120, protein: 1, carbs: 6, fat: 11 },
+    ] },
+  ]
+  const dayB = () => [
+    { name: 'Frühstück', time: '08:00', foods: [
+      { name: 'Rührei', amount: '4 Eier', calories: 312, protein: 26, carbs: 2, fat: 22 },
+      { name: 'Vollkornbrot', amount: '2 Scheiben', calories: 190, protein: 8, carbs: 34, fat: 2 },
+      { name: 'Avocado', amount: '½ Stück', calories: 120, protein: 1, carbs: 6, fat: 11 },
+      { name: 'Haferflocken', amount: '50g', calories: 185, protein: 7, carbs: 30, fat: 3 },
+    ] },
+    { name: 'Mittagessen', time: '13:00', foods: [
+      { name: 'Rinderhack (mager)', amount: '200g', calories: 340, protein: 42, carbs: 0, fat: 18 },
+      { name: 'Vollkornnudeln', amount: '200g (gekocht)', calories: 322, protein: 12, carbs: 62, fat: 2 },
+      { name: 'Tomatensauce', amount: '150g', calories: 70, protein: 2, carbs: 12, fat: 2 },
+    ] },
+    { name: 'Snack', time: '16:00', foods: [
+      { name: 'Proteinriegel', amount: '1 Stück', calories: 210, protein: 20, carbs: 21, fat: 7 },
+      { name: 'Apfel', amount: '1 Stück', calories: 80, protein: 0, carbs: 21, fat: 0 },
+      { name: 'Banane', amount: '1 Stück', calories: 95, protein: 1, carbs: 24, fat: 0 },
+    ] },
+    { name: 'Abendessen', time: '19:30', foods: [
+      { name: 'Pute', amount: '220g', calories: 242, protein: 50, carbs: 0, fat: 4 },
+      { name: 'Quinoa', amount: '200g (gekocht)', calories: 247, protein: 9, carbs: 43, fat: 4 },
+      { name: 'Gemüsepfanne', amount: '200g', calories: 90, protein: 4, carbs: 14, fat: 2 },
+    ] },
+  ]
+  const dayC = () => [
+    { name: 'Frühstück', time: '08:30', foods: [
+      { name: 'Skyr', amount: '300g', calories: 195, protein: 33, carbs: 12, fat: 1 },
+      { name: 'Granola', amount: '50g', calories: 220, protein: 5, carbs: 32, fat: 8 },
+      { name: 'Heidelbeeren', amount: '100g', calories: 45, protein: 1, carbs: 10, fat: 0 },
+      { name: 'Banane', amount: '1 Stück', calories: 95, protein: 1, carbs: 24, fat: 0 },
+    ] },
+    { name: 'Mittagessen', time: '12:30', foods: [
+      { name: 'Thunfisch', amount: '160g', calories: 184, protein: 42, carbs: 0, fat: 2 },
+      { name: 'Kartoffeln', amount: '250g', calories: 215, protein: 5, carbs: 48, fat: 0 },
+      { name: 'Gemischter Salat', amount: '150g', calories: 35, protein: 2, carbs: 5, fat: 1 },
+      { name: 'Olivenöl', amount: '10g', calories: 90, protein: 0, carbs: 0, fat: 10 },
+    ] },
+    { name: 'Snack', time: '16:00', foods: [
+      { name: 'Proteinshake', amount: '30g', calories: 120, protein: 24, carbs: 3, fat: 1 },
+      { name: 'Reiswaffeln', amount: '4 Stück', calories: 140, protein: 3, carbs: 30, fat: 1 },
+    ] },
+    { name: 'Abendessen', time: '19:00', foods: [
+      { name: 'Tofu (gebraten)', amount: '200g', calories: 290, protein: 28, carbs: 6, fat: 18 },
+      { name: 'Basmatireis', amount: '200g (gekocht)', calories: 260, protein: 5, carbs: 57, fat: 1 },
+      { name: 'Wok-Gemüse', amount: '200g', calories: 95, protein: 4, carbs: 15, fat: 2 },
+    ] },
+  ]
+
+  const mealDays: { date: string; tpl: () => ReturnType<typeof dayA>; water: number; notes: string | null }[] = [
+    { date: '2026-03-26', tpl: dayB, water: 2600, notes: null },
+    { date: '2026-03-28', tpl: dayC, water: 2400, notes: 'Ruhetag — etwas weniger gegessen.' },
+    { date: '2026-03-30', tpl: dayA, water: 3100, notes: null },
+    { date: '2026-03-31', tpl: dayB, water: 2800, notes: null },
+    { date: '2026-04-01', tpl: dayA, water: 3200, notes: 'Push Day — nach dem Training extra Protein.' },
+    { date: '2026-04-02', tpl: dayC, water: 2500, notes: null },
+    { date: '2026-04-03', tpl: dayB, water: 2900, notes: null },
+    { date: '2026-04-04', tpl: dayA, water: 3000, notes: 'Heißhunger am Abend, aber im Ziel geblieben.' },
+    { date: '2026-04-05', tpl: dayC, water: 2300, notes: 'Cheat-Meal beim Italiener — ehrlich getrackt.' },
+    { date: '2026-04-07', tpl: dayA, water: 3300, notes: null },
+    { date: '2026-04-08', tpl: dayB, water: 2950, notes: null },
+    { date: '2026-04-09', tpl: dayA, water: 3400, notes: 'Bestes Energielevel diese Woche!' },
+  ]
+
+  const seedMealLogs: MealLog[] = mealDays.map((d, i) => ({
+    id: `ml_${i + 1}`,
+    customer_id: 'c_demo',
+    date: `${d.date}T20:30:00Z`,
+    meals: d.tpl().map((m, j) => ({ id: `ml${i + 1}_m${j + 1}`, ...m })),
+    water_ml: d.water,
+    notes: d.notes,
+    created_at: `${d.date}T20:45:00Z`,
+    updated_at: `${d.date}T20:45:00Z`,
+  }))
+  set(KEYS.mealLogs, seedMealLogs)
 
   localStorage.setItem(KEYS.initialized, 'true')
 }

@@ -6,23 +6,24 @@ import {
   initializeStore, getWorkoutPlans, getNutritionPlans,
   getProgressMetrics, getContractsForCustomer, getOrCreateThread,
   updateProgressMetric, deleteProgressMetric,
-  getWorkoutLogs, getMealLogHistory,
 } from '@/lib/store'
-import type { WorkoutLog, MealLog } from '@/types'
 import { GlassCard } from '@/components/glass-card'
 import { cn } from '@/lib/utils'
 import {
   MessageCircle, Dumbbell, UtensilsCrossed, TrendingUp, Camera,
-  CheckCircle2, AlertCircle, Package, X,
+  CheckCircle2, AlertCircle, Package, X, LayoutDashboard,
 } from 'lucide-react'
 
 // Lazy-ish imports to keep component structure clean
+import { ClientCockpit } from '@/components/workspace/client-cockpit'
 import { ChatWindow } from '@/components/chat/chat-window'
 import { PlanViewer } from '@/components/workout/plan-viewer'
 import { PlanBuilder } from '@/components/workout/plan-builder'
+import { CoachWorkoutLog } from '@/components/workout/coach-workout-log'
 import { NutritionPlanViewer } from '@/components/nutrition/plan-viewer'
 import { NutritionPlanEditor } from '@/components/nutrition/plan-editor'
 import { MealTracker } from '@/components/nutrition/meal-tracker'
+import { CoachMealLog } from '@/components/nutrition/coach-meal-log'
 import { ProgressChart } from '@/components/progress/progress-chart'
 import { ProgressForm } from '@/components/progress/progress-form'
 import { PhotoGallery } from '@/components/progress/photo-gallery'
@@ -36,15 +37,16 @@ interface WorkspaceLayoutProps {
   trainerId: string
 }
 
-const TABS = [
+type TabKey = 'overview' | 'chat' | 'training' | 'nutrition' | 'progress' | 'photos'
+
+const ALL_TABS: { key: TabKey; label: string; icon: typeof MessageCircle }[] = [
+  { key: 'overview', label: 'Übersicht', icon: LayoutDashboard },
   { key: 'chat', label: 'Chat', icon: MessageCircle },
   { key: 'training', label: 'Trainingsplan', icon: Dumbbell },
   { key: 'nutrition', label: 'Ernährung', icon: UtensilsCrossed },
   { key: 'progress', label: 'Fortschritt', icon: TrendingUp },
   { key: 'photos', label: 'Fotos', icon: Camera },
-] as const
-
-type TabKey = typeof TABS[number]['key']
+]
 
 const STATUS_MAP: Record<string, { label: string; color: string; icon: typeof CheckCircle2 }> = {
   active: { label: 'Aktiv', color: 'text-[#00FF94] bg-[#00FF94]/10 border-[#00FF94]/20', icon: CheckCircle2 },
@@ -57,7 +59,8 @@ const STATUS_MAP: Record<string, { label: string; color: string; icon: typeof Ch
 export function WorkspaceLayout({
   role, partnerId, partnerName, partnerImage, customerId, trainerId,
 }: WorkspaceLayoutProps) {
-  const [activeTab, setActiveTab] = useState<TabKey>('chat')
+  const tabs = role === 'trainer' ? ALL_TABS : ALL_TABS.filter((t) => t.key !== 'overview')
+  const [activeTab, setActiveTab] = useState<TabKey>(role === 'trainer' ? 'overview' : 'chat')
   const [workoutPlans, setWorkoutPlans] = useState<WorkoutPlan[]>([])
   const [nutritionPlans, setNutritionPlans] = useState<NutritionPlan[]>([])
   const [metrics, setMetrics] = useState<ProgressMetric[]>([])
@@ -166,7 +169,7 @@ export function WorkspaceLayout({
 
       {/* Tab Navigation */}
       <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
@@ -192,6 +195,11 @@ export function WorkspaceLayout({
 
       {/* Tab Content */}
       <div className="min-h-[400px]">
+        {/* Übersicht / Cockpit Tab (coach) */}
+        {activeTab === 'overview' && role === 'trainer' && (
+          <ClientCockpit customerId={customerId} partnerName={partnerName} onJump={setActiveTab} />
+        )}
+
         {/* Chat Tab */}
         {activeTab === 'chat' && threadId && (
           <GlassCard className="h-[500px] sm:h-[560px] overflow-hidden" hover={false}>
@@ -226,46 +234,7 @@ export function WorkspaceLayout({
                   onSave={() => refreshWorkoutPlans()}
                 />
                 {/* Client Workout Logs — visible to coach */}
-                {(() => {
-                  const logs = getWorkoutLogs(customerId)
-                  if (logs.length === 0) return null
-                  const grouped = logs.reduce((acc, log) => {
-                    if (!acc[log.exercise_name]) acc[log.exercise_name] = []
-                    acc[log.exercise_name].push(log)
-                    return acc
-                  }, {} as Record<string, WorkoutLog[]>)
-                  return (
-                    <GlassCard className="overflow-hidden" hover={false}>
-                      <div className="p-4 border-b border-white/[0.04]">
-                        <h3 className="text-sm font-heading font-semibold text-foreground">Kunden-Tracking — Übungshistorie</h3>
-                        <p className="text-xs text-muted-foreground mt-0.5">Was dein Kunde tatsächlich trainiert hat</p>
-                      </div>
-                      <div className="divide-y divide-white/[0.04]">
-                        {Object.entries(grouped).slice(0, 8).map(([name, exLogs]) => {
-                          const latest = exLogs[exLogs.length - 1]
-                          const maxW = Math.max(...latest.actual_sets.map(s => s.weight))
-                          const maxR = Math.max(...latest.actual_sets.map(s => s.reps))
-                          const prescribed = latest.prescribed_weight ? parseFloat(latest.prescribed_weight) : 0
-                          const hit = prescribed > 0 && maxW >= prescribed
-                          return (
-                            <div key={name} className="px-4 py-3 flex items-center gap-4">
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-foreground">{name}</p>
-                                <p className="text-xs text-muted-foreground">{exLogs.length} Einträge · Letzter: {new Date(latest.date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}</p>
-                              </div>
-                              <div className="text-right flex-shrink-0">
-                                <p className="text-sm font-bold text-[#00D4FF]">{maxW} kg × {maxR}</p>
-                                <span className={cn('text-[10px] font-medium px-1.5 py-0.5 rounded', hit ? 'bg-[#00FF94]/15 text-[#00FF94]' : 'bg-[#FFD700]/15 text-[#FFD700]')}>
-                                  {latest.prescribed_weight ? (hit ? 'Ziel erreicht' : `Vorgabe: ${latest.prescribed_weight}`) : 'Kein Ziel'}
-                                </span>
-                              </div>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </GlassCard>
-                  )
-                })()}
+                <CoachWorkoutLog customerId={customerId} />
               </div>
             )}
           </>
@@ -298,47 +267,7 @@ export function WorkspaceLayout({
                   onSave={() => refreshNutritionPlans()}
                 />
                 {/* Client Meal Logs — visible to coach */}
-                {(() => {
-                  const mealLogs = getMealLogHistory(customerId, 14)
-                  if (mealLogs.length === 0) return null
-                  return (
-                    <GlassCard className="overflow-hidden" hover={false}>
-                      <div className="p-4 border-b border-white/[0.04]">
-                        <h3 className="text-sm font-heading font-semibold text-foreground">Kunden-Ernährungslog</h3>
-                        <p className="text-xs text-muted-foreground mt-0.5">Was dein Kunde in den letzten 14 Tagen gegessen hat</p>
-                      </div>
-                      <div className="divide-y divide-white/[0.04]">
-                        {mealLogs.map((log) => {
-                          let cal = 0, pro = 0, carb = 0, fat = 0
-                          for (const meal of log.meals) for (const f of meal.foods) { cal += f.calories; pro += f.protein; carb += f.carbs; fat += f.fat }
-                          const target = latestNutrition?.calories_target ?? 0
-                          const pct = target > 0 ? Math.round((cal / target) * 100) : 0
-                          return (
-                            <div key={log.id} className="px-4 py-3 flex items-center gap-4">
-                              <div className="w-10 text-center flex-shrink-0">
-                                <p className="text-xs font-bold text-foreground">{new Date(log.date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}</p>
-                                <p className="text-[9px] text-muted-foreground">{log.meals.length} Mahlz.</p>
-                              </div>
-                              <div className="flex-1 grid grid-cols-4 gap-2 text-center text-xs">
-                                <div><span className="text-[#FF8C00] font-semibold">{Math.round(cal)}</span><span className="text-muted-foreground/40 ml-0.5">kcal</span></div>
-                                <div><span className="text-[#00D4FF] font-semibold">{Math.round(pro)}</span><span className="text-muted-foreground/40 ml-0.5">P</span></div>
-                                <div><span className="text-[#00FF94] font-semibold">{Math.round(carb)}</span><span className="text-muted-foreground/40 ml-0.5">C</span></div>
-                                <div><span className="text-[#FFD700] font-semibold">{Math.round(fat)}</span><span className="text-muted-foreground/40 ml-0.5">F</span></div>
-                              </div>
-                              {target > 0 && (
-                                <span className={cn('text-[10px] font-medium px-1.5 py-0.5 rounded flex-shrink-0',
-                                  pct >= 80 && pct <= 120 ? 'bg-[#00FF94]/15 text-[#00FF94]' : 'bg-[#FFD700]/15 text-[#FFD700]'
-                                )}>
-                                  {pct}%
-                                </span>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </GlassCard>
-                  )
-                })()}
+                <CoachMealLog customerId={customerId} nutritionPlan={latestNutrition} />
               </div>
             )}
           </>
