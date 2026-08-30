@@ -28,7 +28,7 @@ export default function CustomerSearchPage() {
   const [priceMax, setPriceMax] = useState('')
 
   const filteredTrainers = useMemo(() => {
-    let results = searchTrainers({
+    const results = searchTrainers({
       query: query || undefined,
       city: city || undefined,
       category: category || undefined,

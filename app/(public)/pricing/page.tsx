@@ -8,8 +8,8 @@ import { FAQAccordion } from '@/components/faq-accordion'
 import { AnimatedSection, StaggerGroup, StaggerItem, motion } from '@/components/motion'
 import { pricingPlans } from '@/lib/mock-data'
 import {
-  Check, X, ArrowRight, Percent, Info, Shield, Zap,
-  HelpCircle, Users, Dumbbell, Search,
+  Check, X, Percent, Info, Shield, Zap,
+  Users, Dumbbell, Search,
 } from 'lucide-react'
 
 /* ── Comparison table data ── */
@@ -68,7 +68,7 @@ function CellValue({ value }: { value: boolean | string }) {
   if (value) {
     return <Check className="w-5 h-5 text-[#00FF94] mx-auto" />
   }
-  return <X className="w-5 h-5 text-muted-foreground/30 mx-auto" />
+  return <X className="w-5 h-5 text-faint mx-auto" />
 }
 
 export default function PricingPage() {
@@ -100,7 +100,7 @@ export default function PricingPage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold leading-[1.08] mb-6"
+            className="t-h1 font-heading font-bold mb-6"
           >
             <span className="text-foreground">Transparente </span>
             <span className="gradient-brand-text">Preise</span>
@@ -164,7 +164,7 @@ export default function PricingPage() {
             ))}
           </StaggerGroup>
           <AnimatedSection className="text-center mt-8">
-            <p className="text-xs text-muted-foreground/60">
+            <p className="text-xs text-soft">
               Alle Preise zzgl. MwSt. Monatlich kündbar, ohne Mindestlaufzeit.
             </p>
           </AnimatedSection>
@@ -172,7 +172,7 @@ export default function PricingPage() {
       </section>
 
       {/* ═══ COMPARISON TABLE ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute inset-0 bg-radial-center opacity-20" aria-hidden="true" />
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
@@ -223,7 +223,7 @@ export default function PricingPage() {
       </section>
 
       {/* ═══ PLATFORM FEE ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#00A8FF]/[0.03] blur-[180px]" aria-hidden="true" />
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
@@ -281,7 +281,7 @@ export default function PricingPage() {
       </section>
 
       {/* ═══ FAQ ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <SectionHeading
@@ -296,11 +296,11 @@ export default function PricingPage() {
       </section>
 
       {/* ═══ FINAL CTA ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00A8FF]/[0.04] to-transparent" aria-hidden="true" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#00A8FF]/[0.05] blur-[150px]" aria-hidden="true" />
         <AnimatedSection className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-tight mb-4">
+          <h2 className="t-h2 font-heading font-bold text-foreground mb-4">
             Bereit <span className="gradient-brand-text">loszulegen?</span>
           </h2>
           <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">

@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { GradientButton } from '@/components/gradient-button'
 import { GlassCard } from '@/components/glass-card'
-import { SectionHeading } from '@/components/section-heading'
 import { AnimatedSection } from '@/components/motion'
 import { Mail, Clock, Send, MapPin, ArrowRight, MessageCircle, ChevronDown } from 'lucide-react'
 
@@ -60,7 +59,7 @@ export default function ContactPage() {
   }
 
   const inputClasses =
-    'w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-[#00A8FF]/40 focus:ring-1 focus:ring-[#00A8FF]/20 focus:bg-white/[0.06] transition-all duration-300'
+    'w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3.5 text-sm text-foreground placeholder:text-faint focus:outline-none focus:border-[#00A8FF]/40 focus:ring-1 focus:ring-[#00A8FF]/20 focus:bg-white/[0.06] transition-all duration-300'
 
   return (
     <>
@@ -74,7 +73,7 @@ export default function ContactPage() {
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection>
             <p className="text-sm font-semibold tracking-brand-wide uppercase gradient-cyan-text mb-4">Kontakt</p>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold leading-[1.08] mb-6">
+            <h1 className="t-h1 font-heading font-bold mb-6">
               <span className="text-foreground">Wir sind</span>{' '}
               <span className="gradient-brand-text">fuer dich da</span>
             </h1>
@@ -88,7 +87,7 @@ export default function ContactPage() {
       </section>
 
       {/* ═══ CONTACT FORM + INFO ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#00A8FF]/[0.03] blur-[200px]" aria-hidden="true" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -185,7 +184,7 @@ export default function ContactPage() {
                               </option>
                             ))}
                           </select>
-                          <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50 pointer-events-none" />
+                          <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-faint pointer-events-none" />
                         </div>
                       </div>
 
@@ -242,7 +241,7 @@ export default function ContactPage() {
                         <info.icon className="w-5 h-5 text-[#0B0F1A]" />
                       </div>
                       <div>
-                        <p className="text-xs text-muted-foreground/60 uppercase tracking-brand-wide mb-1">
+                        <p className="text-xs text-soft uppercase tracking-brand-wide mb-1">
                           {info.label}
                         </p>
                         <p className="text-sm font-semibold text-foreground mb-0.5">

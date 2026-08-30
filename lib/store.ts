@@ -8,9 +8,9 @@ import type {
   Booking, BookingStatus, Contract, ContractStatus,
   ChatThread, Message, WorkoutPlan, WorkoutExercise,
   NutritionPlan, ProgressMetric, ProgressPhoto, Review,
-  WorkoutLog, MealLog,
+  WorkoutLog, MealLog, CustomerProfile,
 } from '@/types'
-import { mockTrainers, mockReviews, mockBookings } from '@/lib/mock-data'
+import { mockTrainers, mockReviews, mockBookings, mockCustomers } from '@/lib/mock-data'
 
 // ─── Storage Keys ─────────────────────────────────────────
 const KEYS = {
@@ -50,6 +50,37 @@ function get<T>(key: string): T[] {
 function set<T>(key: string, data: T[]): void {
   if (typeof window === 'undefined') return
   localStorage.setItem(key, JSON.stringify(data))
+  notify()
+}
+
+// ─── Abonnement ───────────────────────────────────────────
+// Damit Ansichten den Store ueber useSyncExternalStore lesen koennen, statt
+// ihn in einem Effekt in lokalen State zu kopieren. Das spart den
+// setState-im-Effekt-Umweg und laesst Ansichten nach jeder Mutation
+// (Anfrage annehmen, Termin buchen) von selbst aktuell werden.
+
+let storeVersion = 0
+const listeners = new Set<() => void>()
+
+function notify(): void {
+  storeVersion += 1
+  listeners.forEach((fn) => fn())
+}
+
+export function subscribeStore(onChange: () => void): () => void {
+  listeners.add(onChange)
+  return () => {
+    listeners.delete(onChange)
+  }
+}
+
+export function getStoreVersion(): number {
+  return storeVersion
+}
+
+/** Auf dem Server gibt es keinen Store — -1 heisst "noch nichts gelesen". */
+export function getServerStoreVersion(): number {
+  return -1
 }
 
 // ─── Initialize with Seed Data ────────────────────────────
@@ -586,6 +617,44 @@ export function updateContractStatus(contractId: string, status: ContractStatus)
 // ═══════════════════════════════════════════════════════════
 // CHAT
 // ═══════════════════════════════════════════════════════════
+
+// ─── Kunden ───────────────────────────────────────────────
+
+export function getCustomer(customerId: string): CustomerProfile | null {
+  return mockCustomers.find((c) => c.id === customerId) ?? null
+}
+
+/**
+ * Wie ein Coach diesen Kunden sehen darf.
+ *
+ * Der Klarname wird erst mit dem Vertrag freigegeben — vorher steht der
+ * Alias. Deshalb entscheidet hier der Vertragsstatus, nicht die Ansicht:
+ * ein Lead bleibt anonym, ein aktiver Kunde nicht.
+ */
+export function getCustomerLabel(customerId: string, trainerId: string): {
+  name: string
+  isAlias: boolean
+  initials: string
+} {
+  const customer = getCustomer(customerId)
+  const alias = customer?.display_name ?? `Client#${customerId.slice(-4).toUpperCase()}`
+
+  const hasContract = getContractsForTrainer(trainerId).some(
+    (c) => c.customer_id === customerId && (c.status === 'active' || c.status === 'completed'),
+  )
+
+  const realName =
+    customer && customer.first_name && customer.last_name
+      ? `${customer.first_name} ${customer.last_name}`
+      : null
+
+  const name = hasContract && !customer?.is_anonymous && realName ? realName : alias
+  const initials = name.startsWith('Client#')
+    ? name.slice(-2)
+    : name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()
+
+  return { name, isAlias: name === alias, initials }
+}
 
 export function getThreads(): ChatThread[] {
   return get<ChatThread>(KEYS.threads)

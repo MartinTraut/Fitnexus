@@ -34,11 +34,11 @@ export default function TrainersPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <AnimatedSection>
             <div className="text-center mb-8">
-              <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-[-0.01em] leading-[1.05]">
+              <h1 className="font-heading t-h1 font-bold">
                 <span className="text-foreground">Finde deinen </span>
                 <span className="gradient-brand-text">Coach</span>
               </h1>
-              <p className="mt-4 text-lg text-muted-foreground/80 max-w-xl mx-auto leading-relaxed">
+              <p className="mt-4 text-lg text-soft max-w-xl mx-auto leading-relaxed">
                 Durchsuche verifizierte Trainer in deiner Nähe. Filtern, vergleichen, Kennenlernen buchen.
               </p>
             </div>
@@ -58,7 +58,7 @@ export default function TrainersPage() {
                 <p className="text-sm font-semibold text-foreground">
                   Vorschau — so sieht die Coach-Suche aus
                 </p>
-                <p className="text-xs text-muted-foreground/70 mt-0.5">
+                <p className="text-xs text-soft mt-0.5">
                   Suche, Filter und Erstgespräche sind nach kostenloser Registrierung in unter 60 Sekunden freigeschaltet.
                 </p>
               </div>
@@ -72,7 +72,7 @@ export default function TrainersPage() {
           <AnimatedSection delay={0.1}>
             <div className="mb-8 space-y-3">
               <div className="relative">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/40" />
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-faint" />
                 <input
                   type="text"
                   placeholder="Name, Kategorie oder Stadt suchen..."
@@ -107,7 +107,7 @@ export default function TrainersPage() {
                         key={m}
                         type="button"
                         onClick={openLogin}
-                        className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-medium bg-[#1A2332]/40 text-muted-foreground/40 border border-transparent hover:text-[#00D4FF] hover:bg-[#00A8FF]/[0.08] hover:border-[#00A8FF]/20 transition-all duration-200"
+                        className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-medium bg-[#1A2332]/40 text-faint border border-transparent hover:text-[#00D4FF] hover:bg-[#00A8FF]/[0.08] hover:border-[#00A8FF]/20 transition-all duration-200"
                       >
                         <Icon className="w-4 h-4" /> {m}
                       </button>
@@ -125,7 +125,7 @@ export default function TrainersPage() {
                 <span className="text-[#00D4FF] font-semibold">{previewResults.length}+</span>{' '}
                 Trainer in der Vorschau
               </p>
-              <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-muted-foreground/40">
+              <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-faint">
                 <MapPin className="w-3 h-3" /> Auswahl aus ganz Deutschland
               </span>
             </div>
@@ -171,7 +171,7 @@ function LockedSelect({
     <button
       type="button"
       onClick={onClick}
-      className="appearance-none px-4 py-3 rounded-xl bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-sm text-muted-foreground/50 hover:text-[#00D4FF] hover:border-[#00A8FF]/25 focus:outline-none transition-all cursor-pointer w-full text-left flex items-center justify-between gap-2"
+      className="appearance-none px-4 py-3 rounded-xl bg-[#1A2332]/60 border border-[rgba(0,168,255,0.08)] text-sm text-faint hover:text-[#00D4FF] hover:border-[#00A8FF]/25 focus:outline-none transition-all cursor-pointer w-full text-left flex items-center justify-between gap-2"
       aria-label={`${placeholder} (Login erforderlich)`}
       title={`${placeholder} — ${options.slice(0, 3).join(', ')}…`}
     >

@@ -9,7 +9,7 @@ interface GradientButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const solidVariants = {
-  cyan: 'bg-gradient-to-r from-[#00A8FF] to-[#00D4FF] text-white hover:shadow-[0_0_30px_rgba(0,168,255,0.35)]',
+  cyan: 'bg-gradient-to-r from-[#00A8FF] to-[#00D4FF] text-[#04121F] hover:shadow-[0_0_30px_rgba(0,168,255,0.35)]',
   green: 'bg-gradient-to-r from-[#00CC76] to-[#39FF14] text-[#0B0F1A] hover:shadow-[0_0_30px_rgba(0,255,148,0.35)]',
   brand: 'bg-gradient-to-r from-[#00A8FF] via-[#00D4FF] to-[#00FF94] text-[#0B0F1A] hover:shadow-[0_0_30px_rgba(0,212,255,0.35)]',
 }
@@ -33,11 +33,13 @@ export const GradientButton = forwardRef<HTMLButtonElement, GradientButtonProps>
       <button
         ref={ref}
         className={cn(
-          'relative inline-flex items-center justify-center font-semibold transition-all duration-300 ease-[var(--ease-smooth)]',
-          'active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none',
+          'relative inline-flex items-center justify-center font-semibold tracking-[0.01em]',
+          'transition-[transform,box-shadow,background-color,border-color,color,opacity] duration-300 ease-[var(--ease-smooth)] will-change-transform',
+          'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]',
+          'disabled:opacity-50 disabled:pointer-events-none disabled:hover:translate-y-0',
           outline ? outlineVariants[variant] : solidVariants[variant],
           buttonSizes[size],
-          glow && 'animate-pulse-glow',
+          glow && 'shadow-[0_8px_36px_-10px_rgba(0,168,255,0.55)] hover:shadow-[0_14px_48px_-10px_rgba(0,168,255,0.7)]',
           className
         )}
         {...props}

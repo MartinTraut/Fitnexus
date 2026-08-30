@@ -102,7 +102,7 @@ export default async function CategoryPage({ params }: PageProps) {
             <span className="text-foreground"> Coaches finden</span>
           </h1>
 
-          <p className="mt-5 text-lg text-muted-foreground/70 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-5 text-lg text-soft max-w-2xl mx-auto leading-relaxed">
             {description}
           </p>
         </div>
@@ -140,7 +140,7 @@ export default async function CategoryPage({ params }: PageProps) {
             <h2 className="text-xl font-heading font-bold text-foreground mb-2">
               Noch keine {categoryName}-Coaches
             </h2>
-            <p className="text-muted-foreground/70 max-w-md mx-auto">
+            <p className="text-soft max-w-md mx-auto">
               Aktuell sind noch keine Coaches für {categoryName} registriert. Schau dir alle verfügbaren Trainer an oder komm bald wieder.
             </p>
           </GlassCard>

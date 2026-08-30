@@ -1,17 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { GradientButton } from '@/components/gradient-button'
 import { GlassCard } from '@/components/glass-card'
 import { AnimatedSection, StaggerGroup, StaggerItem, motion } from '@/components/motion'
 import { ContainerScroll } from '@/components/ui/container-scroll-animation'
 import { pricingPlans } from '@/lib/mock-data'
 import {
-  Zap, ArrowRight, Check, Star, Users,
-  MessageCircle, Dumbbell, TrendingUp, Apple,
-  Globe, Target, Award, BarChart3, CreditCard,
-  Shield, Eye, Sparkles, Inbox,
+  Zap, Check, Star, MessageCircle, Dumbbell, TrendingUp, Apple,
+  Globe, BarChart3, CreditCard,
+  Eye, Inbox,
   ClipboardList, FileText,
 } from 'lucide-react'
 
@@ -27,7 +25,7 @@ export default function ForCoachesPage() {
         <div className="absolute top-[-10%] left-[-10%] w-[800px] h-[800px] bg-[radial-gradient(ellipse_at_center,rgba(0,255,148,0.12)_0%,transparent_65%)] blur-[30px]" />
         <div className="absolute bottom-[-10%] right-[10%] w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(0,255,148,0.06)_0%,transparent_65%)]" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+        <div className="relative z-10 w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-32 pb-20">
           <div className="max-w-3xl">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#00FF94]/[0.08] border border-[#00FF94]/20 text-sm text-[#00FF94] font-medium mb-8">
@@ -35,14 +33,14 @@ export default function ForCoachesPage() {
             </motion.div>
 
             <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.1] tracking-normal mb-8">
+              className="t-h1 font-heading font-bold mb-8">
               <span className="text-foreground">Mehr Kunden.</span><br />
               <span className="text-foreground">Weniger Chaos.</span><br />
               <span className="gradient-green-text text-glow-green">Mehr Umsatz.</span>
             </motion.h1>
 
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.35 }}
-              className="text-lg sm:text-xl text-muted-foreground/80 max-w-xl mb-10 leading-relaxed">
+              className="text-lg sm:text-xl text-soft max-w-xl mb-10 leading-relaxed">
               FITNEXUS professionalisiert dein Coaching-Business. Neue Kunden finden dich. Du konzentrierst dich aufs Coaching.
             </motion.p>
 
@@ -57,7 +55,7 @@ export default function ForCoachesPage() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.7 }}
-              className="flex flex-wrap items-center gap-6 mt-12 text-xs text-muted-foreground/50">
+              className="flex flex-wrap items-center gap-6 mt-12 text-xs text-faint">
               <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#00FF94]" /> Keine Einrichtungsgebühr</span>
               <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#00FF94]" /> Monatlich kündbar</span>
               <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-[#00FF94]" /> In 5 Minuten online</span>
@@ -67,12 +65,12 @@ export default function ForCoachesPage() {
       </section>
 
       {/* ═══ PAIN POINTS ═══ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
               <p className="text-sm font-semibold tracking-brand-wide uppercase text-red-400/80 mb-4">Kennst du das?</p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.08]">
+              <h2 className="t-h2 font-heading font-bold text-foreground">
                 Coaching ist deine Leidenschaft.<br /><span className="text-red-400/70">Verwaltung dein Albtraum.</span>
               </h2>
             </div>
@@ -87,24 +85,24 @@ export default function ForCoachesPage() {
               <StaggerItem key={item.text}>
                 <div className="p-6 rounded-2xl bg-red-500/[0.03] border border-red-500/[0.08] h-full">
                   <item.icon className="w-5 h-5 text-red-400/60 mb-4" />
-                  <p className="text-sm text-muted-foreground/80 leading-relaxed">{item.text}</p>
+                  <p className="text-sm text-soft leading-relaxed">{item.text}</p>
                 </div>
               </StaggerItem>
             ))}
           </StaggerGroup>
           <AnimatedSection className="text-center">
-            <p className="text-2xl sm:text-3xl font-heading font-bold text-foreground">Es gibt einen <span className="gradient-green-text">besseren Weg</span>.</p>
+            <p className="t-h3 font-heading font-bold text-foreground">Es gibt einen <span className="gradient-green-text">besseren Weg</span>.</p>
           </AnimatedSection>
         </div>
       </section>
 
       {/* ═══ FEATURES ═══ */}
-      <section id="features" className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section id="features" className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-20">
               <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00FF94] mb-4">Features</p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.08] mb-5">
+              <h2 className="t-h2 font-heading font-bold text-foreground mb-5">
                 Alles was du brauchst. <span className="gradient-green-text">An einem Ort.</span>
               </h2>
             </div>
@@ -136,28 +134,30 @@ export default function ForCoachesPage() {
       </section>
 
       {/* ═══ 3D SCROLL — Coach Dashboard Preview ═══ */}
-      <section className="relative overflow-hidden">
+      {/* Kein overflow-hidden: ein clippender Vorfahre setzt position:sticky
+          ausser Kraft — die Karte wurde dadurch gar nicht festgehalten. */}
+      <section className="relative">
         <ContainerScroll
           titleComponent={
             <div className="mb-4">
               <p className="text-sm font-semibold tracking-[0.1em] uppercase text-[#00FF94] mb-4">Dein Dashboard</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-foreground leading-[1.08]">
+              <h2 className="t-h2 font-heading font-bold text-foreground">
                 So sieht dein <span className="gradient-green-text">Coach-Dashboard</span> aus
               </h2>
             </div>
           }
         >
-          <div className="w-full h-full p-4 md:p-6 overflow-hidden">
+          <div className="w-full p-4 md:p-6">
             <div className="flex items-center gap-2 mb-5">
               <div className="w-3 h-3 rounded-full bg-red-500/60" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
               <div className="w-3 h-3 rounded-full bg-green-500/60" />
               <div className="ml-3 flex-1 h-6 rounded-lg bg-[#1A2332]/60 flex items-center px-3">
-                <span className="text-[9px] text-muted-foreground/30">fitnexus.de/dashboard/trainer</span>
+                <span className="text-[9px] text-faint">fitnexus.de/dashboard/trainer</span>
               </div>
             </div>
             {/* KPIs */}
-            <div className="grid grid-cols-4 gap-4 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
               {[
                 { l: 'Aktive Kunden', v: '47', c: '#00FF94' },
                 { l: 'Neue Leads', v: '12', c: '#00A8FF' },
@@ -166,13 +166,13 @@ export default function ForCoachesPage() {
               ].map((s) => (
                 <div key={s.l} className="p-4 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
                   <p className="text-2xl font-bold" style={{ color: s.c }}>{s.v}</p>
-                  <p className="text-[10px] text-muted-foreground/50 mt-1">{s.l}</p>
+                  <p className="text-[10px] text-faint mt-1">{s.l}</p>
                 </div>
               ))}
             </div>
 
             {/* Leads + Kunden + Chat */}
-            <div className="grid grid-cols-3 gap-4 mb-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
               <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm font-semibold text-foreground">Neue Leads</p>
@@ -189,7 +189,7 @@ export default function ForCoachesPage() {
                       <div className="w-1.5 h-1.5 rounded-full bg-[#00FF94] animate-pulse" />
                       <div className="flex-1">
                         <p className="text-xs text-foreground font-medium">Client{l.id}</p>
-                        <p className="text-[10px] text-muted-foreground/30">{l.goal} · {l.city}</p>
+                        <p className="text-[10px] text-faint">{l.goal} · {l.city}</p>
                       </div>
                     </div>
                   ))}
@@ -207,7 +207,7 @@ export default function ForCoachesPage() {
                     <div key={c.n} className="flex items-center justify-between p-2 rounded-lg bg-[#1A2332]/40">
                       <div>
                         <p className="text-xs text-foreground font-medium">{c.n}</p>
-                        <p className="text-[10px] text-muted-foreground/30">{c.p}</p>
+                        <p className="text-[10px] text-faint">{c.p}</p>
                       </div>
                       <span className="text-[10px] font-semibold text-[#00D4FF]">{c.s}</span>
                     </div>
@@ -227,7 +227,7 @@ export default function ForCoachesPage() {
             </div>
 
             {/* Termine + Bewertungen + Verträge + Umsatz */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,255,148,0.06)]">
                 <p className="text-sm font-semibold text-foreground mb-3">Heute — 5 Sessions</p>
                 <div className="space-y-2">
@@ -239,7 +239,7 @@ export default function ForCoachesPage() {
                     { time: '18:00', client: 'Neuer Lead', done: false },
                   ].map((t) => (
                     <div key={t.time} className="flex items-center gap-2 p-2 rounded-lg bg-[#1A2332]/40">
-                      <span className="text-[10px] font-mono text-muted-foreground/30 w-10">{t.time}</span>
+                      <span className="text-[10px] font-mono text-faint w-10">{t.time}</span>
                       <div className={`w-1.5 h-1.5 rounded-full ${t.done ? 'bg-[#00FF94]' : 'bg-muted-foreground/15'}`} />
                       <span className="text-xs text-foreground">{t.client}</span>
                     </div>
@@ -258,7 +258,7 @@ export default function ForCoachesPage() {
                   ].map((r) => (
                     <div key={r.dim}>
                       <div className="flex justify-between text-[10px] mb-1">
-                        <span className="text-muted-foreground/50">{r.dim}</span>
+                        <span className="text-faint">{r.dim}</span>
                         <span className="font-semibold text-[#FFD700]">{r.val}%</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[#1A2332]/60 overflow-hidden">
@@ -296,7 +296,7 @@ export default function ForCoachesPage() {
                     { label: 'Wachstum', value: '+18%', color: '#39FF14' },
                   ].map((u) => (
                     <div key={u.label} className="flex items-center justify-between p-2 rounded-lg bg-[#1A2332]/40">
-                      <p className="text-[10px] text-muted-foreground/40">{u.label}</p>
+                      <p className="text-[10px] text-faint">{u.label}</p>
                       <p className="text-sm font-bold" style={{ color: u.color }}>{u.value}</p>
                     </div>
                   ))}
@@ -308,11 +308,11 @@ export default function ForCoachesPage() {
       </section>
 
       {/* ═══ STATS ═══ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground">
+              <h2 className="t-h2 font-heading font-bold text-foreground">
                 Coaches auf FITNEXUS <span className="gradient-green-text">wachsen schneller</span>
               </h2>
             </div>
@@ -336,12 +336,12 @@ export default function ForCoachesPage() {
       </section>
 
       {/* ═══ DASHBOARD PREVIEW ═══ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <AnimatedSection variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } } }}>
               <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00FF94] mb-4">Dashboard</p>
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground leading-[1.08] mb-6">
+              <h2 className="t-h2 font-heading font-bold text-foreground mb-6">
                 Dein Business. Auf einen <span className="gradient-green-text">Blick.</span>
               </h2>
               <ul className="space-y-3">
@@ -380,12 +380,12 @@ export default function ForCoachesPage() {
       </section>
 
       {/* ═══ PRICING ═══ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
               <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00FF94] mb-4">Preise</p>
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground mb-5">
+              <h2 className="t-h2 font-heading font-bold text-foreground mb-5">
                 Investiere in dein <span className="gradient-green-text">Business</span>
               </h2>
             </div>
@@ -417,19 +417,19 @@ export default function ForCoachesPage() {
       </section>
 
       {/* ═══ FINAL CTA ═══ */}
-      <section className="relative py-32 lg:py-40 overflow-hidden">
+      <section className="relative section-y-lg overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00FF94]/[0.02] to-[#0B0F1A]" />
         <AnimatedSection className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-[1.05] mb-6">
+          <h2 className="t-h1 font-heading font-bold text-foreground mb-6">
             Bereit, dein Coaching<br /><span className="gradient-green-text text-glow-green">zu professionalisieren?</span>
           </h2>
-          <p className="text-lg text-muted-foreground/70 mb-12 max-w-lg mx-auto">
+          <p className="text-lg text-soft mb-12 max-w-lg mx-auto">
             Erstelle dein Profil in 5 Minuten und erhalte deine ersten Leads. Kostenlos starten.
           </p>
           <Link href="/register">
             <GradientButton variant="green" size="xl" glow className="min-w-[280px]"><Zap className="w-5 h-5" /> Jetzt kostenlos starten</GradientButton>
           </Link>
-          <p className="text-xs text-muted-foreground/40 mt-6">Keine Kreditkarte nötig. Monatlich kündbar.</p>
+          <p className="text-xs text-faint mt-6">Keine Kreditkarte nötig. Monatlich kündbar.</p>
         </AnimatedSection>
       </section>
     </>

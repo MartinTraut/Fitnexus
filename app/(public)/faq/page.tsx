@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { GradientButton } from '@/components/gradient-button'
 import { GlassCard } from '@/components/glass-card'
-import { SectionHeading } from '@/components/section-heading'
 import { FAQAccordion } from '@/components/faq-accordion'
 import { AnimatedSection, motion } from '@/components/motion'
 import { faqItems } from '@/lib/mock-data'
@@ -123,7 +122,7 @@ export default function FAQPage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold leading-[1.08] mb-6"
+            className="t-h1 font-heading font-bold mb-6"
           >
             <span className="text-foreground">Häufig gestellte </span>
             <span className="gradient-brand-text">Fragen</span>
@@ -175,14 +174,14 @@ export default function FAQPage() {
       </section>
 
       {/* ═══ STILL HAVE QUESTIONS ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <GlassCard className="p-10 lg:p-14 text-center" hover={false}>
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#00A8FF]/[0.08] border border-[#00A8FF]/[0.12] mb-6">
                 <HelpCircle className="w-7 h-7 text-[#00D4FF]" />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-heading font-bold text-foreground mb-4">
+              <h2 className="t-h3 font-heading font-bold text-foreground mb-4">
                 Deine Frage war nicht dabei?
               </h2>
               <p className="text-muted-foreground leading-relaxed max-w-lg mx-auto mb-8">
@@ -199,11 +198,11 @@ export default function FAQPage() {
       </section>
 
       {/* ═══ FINAL CTA ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00A8FF]/[0.04] to-transparent" aria-hidden="true" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#00A8FF]/[0.05] blur-[150px]" aria-hidden="true" />
         <AnimatedSection className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-tight mb-4">
+          <h2 className="t-h2 font-heading font-bold text-foreground mb-4">
             Bereit <span className="gradient-brand-text">loszulegen?</span>
           </h2>
           <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">

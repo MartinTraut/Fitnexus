@@ -2,7 +2,6 @@
 
 import { motion, type Variants, useInView } from 'framer-motion'
 import { useRef, type ReactNode } from 'react'
-import { cn } from '@/lib/utils'
 
 // ─── Animation Variants ───────────────────────────────────
 export const fadeInUp: Variants = {

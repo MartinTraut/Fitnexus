@@ -9,13 +9,17 @@ import { FAQAccordion } from '@/components/faq-accordion'
 import { AnimatedSection, StaggerGroup, StaggerItem, motion } from '@/components/motion'
 import { ContainerScroll } from '@/components/ui/container-scroll-animation'
 import { faqItems, testimonials } from '@/lib/mock-data'
+import { JsonLd } from '@/components/json-ld'
+import { pageGraph, webPageNode, faqNode } from '@/lib/schema'
 import {
   Search, Zap, ArrowRight, X,
   Dumbbell, Users, MapPin, Star, Check,
   MessageCircle, TrendingUp, Shield, Lock,
-  Apple, BarChart3, Target, Layers, ClipboardList,
+  BarChart3, Target, Layers, ClipboardList,
   Activity, Sparkles,
 } from 'lucide-react'
+
+const homeFaqs = faqItems.slice(0, 6)
 
 export default function HomePage() {
   return (
@@ -23,7 +27,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           HERO — Cinematic, purpose-driven
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
         {/* Background layers */}
         <div className="absolute inset-0 bg-[#050810]" />
         <div className="absolute inset-0 bg-dots opacity-20" />
@@ -31,25 +35,26 @@ export default function HomePage() {
         <div className="absolute bottom-[-5%] left-[0%] w-[700px] h-[700px] bg-[radial-gradient(ellipse_at_center,rgba(0,255,148,0.06)_0%,transparent_65%)]" />
         <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[1400px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.03)_0%,transparent_50%)]" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28 pb-24">
           <div className="flex flex-col items-center text-center">
 
-            {/* Logo — large, cinematic */}
+            {/* Wort-Bild-Marke als liegendes Lockup: gestapelt schiebt sie die
+                CTAs auf einem 950px-Laptop unter die Falz. */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center gap-5 mb-14"
+              className="flex items-center justify-center gap-[clamp(0.75rem,1vw+0.4rem,1.5rem)] mb-9"
             >
               <Image
                 src="/logo-icon.png"
-                alt="FITNEXUS"
+                alt=""
                 width={260}
                 height={260}
-                className="object-contain w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px]"
+                className="object-contain w-[clamp(4rem,4.5vw+2rem,7.5rem)] h-auto"
                 priority
               />
-              <span className="font-heading font-bold text-4xl sm:text-5xl md:text-6xl tracking-[0.05em] gradient-brand-text">
+              <span className="font-heading font-bold text-[clamp(2rem,3vw+1.1rem,4rem)] leading-none tracking-[0.06em] gradient-brand-text">
                 FITNEXUS
               </span>
             </motion.div>
@@ -59,7 +64,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-heading font-bold leading-[1.1] tracking-normal mb-8 max-w-5xl"
+              className="t-display font-heading font-bold mb-7 max-w-5xl"
             >
               <span className="text-foreground">Die Plattform, die</span>
               <br />
@@ -73,7 +78,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="text-lg sm:text-xl md:text-2xl text-muted-foreground/70 max-w-2xl mb-14 leading-relaxed font-light"
+              className="t-lead text-soft max-w-2xl mb-10 font-light"
             >
               Kunden finden den perfekten Coach. Coaches professionalisieren ihr Business.
               Alles in <span className="text-foreground font-normal">einem System</span>.
@@ -87,13 +92,13 @@ export default function HomePage() {
               className="flex flex-col sm:flex-row items-center gap-4"
             >
               <Link href="/fuer-kunden">
-                <GradientButton variant="cyan" size="xl" glow className="min-w-[220px]">
-                  <Search className="w-5 h-5" /> Coach finden
+                <GradientButton variant="cyan" size="xl" className="min-w-[230px] shadow-[0_10px_40px_-12px_rgba(0,168,255,0.6)]">
+                  <Search className="w-5 h-5" aria-hidden /> Coach finden
                 </GradientButton>
               </Link>
               <Link href="/for-coaches">
-                <GradientButton variant="green" size="xl" className="min-w-[220px]">
-                  <Zap className="w-5 h-5" /> Als Coach starten
+                <GradientButton variant="green" size="xl" className="min-w-[230px] shadow-[0_10px_40px_-12px_rgba(0,255,148,0.5)]">
+                  <Zap className="w-5 h-5" aria-hidden /> Als Coach starten
                 </GradientButton>
               </Link>
             </motion.div>
@@ -103,16 +108,18 @@ export default function HomePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.95 }}
-              className="flex flex-wrap items-center justify-center gap-6 mt-14 text-xs text-muted-foreground/40"
+              className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-faint"
             >
               {[
-                { icon: Dumbbell, text: '500+ Coaches' },
-                { icon: Users, text: '10.000+ Nutzer' },
-                { icon: MapPin, text: '50+ Städte' },
-                { icon: Star, text: '4.8 Bewertung' },
+                { icon: Dumbbell, value: '500+', label: 'Coaches' },
+                { icon: Users, value: '10.000+', label: 'Nutzer' },
+                { icon: MapPin, value: '50+', label: 'Städte' },
+                { icon: Star, value: '4,8', label: 'Ø Bewertung' },
               ].map((s) => (
-                <span key={s.text} className="flex items-center gap-1.5">
-                  <s.icon className="w-3.5 h-3.5 text-[#00D4FF]/40" /> {s.text}
+                <span key={s.label} className="flex items-center gap-2">
+                  <s.icon className="w-4 h-4 text-[#00D4FF]/70" aria-hidden />
+                  <span className="nums font-semibold text-foreground/85">{s.value}</span>
+                  <span>{s.label}</span>
                 </span>
               ))}
             </motion.div>
@@ -125,50 +132,50 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           3D SCROLL PREVIEW — Show what the platform looks like
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden -mt-20">
+      <section className="relative">
         <ContainerScroll
           titleComponent={
             <div className="mb-4">
-              <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Die Plattform</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-foreground leading-[1.08]">
+              <p className="t-eyebrow text-[#00D4FF] mb-4">Die Plattform</p>
+              <h2 className="t-h2 font-heading font-bold text-foreground">
                 So sieht <span className="gradient-brand-text">FITNEXUS</span> aus
               </h2>
-              <p className="mt-4 text-muted-foreground/60 max-w-lg mx-auto text-base">
-                Ein Blick in die Zukunft deines Coachings.
+              <p className="mt-4 t-body text-soft max-w-lg mx-auto">
+                Dein Dashboard: Training, Ernährung, Fortschritt und Coach — auf einem Schirm.
               </p>
             </div>
           }
         >
           {/* Mock Dashboard Preview */}
-          <div className="w-full h-full p-6 md:p-8 overflow-hidden">
+          <div className="w-full p-5 md:p-8">
             {/* Browser chrome */}
             <div className="flex items-center gap-2 mb-6">
               <div className="w-3 h-3 rounded-full bg-red-500/60" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
               <div className="w-3 h-3 rounded-full bg-green-500/60" />
               <div className="ml-4 flex-1 h-7 rounded-lg bg-[#1A2332]/60 flex items-center px-3">
-                <span className="text-[10px] text-muted-foreground/40">fitnexus.de/dashboard</span>
+                <span className="text-[10px] text-faint">fitnexus.de/dashboard</span>
               </div>
             </div>
 
             {/* KPIs */}
-            <div className="grid grid-cols-4 gap-4 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
               {[
                 { label: 'Trainingseinheiten', value: '24', color: '#00A8FF' },
                 { label: 'Streak', value: '12 Tage', color: '#FFD700' },
                 { label: 'Fortschritt', value: '-3.6 kg', color: '#00FF94' },
                 { label: 'Nächste Session', value: 'Mo, 10:00', color: '#00D4FF' },
               ].map((s) => (
-                <div key={s.label} className="p-4 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
-                  <p className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
-                  <p className="text-[10px] text-muted-foreground/50 mt-1">{s.label}</p>
+                <div key={s.label} className="p-4 rounded-2xl surface">
+                  <p className="text-2xl font-bold nums" style={{ color: s.color }}>{s.value}</p>
+                  <p className="text-[10px] text-faint mt-1">{s.label}</p>
                 </div>
               ))}
             </div>
 
             {/* Trainingsplan + Chat */}
-            <div className="grid grid-cols-3 gap-4 mb-5">
-              <div className="col-span-2 p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+              <div className="md:col-span-2 p-5 rounded-2xl surface">
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm font-semibold text-foreground">Trainingsplan — Push Day</p>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00A8FF]/10 text-[#00A8FF]">3/5 erledigt</span>
@@ -185,12 +192,12 @@ export default function HomePage() {
                       <div className={`w-5 h-5 rounded border flex items-center justify-center ${item.done ? 'border-[#00FF94]/30 bg-[#00FF94]/5' : 'border-muted-foreground/15'}`}>
                         {item.done && <Check className="w-3 h-3 text-[#00FF94]" />}
                       </div>
-                      <span className={`text-xs ${item.done ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}>{item.ex}</span>
+                      <span className={`text-xs ${item.done ? 'text-faint line-through decoration-[#00FF94]/30' : 'text-muted-foreground'}`}>{item.ex}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+              <div className="p-5 rounded-2xl surface">
                 <p className="text-sm font-semibold text-foreground mb-3">Chat — Coach Max</p>
                 <div className="space-y-2">
                   <div className="p-2 rounded-lg bg-[#00A8FF]/10 text-[10px] text-[#00D4FF]">Gewicht eingetragen?</div>
@@ -203,9 +210,9 @@ export default function HomePage() {
             </div>
 
             {/* Ernährung + Fortschritt + Termine + Coaches */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {/* Ernährung */}
-              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+              <div className="p-5 rounded-2xl surface">
                 <p className="text-sm font-semibold text-foreground mb-3">Ernährung</p>
                 <div className="space-y-3">
                   {[
@@ -216,7 +223,7 @@ export default function HomePage() {
                   ].map((m) => (
                     <div key={m.label}>
                       <div className="flex justify-between text-[10px] mb-1">
-                        <span className="text-muted-foreground/50">{m.label}</span>
+                        <span className="text-faint">{m.label}</span>
                         <span className="font-semibold" style={{ color: m.color }}>{m.pct}%</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[#1A2332]/60 overflow-hidden">
@@ -228,7 +235,7 @@ export default function HomePage() {
               </div>
 
               {/* Gewichtsverlauf + Fortschritt */}
-              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+              <div className="p-5 rounded-2xl surface">
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm font-semibold text-foreground">Gewichtsverlauf</p>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00FF94]/10 text-[#00FF94]">-3.6 kg</span>
@@ -250,7 +257,7 @@ export default function HomePage() {
                   <circle cx="200" cy="54" r="3" fill="#00FF94" />
                   <circle cx="0" cy="2" r="2" fill="#00A8FF" opacity="0.5" />
                 </svg>
-                <div className="flex justify-between text-[9px] text-muted-foreground/25 mb-3">
+                <div className="flex justify-between text-[9px] text-faint mb-3">
                   <span>86 kg</span><span>Woche 1–12</span><span>82.4 kg</span>
                 </div>
                 <div className="space-y-1.5">
@@ -259,7 +266,7 @@ export default function HomePage() {
                     { label: 'Muskelmasse', value: '38.2 kg', change: '+1.8 kg', color: '#39FF14' },
                   ].map((b) => (
                     <div key={b.label} className="flex items-center justify-between">
-                      <span className="text-[10px] text-muted-foreground/40">{b.label}: <span className="text-foreground font-semibold">{b.value}</span></span>
+                      <span className="text-[10px] text-faint">{b.label}: <span className="text-foreground font-semibold">{b.value}</span></span>
                       <span className="text-[10px] font-bold" style={{ color: b.color }}>{b.change}</span>
                     </div>
                   ))}
@@ -267,7 +274,7 @@ export default function HomePage() {
               </div>
 
               {/* Termine */}
-              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+              <div className="p-5 rounded-2xl surface">
                 <p className="text-sm font-semibold text-foreground mb-3">Termine</p>
                 <div className="space-y-2">
                   {[
@@ -280,7 +287,7 @@ export default function HomePage() {
                       <div className={`w-1 h-6 rounded-full ${t.active ? 'bg-[#00FF94]' : 'bg-[#00A8FF]/25'}`} />
                       <div>
                         <p className="text-xs font-semibold text-foreground">{t.title}</p>
-                        <p className="text-[10px] text-muted-foreground/30">{t.time}</p>
+                        <p className="text-[10px] text-faint">{t.time}</p>
                       </div>
                     </div>
                   ))}
@@ -288,7 +295,7 @@ export default function HomePage() {
               </div>
 
               {/* Meine Coaches */}
-              <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+              <div className="p-5 rounded-2xl surface">
                 <p className="text-sm font-semibold text-foreground mb-3">Meine Coaches</p>
                 <div className="space-y-2">
                   {[
@@ -301,7 +308,7 @@ export default function HomePage() {
                       </div>
                       <div className="flex-1">
                         <p className="text-xs font-semibold text-foreground">{c.name}</p>
-                        <p className="text-[10px] text-muted-foreground/30">{c.spec}</p>
+                        <p className="text-[10px] text-faint">{c.spec}</p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Star className="w-3 h-3 text-[#FFD700] fill-[#FFD700]" />
@@ -319,15 +326,15 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           WAS IST FITNEXUS
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="max-w-3xl mx-auto text-center mb-20">
-              <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Die Mission</p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.08] mb-6">
+              <p className="t-eyebrow text-[#00D4FF] mb-4">Die Mission</p>
+              <h2 className="t-h2 font-heading font-bold text-foreground mb-6">
                 Coaching verdient eine <span className="gradient-brand-text">bessere Infrastruktur</span>
               </h2>
-              <p className="text-lg text-muted-foreground/70 leading-relaxed">
+              <p className="t-lead text-soft">
                 Millionen Menschen wollen fitter werden. Tausende Coaches können ihnen helfen.
                 Aber zwischen beiden steht ein Chaos aus WhatsApp, Excel und verstreuten Tools.
                 FITNEXUS räumt damit auf.
@@ -342,12 +349,12 @@ export default function HomePage() {
               { icon: Target, title: 'Ergebnisse statt Hoffnung.', desc: 'Strukturiertes Coaching mit messbarem Fortschritt. Datengetrieben, transparent und auf dein Ziel ausgerichtet.', color: '#00FF94' },
             ].map((item) => (
               <StaggerItem key={item.title}>
-                <motion.div whileHover={{ y: -4, transition: { duration: 0.25 } }} className="p-8 rounded-3xl bg-[#0D1320]/40 border border-[rgba(0,168,255,0.06)] hover:border-[rgba(0,168,255,0.15)] transition-all duration-500 h-full">
+                <motion.div whileHover={{ y: -4, transition: { duration: 0.25 } }} className="p-8 rounded-3xl surface surface-hover h-full">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6" style={{ background: `${item.color}12` }}>
                     <item.icon className="w-6 h-6" style={{ color: item.color }} />
                   </div>
-                  <h3 className="text-lg font-heading font-bold text-foreground mb-3">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <h3 className="t-h3 font-heading font-bold text-foreground mb-3">{item.title}</h3>
+                  <p className="t-body text-soft">{item.desc}</p>
                 </motion.div>
               </StaggerItem>
             ))}
@@ -358,12 +365,13 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           PROBLEM VS SOLUTION — High contrast split
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <AnimatedSection>
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.08]">
+              <p className="t-eyebrow text-[#00D4FF] mb-4">Der Unterschied</p>
+              <h2 className="t-h2 font-heading font-bold text-foreground">
                 Vorher vs. <span className="gradient-brand-text">Nachher</span>
               </h2>
             </div>
@@ -381,7 +389,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="text-xs font-semibold tracking-brand-wide uppercase text-red-400">Ohne FITNEXUS</p>
-                      <p className="text-[11px] text-red-400/50">So läuft Coaching heute</p>
+                      <p className="text-[11px] text-red-300/60">So läuft Coaching heute</p>
                     </div>
                   </div>
 
@@ -399,7 +407,7 @@ export default function HomePage() {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-red-300/90">{item.title}</p>
-                          <p className="text-xs text-red-300/40 leading-relaxed mt-0.5">{item.desc}</p>
+                          <p className="text-xs text-red-200/55 leading-relaxed mt-0.5">{item.desc}</p>
                         </div>
                       </div>
                     ))}
@@ -419,7 +427,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="text-xs font-semibold tracking-brand-wide uppercase text-[#00FF94]">Mit FITNEXUS</p>
-                      <p className="text-[11px] text-[#00FF94]/50">So läuft Coaching in Zukunft</p>
+                      <p className="text-[11px] text-[#00FF94]/65">So läuft Coaching in Zukunft</p>
                     </div>
                   </div>
 
@@ -437,7 +445,7 @@ export default function HomePage() {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-[#00FF94]/90">{item.title}</p>
-                          <p className="text-xs text-[#00FF94]/40 leading-relaxed mt-0.5">{item.desc}</p>
+                          <p className="text-xs text-[#00FF94]/60 leading-relaxed mt-0.5">{item.desc}</p>
                         </div>
                       </div>
                     ))}
@@ -452,21 +460,21 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           HOW IT WORKS — Editorial alternating, with visual mockups
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.03)_0%,transparent_50%)]" />
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <AnimatedSection>
-            <div className="text-center mb-24">
+            <div className="text-center mb-16 lg:mb-20">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full border border-[#00FF94]/25 bg-[#00FF94]/[0.06]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00FF94] animate-pulse" />
-                <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#00FF94]/90">So funktioniert&apos;s</span>
+                <span className="t-eyebrow text-[#00FF94]/90">So funktioniert&apos;s</span>
               </div>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold text-foreground leading-[1.18] tracking-tight pb-2">
-                Dein Weg zum <span className="gradient-brand-text italic inline-block pr-2 pb-1">Ergebnis</span><span className="text-foreground">.</span>
+              <h2 className="t-h1 font-heading font-bold text-foreground">
+                Dein Weg zum <span className="gradient-brand-text">Ergebnis</span>.
               </h2>
-              <p className="mt-5 text-sm md:text-base text-muted-foreground/60">Vier Schritte. Keine Hürden. Kein Papierkram.</p>
+              <p className="mt-5 t-lead text-soft">Vier Schritte. Keine Hürden. Kein Papierkram.</p>
             </div>
           </AnimatedSection>
 
@@ -477,14 +485,14 @@ export default function HomePage() {
             <AnimatedSection>
               <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                 <div className="relative order-2 lg:order-1">
-                  <span aria-hidden className="absolute -top-20 -left-2 lg:-top-24 lg:-left-4 font-heading font-extrabold text-[180px] lg:text-[260px] leading-none text-[#00A8FF]/[0.04] select-none pointer-events-none tracking-tighter">01</span>
+                  <span aria-hidden className="absolute -top-20 -left-2 lg:-top-24 lg:-left-4 font-heading font-extrabold t-numeral text-[#00A8FF]/[0.04] select-none pointer-events-none tracking-tighter">01</span>
                   <div className="relative">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full border border-[#00A8FF]/25 bg-[#00A8FF]/[0.06]">
                       <Search className="w-3.5 h-3.5 text-[#00D4FF]" />
-                      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#00D4FF]">Schritt 01</span>
+                      <span className="t-eyebrow text-[#00D4FF]">Schritt 01</span>
                     </div>
-                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">Entdecken</h3>
-                    <p className="text-base lg:text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                    <h3 className="t-step font-heading font-bold text-foreground mb-4">Entdecken</h3>
+                    <p className="t-lead text-soft max-w-md">
                       Durchsuche hunderte verifizierte Coaches. Filtere nach Stadt, Spezialisierung, Preis und Bewertung. Finde genau den Coach, der zu deinen Zielen passt.
                     </p>
                   </div>
@@ -492,10 +500,10 @@ export default function HomePage() {
 
                 {/* Visual: Search + city tiles */}
                 <div className="order-1 lg:order-2">
-                  <div className="p-5 sm:p-6 rounded-3xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.12)] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+                  <div className="p-5 sm:p-6 rounded-3xl surface backdrop-blur-sm">
                     <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#0B0F1A]/80 border border-[rgba(0,168,255,0.1)] mb-4">
                       <Search className="w-4 h-4 text-[#00D4FF]/70 flex-shrink-0" />
-                      <span className="text-sm text-muted-foreground/70 truncate">Coaches in Berlin · Kraft · 60–90€</span>
+                      <span className="text-sm text-soft truncate">Coaches in Berlin · Kraft · 60–90€</span>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       {[
@@ -504,7 +512,7 @@ export default function HomePage() {
                         { city: 'Hamburg', active: false },
                         { city: 'Köln', active: false },
                       ].map((c) => (
-                        <div key={c.city} className={`px-4 py-3 rounded-2xl text-sm transition ${c.active ? 'border border-[#00A8FF]/35 bg-[#00A8FF]/[0.08] text-[#00D4FF]' : 'border border-[rgba(0,168,255,0.08)] bg-[#0B0F1A]/60 text-muted-foreground/70'}`}>
+                        <div key={c.city} className={`px-4 py-3 rounded-2xl text-sm transition ${c.active ? 'border border-[#00A8FF]/35 bg-[#00A8FF]/[0.08] text-[#00D4FF]' : 'border border-[rgba(0,168,255,0.08)] bg-[#0B0F1A]/60 text-soft'}`}>
                           {c.city}
                         </div>
                       ))}
@@ -519,8 +527,8 @@ export default function HomePage() {
               <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                 {/* Visual: time slots */}
                 <div className="order-1">
-                  <div className="p-5 sm:p-6 rounded-3xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.12)] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-sm">
-                    <p className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground/50 mb-4">Verfügbar diese Woche</p>
+                  <div className="p-5 sm:p-6 rounded-3xl surface backdrop-blur-sm">
+                    <p className="t-eyebrow text-faint mb-4">Verfügbar diese Woche</p>
                     <div className="grid grid-cols-3 gap-2.5 mb-4">
                       {[
                         { slot: 'Mo 10:00', active: false },
@@ -543,14 +551,14 @@ export default function HomePage() {
                 </div>
 
                 <div className="relative order-2">
-                  <span aria-hidden className="absolute -top-20 -right-2 lg:-top-24 lg:-right-4 font-heading font-extrabold text-[180px] lg:text-[260px] leading-none text-[#00D4FF]/[0.04] select-none pointer-events-none tracking-tighter">02</span>
+                  <span aria-hidden className="absolute -top-20 -right-2 lg:-top-24 lg:-right-4 font-heading font-extrabold t-numeral text-[#00D4FF]/[0.04] select-none pointer-events-none tracking-tighter">02</span>
                   <div className="relative">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full border border-[#00D4FF]/25 bg-[#00D4FF]/[0.06]">
                       <MessageCircle className="w-3.5 h-3.5 text-[#00D4FF]" />
-                      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#00D4FF]">Schritt 02</span>
+                      <span className="t-eyebrow text-[#00D4FF]">Schritt 02</span>
                     </div>
-                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">Kennenlernen</h3>
-                    <p className="text-base lg:text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                    <h3 className="t-step font-heading font-bold text-foreground mb-4">Kennenlernen</h3>
+                    <p className="t-lead text-soft max-w-md">
                       Buche ein kostenloses Erstgespräch — komplett anonym über die Plattform. Lerne deinen Coach kennen, bevor du dich entscheidest.
                     </p>
                   </div>
@@ -562,14 +570,14 @@ export default function HomePage() {
             <AnimatedSection>
               <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                 <div className="relative order-2 lg:order-1">
-                  <span aria-hidden className="absolute -top-20 -left-2 lg:-top-24 lg:-left-4 font-heading font-extrabold text-[180px] lg:text-[260px] leading-none text-[#00FF94]/[0.04] select-none pointer-events-none tracking-tighter">03</span>
+                  <span aria-hidden className="absolute -top-20 -left-2 lg:-top-24 lg:-left-4 font-heading font-extrabold t-numeral text-[#00FF94]/[0.04] select-none pointer-events-none tracking-tighter">03</span>
                   <div className="relative">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full border border-[#00FF94]/25 bg-[#00FF94]/[0.06]">
                       <Activity className="w-3.5 h-3.5 text-[#00FF94]" />
-                      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#00FF94]">Schritt 03</span>
+                      <span className="t-eyebrow text-[#00FF94]">Schritt 03</span>
                     </div>
-                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">Trainieren</h3>
-                    <p className="text-base lg:text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                    <h3 className="t-step font-heading font-bold text-foreground mb-4">Trainieren</h3>
+                    <p className="t-lead text-soft max-w-md">
                       Erhalte individuelle Trainingspläne und Ernährungsberatung direkt in FITNEXUS. Tracke jede Übung, jeden Satz, jedes Kilo.
                     </p>
                   </div>
@@ -577,7 +585,7 @@ export default function HomePage() {
 
                 {/* Visual: workout list */}
                 <div className="order-1 lg:order-2">
-                  <div className="p-5 sm:p-6 rounded-3xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.12)] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-sm space-y-3">
+                  <div className="p-5 sm:p-6 rounded-3xl surface backdrop-blur-sm space-y-3">
                     {[
                       { ex: 'Bankdrücken 4×8 @ 80kg', badge: '+5kg', color: '#00FF94' },
                       { ex: 'Kniebeugen 5×5 @ 100kg', badge: 'PR', color: '#FFD700' },
@@ -598,11 +606,11 @@ export default function HomePage() {
               <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                 {/* Visual: transformation card */}
                 <div className="order-1">
-                  <div className="p-5 sm:p-6 rounded-3xl bg-[#0D1320]/70 border border-[rgba(0,168,255,0.12)] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-sm">
-                    <p className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground/50 mb-4">12-Wochen Transformation</p>
+                  <div className="p-5 sm:p-6 rounded-3xl surface backdrop-blur-sm">
+                    <p className="t-eyebrow text-faint mb-4">12-Wochen Transformation</p>
                     <div className="flex items-baseline gap-3 mb-5">
-                      <span className="font-heading font-extrabold text-5xl sm:text-6xl text-[#00FF94] tracking-tight">−3,6 kg</span>
-                      <span className="text-xs text-muted-foreground/60">86,0 → 82,4 kg</span>
+                      <span className="font-heading font-extrabold nums text-[clamp(2.5rem,3vw+1.4rem,3.75rem)] leading-none text-[#00FF94] tracking-tight">−3,6 kg</span>
+                      <span className="text-xs text-soft nums">86,0 → 82,4 kg</span>
                     </div>
                     <div className="grid grid-cols-3 gap-2.5">
                       {[
@@ -611,8 +619,8 @@ export default function HomePage() {
                         { value: '48', label: 'Sessions' },
                       ].map((m) => (
                         <div key={m.label} className="px-3 py-3 rounded-xl border border-[rgba(0,168,255,0.1)] bg-[#0B0F1A]/60 text-center">
-                          <p className="text-sm font-bold text-foreground">{m.value}</p>
-                          <p className="text-[10px] text-muted-foreground/50 mt-0.5">{m.label}</p>
+                          <p className="text-sm font-bold text-foreground nums">{m.value}</p>
+                          <p className="text-[10px] text-faint mt-0.5">{m.label}</p>
                         </div>
                       ))}
                     </div>
@@ -620,14 +628,14 @@ export default function HomePage() {
                 </div>
 
                 <div className="relative order-2">
-                  <span aria-hidden className="absolute -top-20 -right-2 lg:-top-24 lg:-right-4 font-heading font-extrabold text-[180px] lg:text-[260px] leading-none text-[#39FF14]/[0.04] select-none pointer-events-none tracking-tighter">04</span>
+                  <span aria-hidden className="absolute -top-20 -right-2 lg:-top-24 lg:-right-4 font-heading font-extrabold t-numeral text-[#39FF14]/[0.04] select-none pointer-events-none tracking-tighter">04</span>
                   <div className="relative">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full border border-[#39FF14]/25 bg-[#39FF14]/[0.06]">
                       <Sparkles className="w-3.5 h-3.5 text-[#39FF14]" />
-                      <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#39FF14]">Schritt 04</span>
+                      <span className="t-eyebrow text-[#39FF14]">Schritt 04</span>
                     </div>
-                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground mb-4 tracking-tight">Wachsen</h3>
-                    <p className="text-base lg:text-lg text-muted-foreground/70 leading-relaxed max-w-md">
+                    <h3 className="t-step font-heading font-bold text-foreground mb-4">Wachsen</h3>
+                    <p className="t-lead text-soft max-w-md">
                       Sieh deine Transformation in Daten und Fotos. Gewicht, Körperfett, Muskelmasse — alles visualisiert. Setze dir neue Ziele.
                     </p>
                   </div>
@@ -641,12 +649,12 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           SOCIAL PROOF
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-14">
-              <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Stimmen</p>
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground">
+              <p className="t-eyebrow text-[#00D4FF] mb-4">Stimmen</p>
+              <h2 className="t-h2 font-heading font-bold text-foreground">
                 Was unsere Community sagt
               </h2>
             </div>
@@ -659,12 +667,12 @@ export default function HomePage() {
                   <GlassCard className="flex flex-col p-8 h-full" hover={false}>
                     <div className="text-3xl font-serif text-[#00A8FF]/15 leading-none mb-3">&ldquo;</div>
                     <StarRating rating={t.rating} className="mb-4" />
-                    <blockquote className="flex-1 text-sm text-muted-foreground/80 leading-relaxed mb-6">{t.quote}</blockquote>
+                    <blockquote className="flex-1 t-body text-soft mb-6">{t.quote}</blockquote>
                     <div className="border-t border-[rgba(0,168,255,0.06)] pt-5 flex items-center gap-3">
                       <Image src={t.image} alt={t.name} width={44} height={44} className="rounded-full object-cover ring-2 ring-[rgba(0,168,255,0.1)]" />
                       <div>
                         <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                        <p className="text-xs text-muted-foreground">{t.role}</p>
+                        <p className="text-xs text-faint">{t.role}</p>
                       </div>
                     </div>
                   </GlassCard>
@@ -678,15 +686,19 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           FAQ
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground">Noch Fragen?</h2>
+              <p className="t-eyebrow text-[#00D4FF] mb-4">Häufige Fragen</p>
+              <h2 className="t-h2 font-heading font-bold text-foreground">Noch Fragen?</h2>
+              <p className="mt-4 t-body text-soft max-w-xl mx-auto">
+                Die Fragen, die uns am häufigsten gestellt werden.
+              </p>
             </div>
           </AnimatedSection>
           <AnimatedSection>
-            <FAQAccordion items={faqItems.slice(0, 6)} />
+            <FAQAccordion items={homeFaqs} />
           </AnimatedSection>
         </div>
       </section>
@@ -694,18 +706,24 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════════════════════
           FINAL CTA — The Big Decision
           ═══════════════════════════════════════════════════════════ */}
-      <section className="relative py-32 lg:py-40 overflow-hidden section-glow-top">
+      <section className="relative section-y-lg overflow-hidden section-glow-top">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00A8FF]/[0.03] to-[#0B0F1A]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.05)_0%,transparent_60%)]" />
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
-            <div className="text-center mb-16">
-              <Image src="/logo-icon.png" alt="" width={64} height={64} className="object-contain mx-auto mb-6" />
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold text-foreground leading-[1.05] mb-4">
+            <div className="text-center mb-14">
+              <Image
+                src="/logo-icon.png"
+                alt=""
+                width={320}
+                height={320}
+                className="object-contain mx-auto mb-6 w-[clamp(7.5rem,8vw+3rem,15rem)] h-auto"
+              />
+              <h2 className="t-h1 font-heading font-bold text-foreground mb-4">
                 Bereit für dein <span className="gradient-brand-text">nächstes Level?</span>
               </h2>
-              <p className="text-lg text-muted-foreground/60 max-w-lg mx-auto">
+              <p className="t-lead text-soft max-w-xl mx-auto">
                 Wähle deinen Weg und starte in unter 60 Sekunden.
               </p>
             </div>
@@ -720,13 +738,13 @@ export default function HomePage() {
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00A8FF] to-[#00D4FF] flex items-center justify-center mb-6 group-hover:shadow-[0_0_30px_rgba(0,168,255,0.3)] transition-shadow duration-500">
                       <Search className="w-7 h-7 text-[#0B0F1A]" />
                     </div>
-                    <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Ich suche einen Coach</h3>
-                    <p className="text-muted-foreground/70 leading-relaxed mb-6">
+                    <h3 className="t-h3 font-heading font-bold text-foreground mb-3">Ich suche einen Coach</h3>
+                    <p className="t-body text-soft mb-6">
                       Finde verifizierte Trainer, lies echte Bewertungen, buche ein kostenloses Kennenlerngespräch und starte deine Transformation — alles kostenlos.
                     </p>
                     <ul className="space-y-2 mb-8">
                       {['Komplett kostenlos', 'Anonyme Erstgespräche', '500+ verifizierte Coaches', 'Fortschritt sichtbar gemacht'].map((f) => (
-                        <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground/60">
+                        <li key={f} className="flex items-center gap-2 text-sm text-soft">
                           <Check className="w-3.5 h-3.5 text-[#00D4FF] flex-shrink-0" /> {f}
                         </li>
                       ))}
@@ -747,13 +765,13 @@ export default function HomePage() {
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00FF94] to-[#39FF14] flex items-center justify-center mb-6 group-hover:shadow-[0_0_30px_rgba(0,255,148,0.3)] transition-shadow duration-500">
                       <Zap className="w-7 h-7 text-[#0B0F1A]" />
                     </div>
-                    <h3 className="text-2xl font-heading font-bold text-foreground mb-3">Ich bin ein Coach</h3>
-                    <p className="text-muted-foreground/70 leading-relaxed mb-6">
+                    <h3 className="t-h3 font-heading font-bold text-foreground mb-3">Ich bin ein Coach</h3>
+                    <p className="t-body text-soft mb-6">
                       Professionalisiere dein Coaching-Business. Erhalte qualifizierte Leads, verwalte Kunden, erstelle Pläne und baue deine Reputation auf.
                     </p>
                     <ul className="space-y-2 mb-8">
                       {['In 5 Minuten online', 'Automatische Lead-Generierung', 'Alles-in-einem Dashboard', 'Ab 49€/Monat'].map((f) => (
-                        <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground/60">
+                        <li key={f} className="flex items-center gap-2 text-sm text-soft">
                           <Check className="w-3.5 h-3.5 text-[#00FF94] flex-shrink-0" /> {f}
                         </li>
                       ))}
@@ -768,6 +786,18 @@ export default function HomePage() {
           </StaggerGroup>
         </div>
       </section>
+
+      <JsonLd
+        data={pageGraph(
+          webPageNode({
+            path: '/',
+            name: 'FITNEXUS – Finde deinen perfekten Coach',
+            description:
+              'Plattform für Fitness-Coaching: verifizierte Coaches finden, kostenlos kennenlernen, Trainings- und Ernährungspläne nutzen und den Fortschritt messbar machen.',
+          }),
+          faqNode(homeFaqs, '/')
+        )}
+      />
     </>
   )
 }

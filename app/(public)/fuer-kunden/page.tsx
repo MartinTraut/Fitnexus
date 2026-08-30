@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { useState } from 'react'
 import { GradientButton } from '@/components/gradient-button'
 import { GlassCard } from '@/components/glass-card'
@@ -11,11 +10,7 @@ import { AnimatedSection, StaggerGroup, StaggerItem, motion } from '@/components
 import { ContainerScroll } from '@/components/ui/container-scroll-animation'
 import { mockTrainers } from '@/lib/mock-data'
 import {
-  Search, ArrowRight, Check, Shield, Lock, Star, Eye,
-  MessageCircle, Dumbbell, TrendingUp, Apple, Clock,
-  MapPin, Filter, Heart, UserCheck, ChevronRight,
-  Sparkles, Target, Award, Users, Zap,
-} from 'lucide-react'
+  Search, ArrowRight, Check, Lock, Star, MessageCircle, Dumbbell, TrendingUp, UserCheck, Sparkles, } from 'lucide-react'
 
 const previewTrainers = mockTrainers.slice(0, 3)
 
@@ -32,7 +27,7 @@ export default function FuerKundenPage() {
         <div className="absolute top-[-10%] right-[-10%] w-[800px] h-[800px] bg-[radial-gradient(ellipse_at_center,rgba(0,168,255,0.15)_0%,transparent_65%)] blur-[30px]" />
         <div className="absolute bottom-[-10%] left-[20%] w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(0,212,255,0.08)_0%,transparent_65%)]" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+        <div className="relative z-10 w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-32 pb-20">
           <div className="max-w-3xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -48,7 +43,7 @@ export default function FuerKundenPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.1] tracking-normal mb-8"
+              className="t-h1 font-heading font-bold mb-8"
             >
               <span className="text-foreground">Dein perfekter</span>
               <br />
@@ -61,7 +56,7 @@ export default function FuerKundenPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="text-lg sm:text-xl text-muted-foreground/80 max-w-xl mb-10 leading-relaxed"
+              className="text-lg sm:text-xl text-soft max-w-xl mb-10 leading-relaxed"
             >
               Schluss mit ziellosen Workouts und YouTube-Programmen.
               FITNEXUS verbindet dich mit verifizierten Fitness Coaches,
@@ -91,15 +86,15 @@ export default function FuerKundenPage() {
       </section>
 
       {/* ═══ WARUM FITNEXUS ═══ */}
-      <section id="vorteile" className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section id="vorteile" className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-20">
               <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Vorteile</p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.08] mb-5">
+              <h2 className="t-h2 font-heading font-bold text-foreground mb-5">
                 Warum Tausende <span className="gradient-cyan-text">FITNEXUS</span> vertrauen
               </h2>
-              <p className="text-lg text-muted-foreground/60 max-w-2xl mx-auto">
+              <p className="text-lg text-soft max-w-2xl mx-auto">
                 Kein Rätselraten. Kein Risiko. Nur Coaches, die liefern.
               </p>
             </div>
@@ -153,12 +148,12 @@ export default function FuerKundenPage() {
       </section>
 
       {/* ═══ SO FINDEST DU DEINEN COACH ═══ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-20">
               <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Der Prozess</p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-[1.1]">
+              <h2 className="t-h2 font-heading font-bold text-foreground">
                 In 3 Minuten zum <span className="gradient-cyan-text">richtigen Coach</span>
               </h2>
             </div>
@@ -184,7 +179,7 @@ export default function FuerKundenPage() {
                 desc: 'Dein Coach erstellt Trainings- und Ernährungspläne direkt in FITNEXUS. Du trackst deinen Fortschritt, lädst Fotos hoch und kommunizierst alles über die Plattform.',
                 features: ['Individuelle Pläne', 'Progress Tracking', 'Check-in Fotos', 'Direkte Kommunikation'],
               },
-            ].map((step, i) => (
+            ].map((step) => (
               <StaggerItem key={step.num}>
                 <div className="flex gap-6 md:gap-10 items-start">
                   <div className="flex-shrink-0">
@@ -209,28 +204,30 @@ export default function FuerKundenPage() {
       </section>
 
       {/* ═══ 3D SCROLL — So sieht dein Dashboard aus ═══ */}
-      <section className="relative overflow-hidden">
+      {/* Kein overflow-hidden: ein clippender Vorfahre setzt position:sticky
+          ausser Kraft — die Karte wurde dadurch gar nicht festgehalten. */}
+      <section className="relative">
         <ContainerScroll
           titleComponent={
             <div className="mb-4">
               <p className="text-sm font-semibold tracking-[0.1em] uppercase text-[#00D4FF] mb-4">Dein Dashboard</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-foreground leading-[1.08]">
+              <h2 className="t-h2 font-heading font-bold text-foreground">
                 So sieht <span className="gradient-cyan-text">dein Bereich</span> aus
               </h2>
             </div>
           }
         >
-          <div className="w-full h-full p-4 md:p-6 overflow-hidden">
+          <div className="w-full p-4 md:p-6">
             <div className="flex items-center gap-2 mb-5">
               <div className="w-3 h-3 rounded-full bg-red-500/60" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
               <div className="w-3 h-3 rounded-full bg-green-500/60" />
               <div className="ml-3 flex-1 h-6 rounded-lg bg-[#1A2332]/60 flex items-center px-3">
-                <span className="text-[9px] text-muted-foreground/30">fitnexus.de/dashboard/customer</span>
+                <span className="text-[9px] text-faint">fitnexus.de/dashboard/customer</span>
               </div>
             </div>
             {/* KPIs */}
-            <div className="grid grid-cols-4 gap-4 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
               {[
                 { l: 'Mein Coach', v: 'Max K.', c: '#00A8FF' },
                 { l: 'Nächste Session', v: 'Mo, 10:00', c: '#00D4FF' },
@@ -239,14 +236,14 @@ export default function FuerKundenPage() {
               ].map((s) => (
                 <div key={s.l} className="p-4 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
                   <p className="text-2xl font-bold" style={{ color: s.c }}>{s.v}</p>
-                  <p className="text-[10px] text-muted-foreground/50 mt-1">{s.l}</p>
+                  <p className="text-[10px] text-faint mt-1">{s.l}</p>
                 </div>
               ))}
             </div>
 
             {/* Trainingsplan + Chat */}
-            <div className="grid grid-cols-3 gap-4 mb-5">
-              <div className="col-span-2 p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+              <div className="md:col-span-2 p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm font-semibold text-foreground">Trainingsplan — Push Day</p>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00A8FF]/10 text-[#00A8FF]">3/5 erledigt</span>
@@ -263,7 +260,7 @@ export default function FuerKundenPage() {
                       <div className={`w-5 h-5 rounded border flex items-center justify-center ${item.done ? 'border-[#00FF94]/30 bg-[#00FF94]/5' : 'border-muted-foreground/15'}`}>
                         {item.done && <Check className="w-3 h-3 text-[#00FF94]" />}
                       </div>
-                      <span className={`text-xs ${item.done ? 'text-muted-foreground/50' : 'text-muted-foreground'}`}>{item.ex}</span>
+                      <span className={`text-xs ${item.done ? 'text-faint' : 'text-muted-foreground'}`}>{item.ex}</span>
                     </div>
                   ))}
                 </div>
@@ -281,7 +278,7 @@ export default function FuerKundenPage() {
             </div>
 
             {/* Ernährung + Fortschritt + Termine + Coach */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="p-5 rounded-2xl bg-[#0D1320]/80 border border-[rgba(0,168,255,0.06)]">
                 <p className="text-sm font-semibold text-foreground mb-3">Ernährung</p>
                 <div className="space-y-3">
@@ -293,7 +290,7 @@ export default function FuerKundenPage() {
                   ].map((m) => (
                     <div key={m.label}>
                       <div className="flex justify-between text-[10px] mb-1">
-                        <span className="text-muted-foreground/50">{m.label}</span>
+                        <span className="text-faint">{m.label}</span>
                         <span className="font-semibold" style={{ color: m.color }}>{m.pct}%</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[#1A2332]/60 overflow-hidden">
@@ -313,7 +310,7 @@ export default function FuerKundenPage() {
                   ].map((b) => (
                     <div key={b.label} className="flex items-center justify-between p-2 rounded-lg bg-[#1A2332]/40">
                       <div>
-                        <p className="text-[10px] text-muted-foreground/40">{b.label}</p>
+                        <p className="text-[10px] text-faint">{b.label}</p>
                         <p className="text-sm font-bold text-foreground">{b.value}</p>
                       </div>
                       <span className="text-xs font-bold" style={{ color: b.color }}>{b.change}</span>
@@ -334,7 +331,7 @@ export default function FuerKundenPage() {
                       <div className={`w-1 h-6 rounded-full ${t.active ? 'bg-[#00FF94]' : 'bg-[#00A8FF]/25'}`} />
                       <div>
                         <p className="text-xs font-semibold text-foreground">{t.title}</p>
-                        <p className="text-[10px] text-muted-foreground/30">{t.time}</p>
+                        <p className="text-[10px] text-faint">{t.time}</p>
                       </div>
                     </div>
                   ))}
@@ -346,12 +343,12 @@ export default function FuerKundenPage() {
                   <div className="w-9 h-9 rounded-xl bg-[#00A8FF] flex items-center justify-center text-xs font-bold text-[#0B0F1A]">MK</div>
                   <div>
                     <p className="text-xs font-semibold text-foreground">Max Krüger</p>
-                    <p className="text-[10px] text-muted-foreground/30">Kraft & Hypertrophie</p>
+                    <p className="text-[10px] text-faint">Kraft & Hypertrophie</p>
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   {['Verifiziert', '127 Bewertungen', '4.9 ★ Rating'].map((f) => (
-                    <div key={f} className="flex items-center gap-2 text-[10px] text-muted-foreground/50">
+                    <div key={f} className="flex items-center gap-2 text-[10px] text-faint">
                       <Check className="w-3 h-3 text-[#00FF94]" /> {f}
                     </div>
                   ))}
@@ -363,13 +360,13 @@ export default function FuerKundenPage() {
       </section>
 
       {/* ═══ PREVIEW COACHES ═══ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
               <div>
                 <p className="text-sm font-semibold tracking-brand-wide uppercase text-[#00D4FF] mb-4">Coaches</p>
-                <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground">
+                <h2 className="t-h2 font-heading font-bold text-foreground">
                   Entdecke Top Coaches
                 </h2>
               </div>
@@ -397,7 +394,7 @@ export default function FuerKundenPage() {
       </section>
 
       {/* ═══ KOSTENLOS FÜR DICH ═══ */}
-      <section className="relative py-28 lg:py-36 overflow-hidden section-glow-top">
+      <section className="relative section-y overflow-hidden section-glow-top">
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <GlassCard className="p-10 md:p-14 text-center shine" hover={false} neonBorder>
@@ -405,10 +402,10 @@ export default function FuerKundenPage() {
                 <Sparkles className="w-4 h-4" />
                 Komplett kostenlos
               </div>
-              <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground mb-4">
+              <h2 className="t-h2 font-heading font-bold text-foreground mb-4">
                 FITNEXUS ist für Kunden <span className="gradient-green-text">kostenlos</span>
               </h2>
-              <p className="text-lg text-muted-foreground/70 max-w-xl mx-auto mb-8 leading-relaxed">
+              <p className="text-lg text-soft max-w-xl mx-auto mb-8 leading-relaxed">
                 Suche, vergleiche, buche Erstgespräche, kommuniziere, tracke deinen Fortschritt.
                 Alles ohne einen Cent zu bezahlen. Ohne versteckte Kosten. Ohne Abo.
               </p>
@@ -433,10 +430,10 @@ export default function FuerKundenPage() {
       <section className="relative py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00A8FF]/[0.03] to-[#0B0F1A]" />
         <AnimatedSection className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl sm:text-5xl font-heading font-bold text-foreground leading-[1.05] mb-6">
+          <h2 className="t-h2 font-heading font-bold text-foreground mb-6">
             Finde den Coach, der <span className="gradient-cyan-text">dein Leben verändert</span>
           </h2>
-          <p className="text-lg text-muted-foreground/70 mb-10 max-w-lg mx-auto">
+          <p className="text-lg text-soft mb-10 max-w-lg mx-auto">
             Hunderte Coaches warten auf dich. Starte jetzt — kostenlos und in unter 60 Sekunden.
           </p>
           <Link href="/trainers">

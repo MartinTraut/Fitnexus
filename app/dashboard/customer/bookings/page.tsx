@@ -144,7 +144,10 @@ export default function BookingsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 p-1 rounded-xl bg-[#0D1320]/60 border border-white/[0.04] w-fit">
+      {/* Vier Filter passen auf 390px nicht nebeneinander — die Leiste scrollt
+          in sich selbst, statt die Seite quer zu schieben. */}
+      <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex w-max items-center gap-1 rounded-xl border border-white/[0.04] bg-[#0D1320]/60 p-1">
         {tabs.map(tab => {
           const count = tab.key === 'all' ? bookings.length :
             bookings.filter(b => b.status === tab.key).length
@@ -170,6 +173,7 @@ export default function BookingsPage() {
             </button>
           )
         })}
+      </div>
       </div>
 
       {/* Booking Cards */}

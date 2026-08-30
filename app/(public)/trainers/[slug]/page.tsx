@@ -45,7 +45,7 @@ export default function TrainerProfilePage() {
             <h1 className="text-2xl font-heading font-bold text-foreground mb-3">
               Trainer nicht gefunden
             </h1>
-            <p className="text-muted-foreground/70 mb-6">
+            <p className="text-soft mb-6">
               Das Profil existiert nicht oder wurde deaktiviert.
             </p>
             <Link href="/trainers">
@@ -88,7 +88,7 @@ export default function TrainerProfilePage() {
         <AnimatedSection>
           <Link
             href="/trainers"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground/60 hover:text-[#00D4FF] transition-colors duration-200 mb-8"
+            className="inline-flex items-center gap-2 text-sm text-soft hover:text-[#00D4FF] transition-colors duration-200 mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
             Zurück zur Suche
@@ -146,7 +146,7 @@ export default function TrainerProfilePage() {
 
                     <div className="flex items-center justify-center lg:justify-start gap-3 mt-3">
                       <StarRating rating={trainer.rating_average} size="md" />
-                      <span className="text-sm text-muted-foreground/60">
+                      <span className="text-sm text-soft">
                         ({trainer.rating_count} Bewertungen)
                       </span>
                     </div>
@@ -171,7 +171,7 @@ export default function TrainerProfilePage() {
                         return (
                           <span
                             key={m}
-                            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/60 bg-[#1A2332]/40 rounded-lg px-2.5 py-1"
+                            className="inline-flex items-center gap-1.5 text-xs text-soft bg-[#1A2332]/40 rounded-lg px-2.5 py-1"
                           >
                             <Icon className="w-3 h-3" />
                             {m}
@@ -185,13 +185,13 @@ export default function TrainerProfilePage() {
                   <div className="flex flex-col items-center lg:items-end gap-3 flex-shrink-0">
                     <div className="text-center lg:text-right">
                       <p className="text-3xl font-bold gradient-cyan-text">ab {trainer.hourly_rate}€</p>
-                      <p className="text-sm text-muted-foreground/50">/Std.</p>
+                      <p className="text-sm text-faint">/Std.</p>
                     </div>
                     <GradientButton variant="green" size="lg" className="min-w-[180px]" onClick={openLogin}>
                       <Lock className="w-4 h-4" />
                       Kennenlernen
                     </GradientButton>
-                    <p className="text-[11px] text-muted-foreground/40 text-center lg:text-right max-w-[200px] leading-snug">
+                    <p className="text-[11px] text-faint text-center lg:text-right max-w-[200px] leading-snug">
                       Vorschau — Erstgespräch nach kostenloser Registrierung
                     </p>
                   </div>
@@ -211,7 +211,7 @@ export default function TrainerProfilePage() {
                   <span className="w-1 h-6 rounded-full bg-gradient-to-b from-[#00A8FF] to-[#00D4FF]" />
                   Über mich
                 </h2>
-                <p className="text-muted-foreground/80 leading-relaxed">
+                <p className="text-soft leading-relaxed">
                   {trainer.bio}
                 </p>
               </GlassCard>
@@ -238,8 +238,8 @@ export default function TrainerProfilePage() {
                     <div className="w-20 h-20 rounded-full bg-[#00A8FF]/[0.08] flex items-center justify-center mb-4">
                       <Play className="w-9 h-9 text-[#00D4FF]/60 ml-1" />
                     </div>
-                    <p className="text-sm text-muted-foreground/60 font-medium">Lerne {trainer.first_name} persönlich kennen</p>
-                    <p className="text-xs text-muted-foreground/30 mt-1">Vorstellungsvideo wird in Kürze verfügbar sein</p>
+                    <p className="text-sm text-soft font-medium">Lerne {trainer.first_name} persönlich kennen</p>
+                    <p className="text-xs text-faint mt-1">Vorstellungsvideo wird in Kürze verfügbar sein</p>
                   </div>
                 )}
               </GlassCard>
@@ -317,10 +317,10 @@ export default function TrainerProfilePage() {
                           <h3 className="font-heading font-bold text-foreground">{pkg.name}</h3>
                           <span className="text-lg font-bold gradient-cyan-text flex-shrink-0">{pkg.price}€</span>
                         </div>
-                        <p className="text-sm text-muted-foreground/70 leading-relaxed mb-4 flex-1">
+                        <p className="text-sm text-soft leading-relaxed mb-4 flex-1">
                           {pkg.description}
                         </p>
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground/50 pt-3 border-t border-[rgba(0,168,255,0.06)]">
+                        <div className="flex items-center gap-4 text-xs text-faint pt-3 border-t border-[rgba(0,168,255,0.06)]">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             {pkg.duration_weeks} Wochen
@@ -351,8 +351,8 @@ export default function TrainerProfilePage() {
                       const percentage = (value / 5) * 100
                       return (
                         <div key={key} className="flex items-center gap-3">
-                          <DimIcon className="w-4 h-4 text-muted-foreground/40 flex-shrink-0" />
-                          <span className="text-sm text-muted-foreground/70 w-28 flex-shrink-0">{label}</span>
+                          <DimIcon className="w-4 h-4 text-faint flex-shrink-0" />
+                          <span className="text-sm text-soft w-28 flex-shrink-0">{label}</span>
                           <div className="flex-1 h-2 rounded-full bg-[#1A2332]/60 overflow-hidden">
                             <div
                               className="h-full rounded-full bg-gradient-to-r from-[#00A8FF] to-[#00FF94] transition-all duration-700 ease-out"
@@ -377,7 +377,7 @@ export default function TrainerProfilePage() {
                   <h2 className="font-heading text-xl font-bold text-foreground mb-5 flex items-center gap-2">
                     <span className="w-1 h-6 rounded-full bg-gradient-to-b from-[#00A8FF] to-[#00D4FF]" />
                     Bewertungen
-                    <span className="text-sm font-normal text-muted-foreground/50 ml-2">
+                    <span className="text-sm font-normal text-faint ml-2">
                       ({reviews.length})
                     </span>
                   </h2>
@@ -389,7 +389,7 @@ export default function TrainerProfilePage() {
                             <p className="text-sm font-medium text-foreground/80">
                               {review.customer_display_name}
                             </p>
-                            <p className="text-xs text-muted-foreground/40 mt-0.5">
+                            <p className="text-xs text-faint mt-0.5">
                               {new Date(review.created_at).toLocaleDateString('de-DE', {
                                 day: 'numeric',
                                 month: 'long',
@@ -400,7 +400,7 @@ export default function TrainerProfilePage() {
                           <StarRating rating={review.rating_total} size="sm" showValue={false} />
                         </div>
                         {review.text && (
-                          <p className="text-sm text-muted-foreground/70 leading-relaxed">
+                          <p className="text-sm text-soft leading-relaxed">
                             {review.text}
                           </p>
                         )}
@@ -417,7 +417,7 @@ export default function TrainerProfilePage() {
             {/* Stats Panel */}
             <AnimatedSection delay={0.1}>
               <GlassCard hover={false} glow="cyan" className="p-6 sticky top-28">
-                <h3 className="font-heading text-sm font-semibold text-muted-foreground/50 uppercase tracking-wider mb-5">
+                <h3 className="font-heading text-sm font-semibold text-faint uppercase tracking-wider mb-5">
                   Auf einen Blick
                 </h3>
 
@@ -427,7 +427,7 @@ export default function TrainerProfilePage() {
                       <Clock className="w-4 h-4 text-[#00D4FF]" />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground/50">Antwortzeit</p>
+                      <p className="text-xs text-faint">Antwortzeit</p>
                       <p className="text-sm font-semibold text-foreground">~{trainer.response_time_hours} Std.</p>
                     </div>
                   </div>
@@ -437,7 +437,7 @@ export default function TrainerProfilePage() {
                       <Users className="w-4 h-4 text-[#00FF94]" />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground/50">Betreute Kunden</p>
+                      <p className="text-xs text-faint">Betreute Kunden</p>
                       <p className="text-sm font-semibold text-foreground">{trainer.total_clients}</p>
                     </div>
                   </div>
@@ -447,7 +447,7 @@ export default function TrainerProfilePage() {
                       <Calendar className="w-4 h-4 text-[#00D4FF]" />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground/50">Dabei seit</p>
+                      <p className="text-xs text-faint">Dabei seit</p>
                       <p className="text-sm font-semibold text-foreground">
                         {new Date(trainer.member_since + '-01').toLocaleDateString('de-DE', {
                           month: 'long',
@@ -462,12 +462,12 @@ export default function TrainerProfilePage() {
                       <Zap className="w-4 h-4 text-[#00FF94]" />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground/50">Freie Plätze</p>
+                      <p className="text-xs text-faint">Freie Plätze</p>
                       <p className="text-sm font-semibold text-foreground">
                         {trainer.free_spots > 0 ? (
                           <span className="text-[#00FF94]">{trainer.free_spots} verfügbar</span>
                         ) : (
-                          <span className="text-muted-foreground/50">Ausgebucht</span>
+                          <span className="text-faint">Ausgebucht</span>
                         )}
                       </p>
                     </div>
@@ -478,7 +478,7 @@ export default function TrainerProfilePage() {
                       <Globe className="w-4 h-4 text-[#00D4FF]" />
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground/50">Sprachen</p>
+                      <p className="text-xs text-faint">Sprachen</p>
                       <p className="text-sm font-semibold text-foreground">
                         {trainer.languages.join(', ')}
                       </p>
@@ -495,11 +495,11 @@ export default function TrainerProfilePage() {
                         <span>Identität verifiziert</span>
                       </div>
                     )}
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground/50">
+                    <div className="flex items-center gap-2 text-xs text-faint">
                       <Clock className="w-3.5 h-3.5" />
                       <span>Antwortet innerhalb von {trainer.response_time_hours} Std.</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground/50">
+                    <div className="flex items-center gap-2 text-xs text-faint">
                       <Calendar className="w-3.5 h-3.5" />
                       <span>Mitglied seit {trainer.member_since}</span>
                     </div>
@@ -518,7 +518,7 @@ export default function TrainerProfilePage() {
                 Starte jetzt mit{' '}
                 <span className="gradient-brand-text">{trainer.first_name}</span>
               </h2>
-              <p className="text-muted-foreground/70 max-w-lg mx-auto mb-6">
+              <p className="text-soft max-w-lg mx-auto mb-6">
                 Buche ein kostenloses Kennenlerngespräch und finde heraus, ob {trainer.first_name} der richtige Coach für dich ist.
               </p>
               <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -531,7 +531,7 @@ export default function TrainerProfilePage() {
                   Pakete ansehen
                 </GradientButton>
               </div>
-              <p className="text-xs text-muted-foreground/50 mt-4">
+              <p className="text-xs text-faint mt-4">
                 Du befindest dich in der Vorschau. Erstgespräche und Buchungen sind nach kostenloser Registrierung verfügbar.
               </p>
             </GlassCard>

@@ -1,4 +1,6 @@
-import type { TrainerProfile, Review, Booking, WorkoutPlan, NutritionPlan } from '@/types'
+import type {
+  TrainerProfile, Review, Booking, WorkoutPlan, NutritionPlan, CustomerProfile,
+} from '@/types'
 
 // ─── Mock Trainers ────────────────────────────────────────
 export interface TrainerCertificate {
@@ -598,36 +600,90 @@ export const pricingPlans = [
 // ─── FAQ Items ────────────────────────────────────────────
 export const faqItems = [
   {
-    question: 'Ist FITNEXUS wirklich kostenlos für Kunden?',
-    answer: 'Ja. Als Kunde registrierst du dich kostenlos, suchst Trainer, siehst Profile und buchst Erstgespräche – ohne versteckte Kosten.',
+    question: 'Ist FITNEXUS für Kunden wirklich komplett kostenlos oder kommen später versteckte Gebühren dazu?',
+    answer: 'Ja, als Kunde zahlst du für FITNEXUS nichts. Registrierung, Coach-Suche, alle Profile, die Bewertungen und das erste Kennenlern-Gespräch sind kostenlos. Bezahlt wird ausschließlich das Coaching selbst — zu dem Preis, der im Profil deines Coaches steht. Die Plattform finanziert sich über die Abos der Coaches ab 49 € im Monat, nicht über dich.',
   },
   {
-    question: 'Wie finde ich den richtigen Coach?',
-    answer: 'Nutze unsere Filter: Standort, Spezialisierung, Preisspanne, Bewertung und Coaching-Modus (vor Ort / online / hybrid). Dann buchst du ein kostenloses Kennenlern-Gespräch.',
+    question: 'Wie finde ich unter hunderten Coaches genau den, der zu meinem Ziel passt?',
+    answer: 'Über die Filter grenzt du in drei Schritten ein: zuerst Standort — von Berlin über München und Hamburg bis Köln, Frankfurt und Stuttgart — oder Online-Coaching, wenn dir der Ort egal ist. Dann die Spezialisierung, etwa Krafttraining, Hypertrophie, Mobility oder Ernährungsberatung. Zuletzt Preisspanne und Bewertung. Aus der Trefferliste buchst du ein kostenloses Kennenlern-Gespräch und entscheidest erst danach.',
   },
   {
-    question: 'Wie funktioniert die Anonymität?',
-    answer: 'Deine persönlichen Kontaktdaten bleiben geschützt, bis du einen Vertrag abschließt. Vorher kommunizierst du unter einem anonymen Alias (z.B. Client#4821) über die Plattform.',
+    question: 'Was genau heißt anonym — sieht der Coach meinen echten Namen, bevor ich mich entscheide?',
+    answer: 'Nein. Bis zum Vertragsabschluss siehst nur du deinen Namen. Gegenüber dem Coach trittst du unter einem Alias wie Client#4821 auf, Chat und Erstgespräch laufen vollständig über die Plattform. Deine Kontaktdaten — E-Mail, Telefonnummer, Adresse — werden erst freigegeben, wenn du den digitalen Vertrag unterschreibst.',
   },
   {
-    question: 'Kann ich als Trainer FITNEXUS kostenlos testen?',
-    answer: 'Du kannst dein Profil kostenlos erstellen und die Plattform kennenlernen. Für aktives Coaching brauchst du einen Starter- oder Pro-Plan.',
+    question: 'Ich bin Personal Trainer — was kostet FITNEXUS und kann ich es vorher ausprobieren?',
+    answer: 'Dein Profil erstellst du kostenlos und siehst dir die Plattform in Ruhe an. Für aktives Coaching — also Kundenverwaltung, Trainingspläne, Chat und Abrechnung — brauchst du den Starter- oder Pro-Plan ab 49 € im Monat. Ein vollständiges Coach-Profil steht in etwa fünf Minuten.',
   },
   {
-    question: 'Welche Zahlungsmethoden gibt es?',
-    answer: 'Kreditkarte (Visa, Mastercard), SEPA-Lastschrift und PayPal. Alle Zahlungen laufen sicher über Stripe.',
+    question: 'Wie stellt ihr sicher, dass die Coaches auf der Plattform wirklich qualifiziert sind?',
+    answer: 'Jeder Coach lädt seine Zertifikate, Qualifikationen und Lizenzen hoch, unser Team prüft sie manuell und vergibt erst dann den Verifizierungs-Badge. Dazu kommen Bewertungen in sechs Dimensionen, die ausschließlich Kunden mit abgeschlossenem Coaching-Vertrag abgeben können. Gekaufte Rezensionen sind damit ausgeschlossen.',
   },
   {
-    question: 'Kann ich jederzeit kündigen?',
-    answer: 'Ja. Alle Pläne sind monatlich kündbar, ohne Mindestlaufzeit. Du behältst Zugang bis zum Ende des Abrechnungszeitraums.',
+    question: 'Wie kann ich bezahlen und wie sicher ist die Zahlung abgewickelt?',
+    answer: 'Zur Wahl stehen Kreditkarte (Visa und Mastercard), SEPA-Lastschrift und PayPal. Die komplette Abwicklung läuft über Stripe, deine Zahlungsdaten liegen also nie auf unseren Servern. Jede Zahlung ist einem digitalen Vertrag zugeordnet, den du jederzeit in deinem Konto einsehen kannst.',
   },
   {
-    question: 'Was passiert mit meinen Daten?',
-    answer: 'Deine Daten gehören dir. Wir verkaufen nichts an Dritte. Alle Daten werden DSGVO-konform in europäischen Rechenzentren gespeichert.',
+    question: 'Kann ich mein Coach-Abo jederzeit kündigen oder binde ich mich für ein Jahr?',
+    answer: 'Du kannst monatlich kündigen, es gibt keine Mindestlaufzeit. Nach der Kündigung behältst du den vollen Zugang bis zum Ende des bereits bezahlten Abrechnungszeitraums. Deine Kundendaten und Trainingspläne bleiben exportierbar.',
   },
   {
-    question: 'Wie werden Trainer verifiziert?',
-    answer: 'Trainer können Zertifikate, Qualifikationen und Lizenzen hochladen. Unser Team prüft diese und vergibt den Verifizierungs-Badge.',
+    question: 'Was passiert mit meinen Gesundheits- und Trainingsdaten?',
+    answer: 'Sie gehören dir und werden nicht an Dritte verkauft. Gespeichert wird DSGVO-konform in europäischen Rechenzentren. Dein Coach sieht ausschließlich die Daten, die für euer Coaching nötig sind — Gewicht, Trainingsfortschritt, Ernährung — und auch nur so lange, wie der Vertrag läuft.',
+  },
+]
+
+// ─── Kundenprofile ────────────────────────────────────────
+// Der Coach sieht den Klarnamen erst, wenn ein Vertrag laeuft. Bis dahin
+// steht der Alias (display_name). Genau so ist es in FAQ und AGB zugesagt.
+export const mockCustomers: CustomerProfile[] = [
+  {
+    id: 'c_demo', user_id: 'u_c_demo', display_name: 'Client#4821', is_anonymous: false,
+    first_name: 'Jonas', last_name: 'Reuter', avatar_url: null,
+    fitness_goals: ['Muskelaufbau', 'Kraftzuwachs'],
+    created_at: '2026-01-12T10:00:00Z', updated_at: '2026-04-10T10:00:00Z',
+  },
+  {
+    id: 'c_1', user_id: 'u_c_1', display_name: 'Client#7193', is_anonymous: false,
+    first_name: 'Mara', last_name: 'Lindner', avatar_url: null,
+    fitness_goals: ['Abnehmen'],
+    created_at: '2026-01-20T10:00:00Z', updated_at: '2026-04-02T10:00:00Z',
+  },
+  {
+    id: 'c_2', user_id: 'u_c_2', display_name: 'Client#2547', is_anonymous: true,
+    first_name: null, last_name: null, avatar_url: null,
+    fitness_goals: ['Abnehmen', 'Ausdauer'],
+    created_at: '2026-04-08T10:00:00Z', updated_at: '2026-04-08T10:00:00Z',
+  },
+  {
+    id: 'c_3', user_id: 'u_c_3', display_name: 'Client#8362', is_anonymous: true,
+    first_name: null, last_name: null, avatar_url: null,
+    fitness_goals: ['Kraftaufbau'],
+    created_at: '2026-04-09T10:00:00Z', updated_at: '2026-04-09T10:00:00Z',
+  },
+  {
+    id: 'c_4', user_id: 'u_c_4', display_name: 'Client#5091', is_anonymous: false,
+    first_name: 'Tobias', last_name: 'Krahl', avatar_url: null,
+    fitness_goals: ['Hypertrophie'],
+    created_at: '2026-02-02T10:00:00Z', updated_at: '2026-04-11T10:00:00Z',
+  },
+  {
+    id: 'c_5', user_id: 'u_c_5', display_name: 'Client#3318', is_anonymous: false,
+    first_name: 'Nele', last_name: 'Sander', avatar_url: null,
+    fitness_goals: ['Mobility', 'Rückengesundheit'],
+    created_at: '2026-02-18T10:00:00Z', updated_at: '2026-04-12T10:00:00Z',
+  },
+  {
+    id: 'c_6', user_id: 'u_c_6', display_name: 'Client#6604', is_anonymous: false,
+    first_name: 'Deniz', last_name: 'Aydin', avatar_url: null,
+    fitness_goals: ['Wettkampfvorbereitung'],
+    created_at: '2026-03-03T10:00:00Z', updated_at: '2026-04-12T10:00:00Z',
+  },
+  {
+    id: 'c_7', user_id: 'u_c_7', display_name: 'Client#9127', is_anonymous: true,
+    first_name: null, last_name: null, avatar_url: null,
+    fitness_goals: ['Abnehmen'],
+    created_at: '2026-04-11T10:00:00Z', updated_at: '2026-04-11T10:00:00Z',
   },
 ]
 

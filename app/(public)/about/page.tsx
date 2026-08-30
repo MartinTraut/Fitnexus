@@ -108,7 +108,7 @@ export default function AboutPage() {
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <AnimatedSection>
             <p className="text-sm font-semibold tracking-brand-wide uppercase gradient-cyan-text mb-4">Ueber uns</p>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold leading-[1.08] mb-6">
+            <h1 className="t-h1 font-heading font-bold mb-6">
               <span className="text-foreground">Die Zukunft des</span>
               <br />
               <span className="gradient-brand-text">Fitness Coachings</span>
@@ -123,7 +123,7 @@ export default function AboutPage() {
       </section>
 
       {/* ═══ VISION / MISSION ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute inset-0 bg-radial-center opacity-30" aria-hidden="true" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -155,7 +155,7 @@ export default function AboutPage() {
       </section>
 
       {/* ═══ THE PROBLEM ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-[#00A8FF]/[0.03] blur-[160px]" aria-hidden="true" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -191,7 +191,7 @@ export default function AboutPage() {
       </section>
 
       {/* ═══ OUR SOLUTION ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute inset-0 bg-radial-center opacity-20" aria-hidden="true" />
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#00FF94]/[0.04] blur-[160px]" aria-hidden="true" />
 
@@ -224,7 +224,7 @@ export default function AboutPage() {
       </section>
 
       {/* ═══ VALUES ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#00A8FF]/[0.03] blur-[200px]" aria-hidden="true" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -260,7 +260,7 @@ export default function AboutPage() {
       </section>
 
       {/* ═══ TEAM ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute inset-0 bg-radial-center opacity-20" aria-hidden="true" />
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
@@ -294,12 +294,12 @@ export default function AboutPage() {
       </section>
 
       {/* ═══ FINAL CTA ═══ */}
-      <section className="relative py-24 lg:py-32 overflow-hidden">
+      <section className="relative section-y overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00A8FF]/[0.04] to-transparent" aria-hidden="true" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#00A8FF]/[0.05] blur-[150px]" aria-hidden="true" />
 
         <AnimatedSection className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-bold text-foreground leading-tight mb-4">
+          <h2 className="t-h2 font-heading font-bold text-foreground mb-4">
             Werde Teil von <span className="gradient-brand-text">FITNEXUS</span>
           </h2>
           <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">

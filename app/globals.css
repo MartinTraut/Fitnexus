@@ -55,6 +55,26 @@
   --color-surface-elevated: #111827;
   --color-surface-glass: rgba(13, 19, 32, 0.8);
 
+
+  /* Fluid Type Scale — clamp(MIN, vw + rem, MAX), nie reines vw */
+  --fs-display: clamp(2.25rem, 4.6vw + 0.6rem, 5.75rem);
+  --fs-h1: clamp(2.25rem, 3.2vw + 1.15rem, 4rem);
+  --fs-h2: clamp(1.875rem, 2.1vw + 1.15rem, 3.25rem);
+  --fs-h3: clamp(1.375rem, 1.1vw + 0.95rem, 2rem);
+  --fs-step: clamp(2.25rem, 2.8vw + 1.3rem, 3.75rem);
+  --fs-numeral: clamp(7rem, 13vw + 1rem, 16rem);
+  --fs-lead: clamp(1.0625rem, 0.45vw + 0.94rem, 1.375rem);
+  --fs-body: clamp(0.9375rem, 0.2vw + 0.89rem, 1.0625rem);
+  --fs-eyebrow: clamp(0.6875rem, 0.16vw + 0.65rem, 0.8125rem);
+
+  /* Vertikaler Rhythmus */
+  --section-y: clamp(4rem, 4.5vw + 1.75rem, 7rem);
+  --section-y-lg: clamp(5rem, 5.5vw + 2.25rem, 8.5rem);
+
+  /* Lesbare Textstufen statt Opacity-Stapel auf muted-foreground */
+  --text-soft: #A6B4C8;
+  --text-faint: #75849B;
+
   /* Animation tokens */
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -128,9 +148,23 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
+  /* Smooth scrolling — nur wenn der Nutzer Bewegung nicht abbestellt hat */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Bewegung global drosseln, wenn das System es verlangt */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   /* Custom scrollbar */
@@ -157,11 +191,109 @@
 }
 
 @layer utilities {
+  /* ── Typografie-Stufen — fluid, eine Quelle statt Breakpoint-Treppen ── */
+  .t-display {
+    font-size: var(--fs-display);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .t-h1 {
+    font-size: var(--fs-h1);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .t-h2 {
+    font-size: var(--fs-h2);
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+    text-wrap: balance;
+  }
+  .t-h3 {
+    font-size: var(--fs-h3);
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+  .t-step {
+    font-size: var(--fs-step);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+  .t-numeral {
+    font-size: var(--fs-numeral);
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+  }
+  .t-lead {
+    font-size: var(--fs-lead);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+  .t-body {
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+  .t-eyebrow {
+    font-size: var(--fs-eyebrow);
+    line-height: 1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Vertikaler Sektionsrhythmus */
+  .section-y {
+    padding-top: var(--section-y);
+    padding-bottom: var(--section-y);
+  }
+  .section-y-lg {
+    padding-top: var(--section-y-lg);
+    padding-bottom: var(--section-y-lg);
+  }
+
+  /* Lesbare Sekundaerstufen — ersetzen muted-foreground/40 & Co. */
+  .text-soft {
+    color: var(--text-soft);
+  }
+  .text-faint {
+    color: var(--text-faint);
+  }
+
+  /* Zahlen laufen nicht mehr, wenn sich Ziffern aendern */
+  .nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /* Kartenflaeche mit belichteter Oberkante — traegt die Premium-Anmutung */
+  .surface {
+    background: linear-gradient(180deg, rgba(18, 26, 42, 0.72) 0%, rgba(11, 16, 27, 0.72) 100%);
+    border: 1px solid rgba(0, 168, 255, 0.1);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 1px 2px rgba(0, 0, 0, 0.35);
+    transition:
+      border-color 0.4s var(--ease-smooth),
+      box-shadow 0.4s var(--ease-smooth),
+      transform 0.4s var(--ease-smooth);
+  }
+  .surface-hover:hover {
+    border-color: rgba(0, 168, 255, 0.24);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 18px 44px -20px rgba(0, 168, 255, 0.35),
+      0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
   /* Brand Gradients */
   .gradient-brand {
     background: linear-gradient(135deg, #00A8FF 0%, #00D4FF 35%, #00FF94 70%, #39FF14 100%);
   }
   .gradient-brand-text {
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
     background: linear-gradient(135deg, #00A8FF 0%, #00D4FF 35%, #00FF94 70%, #39FF14 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -174,12 +306,16 @@
     background: linear-gradient(135deg, #00FF94, #39FF14);
   }
   .gradient-cyan-text {
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
     background: linear-gradient(135deg, #00A8FF, #00D4FF);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .gradient-green-text {
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
     background: linear-gradient(135deg, #00FF94, #39FF14);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -438,4 +574,19 @@
     pointer-events: none;
     z-index: 9999;
   }
+}
+
+/* ── Tastatur-Fokus ───────────────────────────────────────────────────
+   Ungelayert, damit der Ring nicht von Regeln aus fremden Layern
+   uebersteuert wird. Zusaetzlich vom Transitionieren ausgenommen: mit
+   `transition-all` auf Buttons blendet der Ring sonst ueber 300ms ein,
+   statt beim Tabben sofort dazustehen. */
+:focus-visible {
+  outline: 2px solid #00D4FF;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+:focus-visible {
+  transition-property: none;
 }
